@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "648058350157",
+    "firebase_url": "https://green-needs-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "green-needs",
+    "storage_bucket": "green-needs.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:648058350157:android:8bc58ad7489289812c8a04",
+        "android_client_info": {
+          "package_name": "com.example.greenneeds"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDUaakKtiPUdJF0jx7nWrLdgtT2AhcbSoI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
