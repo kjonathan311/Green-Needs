@@ -1,4 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:greenneeds/ui/provider/menu/item/add/AddMenuPageViewModel.dart';
+import 'package:provider/provider.dart';
+
+import '../../../../utils.dart';
 
 class AddMenuPage extends StatefulWidget {
   const AddMenuPage({super.key});
@@ -14,15 +20,17 @@ class _AddMenuPageState extends State<AddMenuPage> {
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _priceController = TextEditingController();
   final TextEditingController _discountedPriceController = TextEditingController();
+  File? _imageFile;
 
   @override
   void initState() {
     super.initState();
-    // _categoriesFuture = context.read<AddInventoryItemPageViewModel>().getCategories();
+    _categoriesFuture = context.read<AddMenuPageViewModel>().getCategories();
   }
 
   @override
   Widget build(BuildContext context) {
+    final viewModel=Provider.of<AddMenuPageViewModel>(context);
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -41,118 +49,143 @@ class _AddMenuPageState extends State<AddMenuPage> {
       ),
       body: Stack(
         children: [
-
-          Padding(
-              padding: EdgeInsets.all(32.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text("nama", style: Theme.of(context).textTheme.bodyLarge),
-                SizedBox(height: 5.0),
-                TextField(
-                  controller: _nameController,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(10.0),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(height: 10.0),
-                Text("Kategori", style: Theme.of(context).textTheme.bodyLarge),
-                SizedBox(height: 5.0),
-                Container(
-                  width: double.infinity,
-                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.black,
-                    ),
-                    borderRadius: BorderRadius.circular(8.0), // Border radius
-                  ),
-                  child: FutureBuilder<List<String>>(
-                    future: _categoriesFuture,
-                    builder: (BuildContext context, AsyncSnapshot<List<String>> snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting || snapshot.hasError || snapshot.data == null || snapshot.data!.isEmpty) {
-                        return DropdownButtonFormField<String>(
-                          value: _selectedCategory,
-                          items: [
-                            DropdownMenuItem<String>(
-                              value: 'tidak dikategorikan',
-                              child: Text('tidak dikategorikan'),
-                            )
-                          ],
-                          onChanged: (String? newValue) {
-                            setState(() {
-                              _selectedCategory = newValue!;
-                            });
-                          },
-                        );
-                      } else {
-                        List<String>? categories = snapshot.data;
-                        return DropdownButtonFormField<String>(
-                          value: _selectedCategory,
-                          items: categories!.map((String category) {
-                            return DropdownMenuItem<String>(
-                              value: category,
-                              child: Text(category),
-                            );
-                          }).toList(),
-                          onChanged: (String? newValue) {
-                            setState(() {
-                              _selectedCategory = newValue!;
-                            });
-                          },
-                        );
-                      }
+          SingleChildScrollView(
+            child: Padding(
+                padding: EdgeInsets.all(32.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("gambar",style: Theme.of(context).textTheme.bodyLarge),
+                  SizedBox(height: 5.0),
+                  InkWell(
+                    onTap: () async {
+                      File? image = await getImageFromDevice(context);
+                      setState(() {
+                        _imageFile = image;
+                      });
                     },
-                  ),
-                ),
-                SizedBox(height: 10.0),
-                Text("deskripsi makanan", style: Theme.of(context).textTheme.bodyLarge),
-                SizedBox(height: 5.0),
-                TextField(
-                  controller: _descriptionController,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(10.0),
+                    child: Container(
+                      width: 120,
+                      height: 120,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        image: DecorationImage(
+                          fit: BoxFit.cover,
+                          image: _imageFile != null
+                              ? FileImage(_imageFile!)
+                              : AssetImage('images/placeholder_food.png') as ImageProvider,
+                        ),
                       ),
                     ),
                   ),
-                ),
-                SizedBox(height: 10.0),
-                Text("harga awal", style: Theme.of(context).textTheme.bodyLarge),
-                SizedBox(height: 5.0),
-                TextField(
-                  controller: _priceController,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(10.0),
+                  Text("nama", style: Theme.of(context).textTheme.bodyLarge),
+                  SizedBox(height: 5.0),
+                  TextField(
+                    controller: _nameController,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(10.0),
+                        ),
                       ),
                     ),
                   ),
-                  keyboardType: TextInputType.number,
-                ),
-                SizedBox(height: 10.0),
-                Text("harga diskon", style: Theme.of(context).textTheme.bodyLarge),
-                SizedBox(height: 5.0),
-                TextField(
-                  controller: _discountedPriceController,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(10.0),
+                  SizedBox(height: 10.0),
+                  Text("kategori", style: Theme.of(context).textTheme.bodyLarge),
+                  SizedBox(height: 5.0),
+                  Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.black,
+                      ),
+                      borderRadius: BorderRadius.circular(8.0), // Border radius
+                    ),
+                    child: FutureBuilder<List<String>>(
+                      future: _categoriesFuture,
+                      builder: (BuildContext context, AsyncSnapshot<List<String>> snapshot) {
+                        if (snapshot.connectionState == ConnectionState.waiting || snapshot.hasError || snapshot.data == null || snapshot.data!.isEmpty) {
+                          return DropdownButtonFormField<String>(
+                            value: _selectedCategory,
+                            items: [
+                              DropdownMenuItem<String>(
+                                value: 'tidak dikategorikan',
+                                child: Text('tidak dikategorikan'),
+                              )
+                            ],
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                _selectedCategory = newValue!;
+                              });
+                            },
+                          );
+                        } else {
+                          List<String>? categories = snapshot.data;
+                          return DropdownButtonFormField<String>(
+                            value: _selectedCategory,
+                            items: categories!.map((String category) {
+                              return DropdownMenuItem<String>(
+                                value: category,
+                                child: Text(category),
+                              );
+                            }).toList(),
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                _selectedCategory = newValue!;
+                              });
+                            },
+                          );
+                        }
+                      },
+                    ),
+                  ),
+                  SizedBox(height: 10.0),
+                  Text("deskripsi makanan", style: Theme.of(context).textTheme.bodyLarge),
+                  SizedBox(height: 5.0),
+                  TextField(
+                    controller: _descriptionController,
+                    maxLines: null,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(10.0),
+                        ),
                       ),
                     ),
                   ),
-                  keyboardType: TextInputType.number,
-                ),
-                SizedBox(height: 10.0),
-
-              ],
+                  SizedBox(height: 10.0),
+                  Text("harga awal", style: Theme.of(context).textTheme.bodyLarge),
+                  SizedBox(height: 5.0),
+                  TextField(
+                    controller: _priceController,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(10.0),
+                        ),
+                      ),
+                    ),
+                    keyboardType: TextInputType.number,
+                  ),
+                  SizedBox(height: 10.0),
+                  Text("harga diskon", style: Theme.of(context).textTheme.bodyLarge),
+                  SizedBox(height: 5.0),
+                  TextField(
+                    controller: _discountedPriceController,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(10.0),
+                        ),
+                      ),
+                    ),
+                    keyboardType: TextInputType.number,
+                  ),
+                  SizedBox(height: 10.0),
+            
+                ],
+              ),
             ),
           )
 

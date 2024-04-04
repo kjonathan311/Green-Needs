@@ -130,7 +130,7 @@ class _DetailInventoryItemPageState extends State<DetailInventoryItemPage> {
                     ),
                   ),
                   SizedBox(height: 10.0),
-                  Text("Kategori", style: Theme.of(context).textTheme.bodyLarge),
+                  Text("kategori", style: Theme.of(context).textTheme.bodyLarge),
                   SizedBox(height: 5.0),
                   Container(
                     width: double.infinity,
@@ -169,7 +169,7 @@ class _DetailInventoryItemPageState extends State<DetailInventoryItemPage> {
                   ),
 
                   SizedBox(height: 10.0),
-                  Text("Tanggal Beli/Tambah Item",
+                  Text("tanggal beli/tambah item",
                       style: Theme.of(context).textTheme.bodyLarge),
                   SizedBox(height: 5.0),
                   TextField(
@@ -177,7 +177,6 @@ class _DetailInventoryItemPageState extends State<DetailInventoryItemPage> {
                     readOnly: true,
                     onTap: () => _selectStartDate(context),
                     decoration: InputDecoration(
-                      hintText: 'Pilih Tanggal awal',
                       border: const OutlineInputBorder(
                         borderRadius: BorderRadius.all(
                           Radius.circular(10.0),
@@ -194,7 +193,7 @@ class _DetailInventoryItemPageState extends State<DetailInventoryItemPage> {
                   SizedBox(height: 10.0),
 
 
-                  Text("Tanggal Expire Item",
+                  Text("tanggal expire item",
                       style: Theme.of(context).textTheme.bodyLarge),
                   SizedBox(height: 5.0),
                   TextField(
@@ -219,7 +218,7 @@ class _DetailInventoryItemPageState extends State<DetailInventoryItemPage> {
                   SizedBox(height: 10.0),
 
 
-                  Text("Jumlah",
+                  Text("jumlah",
                       style: Theme.of(context).textTheme.bodyLarge),
                   SizedBox(height: 5.0),
                   Padding(

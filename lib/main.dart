@@ -16,14 +16,15 @@ import 'package:greenneeds/ui/consumer/inventory/item/detail/DetailInventoryItem
 import 'package:greenneeds/ui/consumer/profile/ConsumerEditProfilePage.dart';
 import 'package:greenneeds/ui/consumer/profile/ConsumerProfileViewModel.dart';
 import 'package:greenneeds/ui/provider/ProviderScreen.dart';
+import 'package:greenneeds/ui/provider/menu/MenuPageViewModel.dart';
 import 'package:greenneeds/ui/provider/menu/item/add/AddMenuPage.dart';
+import 'package:greenneeds/ui/provider/menu/item/add/AddMenuPageViewModel.dart';
 import 'package:greenneeds/ui/provider/profile/FoodProviderEditProfilePage.dart';
 import 'package:greenneeds/ui/provider/profile/FoodProviderProfileViewModel.dart';
 import 'package:greenneeds/ui/provider/verification/VerificationFoodProviderViewModel.dart';
 import 'package:provider/provider.dart';
 import '/firebase_options.dart';
 import 'model/FirebaseAuthProvider.dart';
-import 'ui/consumer/inventory/item/detail/DetailInventoryItemPage.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -63,8 +64,11 @@ class MyApp extends StatelessWidget {
           ChangeNotifierProvider<DetailInventoryItemPageViewModel>(
               create: (context) => DetailInventoryItemPageViewModel()),
           ChangeNotifierProvider<InventoryViewModel>(
-              create: (context)=> InventoryViewModel()
-          ),
+              create: (context) => InventoryViewModel()),
+          ChangeNotifierProvider<MenuPageViewModel>(
+              create: (context) => MenuPageViewModel()),
+          ChangeNotifierProvider<AddMenuPageViewModel>(
+              create: (context) => AddMenuPageViewModel()),
         ],
         child: MaterialApp(
           title: 'Green Needs',
@@ -87,11 +91,13 @@ class MyApp extends StatelessWidget {
             "/register/foodprovider": (context) => RegisterFoodProviderPage(),
             "/consumer": (context) => ConsumerScreen(),
             "/consumer/inventory/add": (context) => AddInventoryItemPage(),
-            "/consumer/inventory/category": (context) => InventoryCategoryPage(),
+            "/consumer/inventory/category": (context) =>
+                InventoryCategoryPage(),
             "/consumer/edit/profile": (context) => ConsumerEditProfilePage(),
             "/provider": (context) => ProviderScreen(),
-            "/provider/edit/profile": (context) => FoodProviderEditProfilePage(),
-            "provider/menu/add":(context)=>AddMenuPage(),
+            "/provider/edit/profile": (context) =>
+                FoodProviderEditProfilePage(),
+            "/provider/menu/add": (context) => AddMenuPage(),
             "/admin": (context) => AdminScreen(),
           },
         ));

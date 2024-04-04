@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:greenneeds/ui/provider/menu/MenuPageViewModel.dart';
+import 'package:provider/provider.dart';
 import '../profile/FoodProviderProfilePopUpWindow.dart';
 
 class MenuPage extends StatefulWidget {
@@ -84,6 +86,7 @@ class _MenuLayoutState extends State<MenuLayout> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    final viewModel=Provider.of<MenuPageViewModel>(context);
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -93,19 +96,41 @@ class _MenuLayoutState extends State<MenuLayout> with TickerProviderStateMixin {
             child: Row(
               children: [
                 Expanded(
-                  child: TabBar(
-                    isScrollable: true,
-                    controller: _tabController,
-                    tabs: [
-                      Text("PlaceHolder1"),
-                      Text("PlaceHolder2"),
-                      Text("PlaceHolder3"),
-                    ],
-                    onTap: (index) {
-                      setState(() {
-                        // _selectedCategory = categories[index];
-                        // _selectedCategoryController.add(_selectedCategory);
-                      });
+                  child: StreamBuilder<List<String>>(
+                    stream: viewModel.categoriesStream(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Container();
+                      } else if (snapshot.hasError) {
+                        return Text("Error: ${snapshot.error}");
+                      } else {
+                        List<String> categories = snapshot.data ?? ["Semua item", 'tidak dikategorikan'];
+                        if (_tabController.length != categories.length) {
+                          _tabController = TabController(
+                            length: categories.length,
+                            vsync: this,
+                            initialIndex: _tabController.index,
+                          );
+                        }
+                        if (_selectedCategory.isEmpty) {
+                          _selectedCategory = categories.first;
+                          _selectedCategoryController.add(_selectedCategory);
+                        }
+                        print("Selected category: $_selectedCategory");
+                        return TabBar(
+                          isScrollable: true,
+                          controller: _tabController,
+                          tabs: categories
+                              .map((category) => Tab(text: category))
+                              .toList(),
+                          onTap: (index) {
+                            setState(() {
+                              _selectedCategory = categories[index];
+                              _selectedCategoryController.add(_selectedCategory);
+                            });
+                          },
+                        );
+                      }
                     },
                   ),
                 ),
@@ -149,7 +174,7 @@ class _MenuLayoutState extends State<MenuLayout> with TickerProviderStateMixin {
 
 class MenuListTile extends StatelessWidget {
   final String? photoUrl;
-  final String placeholderImageUrl = 'images/placeholder_food.pn';
+  final String placeholderImageUrl = 'images/placeholder_food.png';
 
   const MenuListTile({Key? key, this.photoUrl}) : super(key: key);
 
