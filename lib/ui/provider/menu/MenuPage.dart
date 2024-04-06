@@ -3,8 +3,11 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:greenneeds/model/MenuItem.dart';
 import 'package:greenneeds/ui/provider/menu/MenuPageViewModel.dart';
+import 'package:greenneeds/ui/provider/menu/item/detail/DetailMenuPage.dart';
 import 'package:provider/provider.dart';
+import '../../utils.dart';
 import '../profile/FoodProviderProfilePopUpWindow.dart';
 
 class MenuPage extends StatefulWidget {
@@ -18,43 +21,23 @@ class _MenuPageState extends State<MenuPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        actions: [
-          IconButton(
-            icon: Icon(Icons.person),
-            onPressed: () {
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return FoodProviderProfilePopUpWindow();
-                },
-              );
-            },
-          ),
-        ],
-      ),
-      body: DefaultTabController(
-        length: 2,
-        child: Column(
-          children: [
-            TabBar(
-              tabs: [
-                Tab(icon: Icon(Icons.menu), text: "Menu"),
-                Tab(icon: Icon(Icons.wysiwyg), text: "Food Waste Harian"),
-              ],
-            ),
-            Expanded(
-              child: TabBarView(
-                children: [
-                  MenuLayout(),
-                  Center(child: Text('Food waste harian content')),
-                ],
-              ),
+        appBar: AppBar(
+          title: Text("Menu"),
+          actions: [
+            IconButton(
+              icon: Icon(Icons.person),
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return FoodProviderProfilePopUpWindow();
+                  },
+                );
+              },
             ),
           ],
         ),
-      ),
-    );
+        body: const MenuLayout());
   }
 }
 
@@ -73,7 +56,7 @@ class _MenuLayoutState extends State<MenuLayout> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 0, vsync: this);
     _selectedCategoryController = StreamController<String>();
     _selectedCategory = '';
   }
@@ -86,11 +69,10 @@ class _MenuLayoutState extends State<MenuLayout> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    final viewModel=Provider.of<MenuPageViewModel>(context);
+    final viewModel = Provider.of<MenuPageViewModel>(context);
     return SingleChildScrollView(
       child: Column(
         children: [
-          const SizedBox(height: 20.0),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 32.0),
             child: Row(
@@ -104,7 +86,8 @@ class _MenuLayoutState extends State<MenuLayout> with TickerProviderStateMixin {
                       } else if (snapshot.hasError) {
                         return Text("Error: ${snapshot.error}");
                       } else {
-                        List<String> categories = snapshot.data ?? ["Semua item", 'tidak dikategorikan'];
+                        List<String> categories = snapshot.data ??
+                            ["Semua item", 'tidak dikategorikan'];
                         if (_tabController.length != categories.length) {
                           _tabController = TabController(
                             length: categories.length,
@@ -126,7 +109,8 @@ class _MenuLayoutState extends State<MenuLayout> with TickerProviderStateMixin {
                           onTap: (index) {
                             setState(() {
                               _selectedCategory = categories[index];
-                              _selectedCategoryController.add(_selectedCategory);
+                              _selectedCategoryController
+                                  .add(_selectedCategory);
                             });
                           },
                         );
@@ -146,23 +130,67 @@ class _MenuLayoutState extends State<MenuLayout> with TickerProviderStateMixin {
           const SizedBox(height: 10.0),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 32.0),
-            child: ListView.builder(
-              itemCount: 10,
-              physics: NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              itemBuilder: (BuildContext context, int index) {
-                return GestureDetector(
-                    onTap: () {
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(
-                      //     builder: (context) => DetailInventoryItemPage(
-                      //       item: items[index],
-                      //     ),
-                      //   ),
-                      // );
+            child: StreamBuilder<String>(
+              stream: _selectedCategoryController.stream,
+              builder: (context, snapshotCategory) {
+                if (snapshotCategory.hasData && snapshotCategory.data != null) {
+                  return StreamBuilder<List<MenuItem>>(
+                    stream: viewModel.menuItems(snapshotCategory.data!),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasError) {
+                        return Container(
+                          height: 100,
+                          child: Center(
+                            child: Text('Error: ${snapshot.error}'),
+                          ),
+                        );
+                      } else {
+                        List<MenuItem>? items = snapshot.data;
+                        if (snapshot.connectionState ==
+                                ConnectionState.waiting ||
+                            snapshot.hasError) {
+                          return Container(
+                            height: 500,
+                            child: Center(
+                              child: Text('Loading..'),
+                            ),
+                          );
+                        } else if (items == null || items.isEmpty) {
+                          return Container(
+                            height: 500,
+                            child: Center(
+                              child: Text('Tidak ada item.'),
+                            ),
+                          );
+                        } else {
+                          return ListView.builder(
+                            itemCount: items.length,
+                            physics: NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            itemBuilder: (BuildContext context, int index) {
+                              return GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => DetailMenuPage(
+                                          item: items[index],
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  child: MenuListTile(
+                                    item: items[index],
+                                  ));
+                            },
+                          );
+                        }
+                      }
                     },
-                    child: MenuListTile());
+                  );
+                } else {
+                  return Container();
+                }
               },
             ),
           ),
@@ -173,10 +201,10 @@ class _MenuLayoutState extends State<MenuLayout> with TickerProviderStateMixin {
 }
 
 class MenuListTile extends StatelessWidget {
-  final String? photoUrl;
+  final MenuItem item;
   final String placeholderImageUrl = 'images/placeholder_food.png';
 
-  const MenuListTile({Key? key, this.photoUrl}) : super(key: key);
+  const MenuListTile({super.key, required this.item});
 
   @override
   Widget build(BuildContext context) {
@@ -187,19 +215,19 @@ class MenuListTile extends StatelessWidget {
         borderRadius: BorderRadius.circular(10.0),
       ),
       child: Container(
-        height: 130,
         child: Row(
           children: [
             SizedBox(
               width: 100,
+              height: 130,
               child: ClipRRect(
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(10.0),
                   bottomLeft: Radius.circular(10.0),
                 ),
-                child: photoUrl != null
+                child: item.photoUrl != null
                     ? Image.network(
-                        photoUrl!,
+                        item.photoUrl!,
                         fit: BoxFit.cover,
                       )
                     : Image.asset(
@@ -214,27 +242,27 @@ class MenuListTile extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("name",
+                    Text(item.name,
                         style: Theme.of(context)
                             .textTheme
                             .bodyLarge!
                             .copyWith(fontWeight: FontWeight.bold)),
-                    Text("category"),
+                    Text(item.category),
                     Row(
                       children: [
                         Text(
-                          "Rp. 10.000",
+                          formatCurrency(item.startPrice),
                           style: TextStyle(
                             decoration: TextDecoration.lineThrough,
                             decorationThickness: 2,
                           ),
                         ),
                         SizedBox(width: 10),
-                        Text("Rp. 5.000"),
+                        Text(formatCurrency(item.discountedPrice)),
                       ],
                     ),
                     Text(
-                      "gjpasde'fgiojsdopgisjdogprijgwopeigjepwoigjweropij",
+                      item.description,
                       overflow: TextOverflow.ellipsis,
                       softWrap: false,
                       maxLines: 1,

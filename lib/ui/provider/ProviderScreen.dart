@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:greenneeds/ui/consumer/DailyWaste/DailyWastePage.dart';
 import 'package:greenneeds/ui/provider/verification/UnverifiedScreen.dart';
 import 'package:greenneeds/ui/provider/verification/VerificationFoodProviderViewModel.dart';
 import 'package:provider/provider.dart';
@@ -17,6 +18,7 @@ class _ProviderScreenState extends State<ProviderScreen> {
 
   final List _pages = [
     MenuPage(),
+    DailyWastePage(),
     Center(
       child: Text("Orders"),
     ),
@@ -53,6 +55,10 @@ class _ProviderScreenState extends State<ProviderScreen> {
                 items: const [
                   BottomNavigationBarItem(
                     icon: Icon(Icons.menu_book),
+                    label: "Menu",
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.wysiwyg),
                     label: "Menu",
                   ),
                   BottomNavigationBarItem(

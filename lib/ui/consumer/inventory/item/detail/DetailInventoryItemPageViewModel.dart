@@ -29,8 +29,6 @@ class DetailInventoryItemPageViewModel extends ChangeNotifier{
         return;
       }
 
-      log(category);
-
       try{
         await _firestore.collection('consumers').doc(user.uid).collection('inventory').doc(uid).set({
           'name': name,

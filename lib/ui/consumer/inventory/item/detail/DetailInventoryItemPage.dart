@@ -159,7 +159,6 @@ class _DetailInventoryItemPageState extends State<DetailInventoryItemPage> {
                             onChanged: (String? newValue) {
                               setState(() {
                                 _selectedCategory = newValue!;
-                                log(_selectedCategory);
                               });
                             },
                           );

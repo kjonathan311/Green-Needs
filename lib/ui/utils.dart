@@ -42,6 +42,13 @@ String formatDateWithMonth(DateTime dateTime) {
   return formattedDate;
 }
 
+String formatCurrency(int price) {
+  String formattedPrice = price.toString();
+  final RegExp regExp = RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))');
+  formattedPrice = formattedPrice.replaceAllMapped(regExp, (Match match) => '${match[1]},');
+  return 'Rp $formattedPrice';
+}
+
 
 Future<File?> getImageFromDevice(BuildContext context) async {
   final picker = ImagePicker();
@@ -76,7 +83,26 @@ Future<String?> uploadProfileImage(File imageFile) async {
 
     await uploadTask.whenComplete(() async {
       url = await ref.getDownloadURL();
-      log(url); // This will print the download URL after the upload task completes
+    });
+
+    return url;
+  } catch (e) {
+    log('Error uploading profile image: $e');
+    return null;
+  }
+}
+
+Future<String?> uploadMenuImage(File imageFile,String uid) async {
+  try {
+    FirebaseStorage storage = FirebaseStorage.instance;
+    final FirebaseAuth _auth = FirebaseAuth.instance;
+    String url = "";
+    final metadata = SettableMetadata(contentType: "image/jpeg");
+    Reference ref = storage.ref().child("images/menu/${_auth.currentUser?.uid}/${uid}.jpg");
+    final uploadTask = ref.putFile(imageFile, metadata);
+
+    await uploadTask.whenComplete(() async {
+      url = await ref.getDownloadURL();
     });
 
     return url;

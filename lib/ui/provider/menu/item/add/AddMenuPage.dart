@@ -43,7 +43,8 @@ class _AddMenuPageState extends State<AddMenuPage> {
         title: Text("Tambah menu"),
         actions: [
           IconButton(onPressed: ()async{
-
+            await viewModel.addMenuItem(context, _nameController.text.trim(), _selectedCategory, _descriptionController.text.trim(),
+                _priceController.text.trim(), _discountedPriceController.text.trim(), _imageFile);
           }, icon:Icon(Icons.add))
         ],
       ),
@@ -64,16 +65,18 @@ class _AddMenuPageState extends State<AddMenuPage> {
                         _imageFile = image;
                       });
                     },
-                    child: Container(
-                      width: 120,
-                      height: 120,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        image: DecorationImage(
-                          fit: BoxFit.cover,
-                          image: _imageFile != null
-                              ? FileImage(_imageFile!)
-                              : AssetImage('images/placeholder_food.png') as ImageProvider,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: Container(
+                        width: 120,
+                        height: 120,
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            fit: BoxFit.cover,
+                            image: _imageFile != null
+                                ? FileImage(_imageFile!)
+                                : AssetImage('images/placeholder_food.png') as ImageProvider,
+                          ),
                         ),
                       ),
                     ),
@@ -187,15 +190,14 @@ class _AddMenuPageState extends State<AddMenuPage> {
                 ],
               ),
             ),
-          )
-
-          // if (viewModel.isLoading)
-          //   Container(
-          //     color: Colors.black.withOpacity(0.3),
-          //     child: const Center(
-          //       child: CircularProgressIndicator(),
-          //     ),
-          //   )
+          ),
+          if (viewModel.isLoading)
+            Container(
+              color: Colors.black.withOpacity(0.3),
+              child: const Center(
+                child: CircularProgressIndicator(),
+              ),
+            )
         ],
       ),
     );

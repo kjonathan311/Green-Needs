@@ -45,6 +45,7 @@ class FoodProviderProfileViewModel extends ChangeNotifier{
 
   Future<void> updateProfile(BuildContext context,String name,
       String phoneNumber,String address,String city, File? newImageFile) async {
+    User? user = _auth.currentUser;
     _isLoading = true;
     notifyListeners();
 
@@ -85,7 +86,6 @@ class FoodProviderProfileViewModel extends ChangeNotifier{
       return;
     }
 
-    User? user = _auth.currentUser;
     if (user != null) {
       try {
         String? photoUrl;

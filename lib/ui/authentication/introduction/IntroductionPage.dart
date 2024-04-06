@@ -122,7 +122,7 @@ class IntroductionPage extends StatelessWidget {
             ),
             if (viewModel.isLoading)
               Container(
-                color: Colors.black.withOpacity(0.5),
+                color: Colors.white,
                 child: const Center(
                   child: CircularProgressIndicator(),
                 ),

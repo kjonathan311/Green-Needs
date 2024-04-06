@@ -13,25 +13,29 @@ import 'package:greenneeds/ui/consumer/inventory/category/InventoryCategoryPageV
 import 'package:greenneeds/ui/consumer/inventory/item/add/AddInventoryItemPage.dart';
 import 'package:greenneeds/ui/consumer/inventory/item/add/AddInventoryItemPageViewModel.dart';
 import 'package:greenneeds/ui/consumer/inventory/item/detail/DetailInventoryItemPageViewModel.dart';
+import 'package:greenneeds/ui/consumer/inventory/notification/InventoryNotificationPopUpWindowViewModel.dart';
 import 'package:greenneeds/ui/consumer/profile/ConsumerEditProfilePage.dart';
 import 'package:greenneeds/ui/consumer/profile/ConsumerProfileViewModel.dart';
 import 'package:greenneeds/ui/provider/ProviderScreen.dart';
 import 'package:greenneeds/ui/provider/menu/MenuPageViewModel.dart';
 import 'package:greenneeds/ui/provider/menu/item/add/AddMenuPage.dart';
 import 'package:greenneeds/ui/provider/menu/item/add/AddMenuPageViewModel.dart';
+import 'package:greenneeds/ui/provider/menu/item/detail/DetailMenuViewModel.dart';
 import 'package:greenneeds/ui/provider/profile/FoodProviderEditProfilePage.dart';
 import 'package:greenneeds/ui/provider/profile/FoodProviderProfileViewModel.dart';
 import 'package:greenneeds/ui/provider/verification/VerificationFoodProviderViewModel.dart';
 import 'package:provider/provider.dart';
 import '/firebase_options.dart';
 import 'model/FirebaseAuthProvider.dart';
+import 'model/NotificationService.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(MyApp());
+  NotificationService().initNotifications();
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -69,6 +73,11 @@ class MyApp extends StatelessWidget {
               create: (context) => MenuPageViewModel()),
           ChangeNotifierProvider<AddMenuPageViewModel>(
               create: (context) => AddMenuPageViewModel()),
+          ChangeNotifierProvider<DetailMenuViewModel>(
+              create: (context) => DetailMenuViewModel()),
+          ChangeNotifierProvider<InventoryNotificationPopUpWindowViewModel>
+            (create: (context)=>InventoryNotificationPopUpWindowViewModel()
+          )
         ],
         child: MaterialApp(
           title: 'Green Needs',

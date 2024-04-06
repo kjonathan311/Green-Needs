@@ -1,6 +1,9 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import 'InventoryNotificationPopUpWindowViewModel.dart';
 
 class InventoryNotificationPopUpWindow extends StatefulWidget {
   const InventoryNotificationPopUpWindow({super.key});
@@ -10,10 +13,28 @@ class InventoryNotificationPopUpWindow extends StatefulWidget {
 }
 
 class _InventoryNotificationPopUpWindowState extends State<InventoryNotificationPopUpWindow> {
-  int _selectedValue=1;
+  int _selectedValue=0;
 
   @override
+  void initState() {
+    super.initState();
+    _loadNotificationDuration();
+  }
+
+  Future<void> _loadNotificationDuration() async {
+    final viewModel =
+    Provider.of<InventoryNotificationPopUpWindowViewModel>(
+        context,
+        listen: false);
+    int duration = await viewModel.getNotificationDuration();
+    setState(() {
+      _selectedValue = duration;
+    });
+  }
+  @override
   Widget build(BuildContext context) {
+    final viewModel = Provider.of<InventoryNotificationPopUpWindowViewModel>(context);
+
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10.0),
@@ -32,7 +53,7 @@ class _InventoryNotificationPopUpWindowState extends State<InventoryNotification
             ),
             RadioListTile(
               title: const Text('Satu Minggu'),
-              value: 1,
+              value: 7,
               groupValue: _selectedValue,
               onChanged: (value) {
                 setState(() {
@@ -42,7 +63,7 @@ class _InventoryNotificationPopUpWindowState extends State<InventoryNotification
             ),
             RadioListTile(
               title: const Text('Dua Minggu'),
-              value: 2,
+              value: 14,
               groupValue: _selectedValue,
               onChanged: (value) {
                 setState(() {
@@ -52,7 +73,7 @@ class _InventoryNotificationPopUpWindowState extends State<InventoryNotification
             ),
             RadioListTile(
               title: const Text('Satu Bulan'),
-              value: 3,
+              value: 30,
               groupValue: _selectedValue,
               onChanged: (value) {
                 setState(() {
@@ -64,7 +85,10 @@ class _InventoryNotificationPopUpWindowState extends State<InventoryNotification
               width: double.infinity,
               height: 50,
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () async{
+                  await viewModel.addDuration(_selectedValue);
+                  Navigator.pop(context);
+                },
                 style: ButtonStyle(
                     backgroundColor:
                     MaterialStateProperty.all<Color>(

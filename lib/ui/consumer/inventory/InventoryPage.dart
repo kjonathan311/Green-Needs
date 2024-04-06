@@ -12,6 +12,8 @@ import 'package:greenneeds/ui/consumer/profile/ConsumerProfilePopUpWindow.dart';
 import 'package:greenneeds/ui/utils.dart';
 import 'package:provider/provider.dart';
 
+import '../../../model/NotificationService.dart';
+
 class InventoryPage extends StatefulWidget {
   const InventoryPage({super.key});
 
@@ -33,6 +35,7 @@ class _InventoryPageState extends State<InventoryPage>
     _selectedCategory = '';
   }
 
+
   @override
   void dispose() {
     _selectedCategoryController.close();
@@ -42,6 +45,11 @@ class _InventoryPageState extends State<InventoryPage>
   @override
   Widget build(BuildContext context) {
     final viewModel = Provider.of<InventoryViewModel>(context);
+
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
+      viewModel.notifyNearingExpiration();
+      viewModel.subscribeToFirestoreChanges();
+    });
 
     return Scaffold(
       appBar: AppBar(
@@ -59,7 +67,8 @@ class _InventoryPageState extends State<InventoryPage>
               PopupMenuItem(
                 value: 'option2',
                 child: Text('Notifikasi'),
-                onTap: () {
+                onTap: () async{
+
                   showDialog(
                       context: context,
                       builder: (BuildContext context) {
@@ -148,10 +157,10 @@ class _InventoryPageState extends State<InventoryPage>
               padding: const EdgeInsets.symmetric(horizontal: 32.0),
               child: StreamBuilder<String>(
                 stream: _selectedCategoryController.stream,
-                builder: (context, snapshot) {
-                  if (snapshot.hasData && snapshot.data != null) {
+                builder: (context, snapshotCategory) {
+                  if (snapshotCategory.hasData && snapshotCategory.data != null) {
                     return StreamBuilder<List<InventoryItem>>(
-                      stream: viewModel.inventoryItems(snapshot.data!),
+                      stream: viewModel.inventoryItems(snapshotCategory.data!),
                       builder: (context, snapshot) {
                         if (snapshot.hasError) {
                           return Container(
@@ -162,7 +171,14 @@ class _InventoryPageState extends State<InventoryPage>
                           );
                         } else {
                           List<InventoryItem>? items = snapshot.data;
-                          if (items == null || items.isEmpty) {
+                          if (snapshot.connectionState == ConnectionState.waiting || snapshot.hasError) {
+                            return Container(
+                              height: 500,
+                              child: Center(
+                                child: Text('Loading..'),
+                              ),
+                            );
+                          }else if (items == null || items.isEmpty) {
                             return Container(
                               height: 500,
                               child: Center(
@@ -269,14 +285,30 @@ class InventoryHeader extends StatelessWidget {
                 color: Color(0xFF7A779E),
                 borderRadius: BorderRadius.circular(20.0),
               ),
-              child: Align(
+              child:Align(
                 alignment: Alignment.center,
-                child: Text(
-                  "12 dekat exp.",
-                  style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      overflow: TextOverflow.ellipsis),
+                child: StreamBuilder<int>(
+                  stream: viewModel.nearingExpirationItemCountStream,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      int itemCount = snapshot.data!;
+                      return Text(
+                        "${itemCount} near exp",
+                        style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            overflow: TextOverflow.ellipsis),
+                      );
+                    } else{
+                      return Text(
+                        "0 near exp",
+                        style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            overflow: TextOverflow.ellipsis),
+                      );
+                    }
+                  },
                 ),
               ),
             ),
@@ -307,9 +339,14 @@ class InventoryListTile extends StatefulWidget {
 }
 
 class _InventoryListTileState extends State<InventoryListTile> {
+  DateTime DateNow = DateTime.now();
+
   @override
   Widget build(BuildContext context) {
     final viewModel = Provider.of<InventoryViewModel>(context);
+    bool isExpired = widget.expiration_date.isBefore(DateNow);
+    bool isNearExpiration = viewModel.isExpirationNear(widget.expiration_date);
+
     return Container(
       margin: EdgeInsets.symmetric(vertical: 10.0),
       decoration: BoxDecoration(
@@ -335,9 +372,14 @@ class _InventoryListTileState extends State<InventoryListTile> {
                     Text(widget.category),
                   ],
                 ),
-                Text("exp.\n${formatDateWithMonth(widget.expiration_date)}",
-                    textAlign: TextAlign.right),
-                //exp Date
+
+                Text(
+                  isExpired ? "Expired" : "exp.\n${formatDateWithMonth(widget.expiration_date)}",
+                  textAlign: TextAlign.right,
+                  style: TextStyle(
+                    color: isExpired ? Colors.red : isNearExpiration ? Colors.orange : null,
+                  ),
+                ),
               ],
             ),
           ),
