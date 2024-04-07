@@ -5,7 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:greenneeds/model/InventoryItem.dart';
-import 'package:greenneeds/model/NotificationService.dart';
+import 'package:greenneeds/services/NotificationService.dart';
 
 class InventoryViewModel extends ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -149,7 +149,6 @@ class InventoryViewModel extends ChangeNotifier {
   Future<void> notifyNearingExpiration() async {
     final int duration = await getNotificationDuration();
     final DateTime now = DateTime.now();
-    final DateTime yesterday = now.subtract(Duration(days: 1));
     final DateTime aheadDate = now.add(Duration(days: duration));
 
     User? user = _auth.currentUser;
@@ -158,26 +157,39 @@ class InventoryViewModel extends ChangeNotifier {
           .collection('consumers')
           .doc(user.uid)
           .collection('inventory');
-      await for (QuerySnapshot snapshot in inventoryCollectionRef.snapshots()) {
-        for (QueryDocumentSnapshot doc in snapshot.docs) {
-          Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-          DateTime expirationDate =
-          (data['expiration_date'] as Timestamp).toDate();
+      QuerySnapshot snapshot = await inventoryCollectionRef.get();
+      for (QueryDocumentSnapshot doc in snapshot.docs) {
+        Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+        DateTime expirationDate =
+        (data['expiration_date'] as Timestamp).toDate();
 
+        if (data['isAlerted'] != true &&
+            expirationDate.isBefore(aheadDate) &&
+            expirationDate.isAfter(now)) {
+          NotificationService().showNotification(
+            title: "Peringatan Item Inventory",
+            body: "item ${data['name']} dekat tanggal expire.",
+          );
+          await inventoryCollectionRef.doc(doc.id).set(
+              {'isAlerted': true}, SetOptions(merge: true));
+        }
 
-          if (data['isAlerted'] != true && expirationDate.isBefore(aheadDate) && expirationDate.isAfter(now)) {
-
-            NotificationService().showNotification(
-              title: "Peringatan Item Exp",
-              body: "item ${data['name']} dekat tanggal expire.",
-            );
-            await inventoryCollectionRef.doc(doc.id).set({'isAlerted': true}, SetOptions(merge: true));
-
-          }
+        if (data['isExpired'] != true &&
+            expirationDate.year == now.year &&
+            expirationDate.month == now.month &&
+            expirationDate.day == now.day) {
+          NotificationService().showNotification(
+            title: "Peringatan Item Inventory",
+            body: "item ${data['name']} telah expire.",
+          );
+          await inventoryCollectionRef.doc(doc.id).set(
+              {'isExpired': true}, SetOptions(merge: true));
+          log("notification run 2");
         }
       }
     }
   }
+
 
   StreamSubscription<DocumentSnapshot>? _subscription;
 

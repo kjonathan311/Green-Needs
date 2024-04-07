@@ -62,7 +62,7 @@ class DetailMenuViewModel extends ChangeNotifier{
         notifyListeners();
       }
 
-      Navigator.pop(context);
+
     }
     _isLoading = false;
     notifyListeners();

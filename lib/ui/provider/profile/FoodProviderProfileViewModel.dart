@@ -67,7 +67,7 @@ class FoodProviderProfileViewModel extends ChangeNotifier{
     }
     double lat=0;
     double lng=0;
-
+    String? postalcode;
     try {
       //check city
       List<Location> checklocal = await locationFromAddress('$city');
@@ -77,6 +77,10 @@ class FoodProviderProfileViewModel extends ChangeNotifier{
       List<Location> locations = await locationFromAddress('$address, $city');
       lat = locations[0].latitude;
       lng = locations[0].longitude;
+
+      List<Placemark> placemarks = await placemarkFromCoordinates(lat,lng);
+      postalcode= placemarks[0].postalCode;
+
     }catch(e){
       if(e.toString()=="Could not find any result for the supplied address or coordinates."){
         showCustomSnackBar(context, "alamat tidak sesuai.", color: Colors.red);
@@ -100,6 +104,7 @@ class FoodProviderProfileViewModel extends ChangeNotifier{
           'longitude':lng,
           'city':city,
           'address':address,
+          if (postalcode!=null) 'postalcode':postalcode,
           if (photoUrl != null) 'photoUrl': photoUrl,
         }, SetOptions(merge: true));
 

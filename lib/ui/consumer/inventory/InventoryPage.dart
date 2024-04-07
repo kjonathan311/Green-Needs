@@ -12,7 +12,7 @@ import 'package:greenneeds/ui/consumer/profile/ConsumerProfilePopUpWindow.dart';
 import 'package:greenneeds/ui/utils.dart';
 import 'package:provider/provider.dart';
 
-import '../../../model/NotificationService.dart';
+import '../../../services/NotificationService.dart';
 
 class InventoryPage extends StatefulWidget {
   const InventoryPage({super.key});

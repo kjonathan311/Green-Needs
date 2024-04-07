@@ -88,6 +88,10 @@ class FirebaseAuthProvider with ChangeNotifier {
   Future<AuthResult> registerFoodProvider(String name, String email,
       String password, String phoneNumber, String address, String city) async {
     try {
+
+      city = city.toLowerCase();
+      city = city.substring(0, 1).toUpperCase() + city.substring(1);
+
       List<Location> checklocal = await locationFromAddress('$city');
 
       List<Location> checkLoc = await locationFromAddress('$address');
@@ -95,6 +99,10 @@ class FirebaseAuthProvider with ChangeNotifier {
       List<Location> locations = await locationFromAddress('$address, $city');
       double lat = locations[0].latitude;
       double lng = locations[0].longitude;
+
+      List<Placemark> placemarks = await placemarkFromCoordinates(lat,lng);
+      String? postalcode= placemarks[0].postalCode;
+
 
       UserCredential credential = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
@@ -111,6 +119,7 @@ class FirebaseAuthProvider with ChangeNotifier {
         'address': address,
         'latitude': lat,
         'longitude': lng,
+        if(postalcode!=null) 'postalcode':postalcode,
         'city': city,
         'status': 'unverified'
       };

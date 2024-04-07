@@ -27,7 +27,7 @@ import 'package:greenneeds/ui/provider/verification/VerificationFoodProviderView
 import 'package:provider/provider.dart';
 import '/firebase_options.dart';
 import 'model/FirebaseAuthProvider.dart';
-import 'model/NotificationService.dart';
+import 'services/NotificationService.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

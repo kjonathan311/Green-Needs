@@ -42,7 +42,7 @@ class DetailInventoryItemPageViewModel extends ChangeNotifier{
         notifyListeners();
       }
 
-      Navigator.pop(context);
+      Navigator.of(context).pushNamedAndRemoveUntil("/consumer", (route) => false);
     }
     _isLoading = false;
     notifyListeners();

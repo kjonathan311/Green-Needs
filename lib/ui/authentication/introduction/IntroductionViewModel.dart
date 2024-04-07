@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:greenneeds/model/FirebaseAuthProvider.dart';
 
+
 class IntroductionPageViewModel extends ChangeNotifier  {
   final FirebaseAuthProvider authProvider;
 
