@@ -36,6 +36,8 @@ class DetailInventoryItemPageViewModel extends ChangeNotifier{
           'category':category,
           'purchase_date': Timestamp.fromDate(startDate),
           'expiration_date': Timestamp.fromDate(endDate),
+          'isAlerted':false,
+          'isExpired':false,
         }, SetOptions(merge: true));
       }catch(e){
         _isLoading = false;

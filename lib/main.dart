@@ -80,6 +80,7 @@ class MyApp extends StatelessWidget {
           )
         ],
         child: MaterialApp(
+          debugShowCheckedModeBanner: false,
           title: 'Green Needs',
           theme: ThemeData(
             primarySwatch: Colors.blue,

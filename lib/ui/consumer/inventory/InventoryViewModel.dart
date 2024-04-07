@@ -175,16 +175,16 @@ class InventoryViewModel extends ChangeNotifier {
         }
 
         if (data['isExpired'] != true &&
-            expirationDate.year == now.year &&
-            expirationDate.month == now.month &&
-            expirationDate.day == now.day) {
+            (expirationDate.isBefore(DateTime.now()) ||
+                (expirationDate.year == DateTime.now().year &&
+                    expirationDate.month == DateTime.now().month &&
+                    expirationDate.day == DateTime.now().day))) {
           NotificationService().showNotification(
             title: "Peringatan Item Inventory",
             body: "item ${data['name']} telah expire.",
           );
           await inventoryCollectionRef.doc(doc.id).set(
               {'isExpired': true}, SetOptions(merge: true));
-          log("notification run 2");
         }
       }
     }

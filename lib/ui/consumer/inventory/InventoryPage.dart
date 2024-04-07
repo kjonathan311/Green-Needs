@@ -245,7 +245,7 @@ class InventoryHeader extends StatelessWidget {
             child: Container(
               padding: EdgeInsets.symmetric(vertical: 12, horizontal: 15),
               decoration: BoxDecoration(
-                color: Color(0xFF8AAB97),
+                border: Border.all(color: Colors.black),
                 borderRadius: BorderRadius.circular(20.0),
               ),
               child: Align(
@@ -259,7 +259,6 @@ class InventoryHeader extends StatelessWidget {
                       return Text(
                         "${itemCount} items",
                         style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                            color: Colors.white,
                             fontWeight: FontWeight.bold,
                             overflow: TextOverflow.ellipsis),
                       );
@@ -267,7 +266,6 @@ class InventoryHeader extends StatelessWidget {
                       return Text(
                         "0 items",
                         style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                            color: Colors.white,
                             fontWeight: FontWeight.bold,
                             overflow: TextOverflow.ellipsis),
                       );
@@ -282,7 +280,7 @@ class InventoryHeader extends StatelessWidget {
             child: Container(
               padding: EdgeInsets.symmetric(vertical: 12, horizontal: 15),
               decoration: BoxDecoration(
-                color: Color(0xFF7A779E),
+                border: Border.all(color: Colors.black),
                 borderRadius: BorderRadius.circular(20.0),
               ),
               child:Align(
@@ -293,17 +291,15 @@ class InventoryHeader extends StatelessWidget {
                     if (snapshot.hasData) {
                       int itemCount = snapshot.data!;
                       return Text(
-                        "${itemCount} near exp",
+                        "${itemCount} dekat exp",
                         style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                            color: Colors.white,
                             fontWeight: FontWeight.bold,
                             overflow: TextOverflow.ellipsis),
                       );
                     } else{
                       return Text(
-                        "0 near exp",
+                        "0 dekat exp",
                         style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                            color: Colors.white,
                             fontWeight: FontWeight.bold,
                             overflow: TextOverflow.ellipsis),
                       );
