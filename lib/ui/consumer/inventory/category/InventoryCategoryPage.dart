@@ -176,7 +176,7 @@ class _AddCategoryPopUpWindowState extends State<AddCategoryPopUpWindow> {
                   decoration: const InputDecoration(
                     contentPadding:
                     EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
-                    hintText: "nama",
+                    hintText: "nama kategori",
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.all(
                         Radius.circular(10.0),

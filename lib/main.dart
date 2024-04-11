@@ -16,6 +16,9 @@ import 'package:greenneeds/ui/consumer/inventory/item/detail/DetailInventoryItem
 import 'package:greenneeds/ui/consumer/inventory/notification/InventoryNotificationPopUpWindowViewModel.dart';
 import 'package:greenneeds/ui/consumer/profile/ConsumerEditProfilePage.dart';
 import 'package:greenneeds/ui/consumer/profile/ConsumerProfileViewModel.dart';
+import 'package:greenneeds/ui/provider/DailyWaste/DailyWastePageViewModel.dart';
+import 'package:greenneeds/ui/provider/DailyWaste/add/AddDailyWastePage.dart';
+import 'package:greenneeds/ui/provider/DailyWaste/add/AddDailyWasteViewModel.dart';
 import 'package:greenneeds/ui/provider/ProviderScreen.dart';
 import 'package:greenneeds/ui/provider/menu/MenuPageViewModel.dart';
 import 'package:greenneeds/ui/provider/menu/item/add/AddMenuPage.dart';
@@ -75,9 +78,12 @@ class MyApp extends StatelessWidget {
               create: (context) => AddMenuPageViewModel()),
           ChangeNotifierProvider<DetailMenuViewModel>(
               create: (context) => DetailMenuViewModel()),
-          ChangeNotifierProvider<InventoryNotificationPopUpWindowViewModel>
-            (create: (context)=>InventoryNotificationPopUpWindowViewModel()
-          )
+          ChangeNotifierProvider<InventoryNotificationPopUpWindowViewModel>(
+              create: (context) => InventoryNotificationPopUpWindowViewModel()),
+          ChangeNotifierProvider<AddDailyWastePageViewModel>(
+              create: (context) => AddDailyWastePageViewModel()),
+          ChangeNotifierProvider<DailyWastePageViewModel>(
+              create: (context) => DailyWastePageViewModel()),
         ],
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
@@ -108,6 +114,7 @@ class MyApp extends StatelessWidget {
             "/provider/edit/profile": (context) =>
                 FoodProviderEditProfilePage(),
             "/provider/menu/add": (context) => AddMenuPage(),
+            "/provider/daily/add":(context)=>AddDailyWastePage(),
             "/admin": (context) => AdminScreen(),
           },
         ));

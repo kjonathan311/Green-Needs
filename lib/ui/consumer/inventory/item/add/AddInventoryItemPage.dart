@@ -120,6 +120,7 @@ class _AddInventoryItemPageState extends State<AddInventoryItemPage> {
                           Radius.circular(10.0),
                         ),
                       ),
+                      hintText: "nama item",
                     ),
                   ),
                   SizedBox(height: 10.0),
@@ -232,10 +233,17 @@ class _AddInventoryItemPageState extends State<AddInventoryItemPage> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        IconButton(
-                          icon: Icon(Icons.remove),
-                          onPressed: _decrementQuantity,
+                        Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10.0),
+                            border: Border.all(color: Colors.black),
+                          ),
+                          child: IconButton(
+                            icon: Icon(Icons.remove),
+                            onPressed: _decrementQuantity,
+                          ),
                         ),
+                        SizedBox(width: 3),
                         Expanded(
                           child: SizedBox(
                             width: 20.0,
@@ -243,21 +251,29 @@ class _AddInventoryItemPageState extends State<AddInventoryItemPage> {
                               readOnly: true,
                               textAlign: TextAlign.center,
                               decoration: const InputDecoration(
-                                contentPadding: EdgeInsets.symmetric(vertical: 8.0),
+                                contentPadding:
+                                EdgeInsets.symmetric(vertical: 8.0),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.all(
                                     Radius.circular(10.0),
                                   ),
                                 ),
                               ),
-                              controller:
-                                  TextEditingController(text: quantity.toString()),
+                              controller: TextEditingController(
+                                  text: quantity.toString()),
                             ),
                           ),
                         ),
-                        IconButton(
-                          icon: Icon(Icons.add),
-                          onPressed: _incrementQuantity,
+                        SizedBox(width: 3),
+                        Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10.0),
+                            border: Border.all(color: Colors.black),
+                          ),
+                          child: IconButton(
+                            icon: Icon(Icons.add),
+                            onPressed: _incrementQuantity,
+                          ),
                         ),
                       ],
                     ),

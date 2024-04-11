@@ -18,3 +18,29 @@ class MenuItem {
     this.photoUrl,
   });
 }
+
+class Product {
+  final MenuItem menuItem;
+  int quantity;
+
+  Product({
+    required this.menuItem,
+    this.quantity = 0,
+  });
+}
+
+class Paket{
+  final List<Product> products;
+  final String uid;
+  final String name;
+  final int price;
+  int quantity;
+
+  Paket({
+    required this.uid,
+    required this.products,
+    required this.name,
+    required this.price,
+    this.quantity = 0,
+  });
+}
