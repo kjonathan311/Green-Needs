@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 
 import '../../../model/MenuItem.dart';
 import '../../utils.dart';
+import '../profile/FoodProviderProfilePopUpWindow.dart';
 import 'DailyWastePageViewModel.dart';
 
 class DailyWastePage extends StatefulWidget {
@@ -18,7 +19,22 @@ class _DailyWastePageState extends State<DailyWastePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+        appBar: AppBar(
+          title: Text("Menu"),
+          actions: [
+            IconButton(
+              icon: Icon(Icons.person),
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return FoodProviderProfilePopUpWindow();
+                  },
+                );
+              },
+            ),
+          ],
+        ),
       body: DefaultTabController(
         length: 2,
         child: Column(

@@ -7,6 +7,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:greenneeds/ui/authentication/registerConsumer/RegisterConsumerPage.dart';
 import 'package:greenneeds/ui/authentication/registerFoodProvider/RegisterFoodProviderPage.dart';
 import 'package:greenneeds/ui/consumer/ConsumerScreen.dart';
+import 'package:greenneeds/ui/consumer/food_delivery/address/AddressViewModel.dart';
+import 'package:greenneeds/ui/consumer/food_delivery/search/MainSearchViewModel.dart';
 import 'package:greenneeds/ui/consumer/inventory/InventoryViewModel.dart';
 import 'package:greenneeds/ui/consumer/inventory/category/InventoryCategoryPage.dart';
 import 'package:greenneeds/ui/consumer/inventory/category/InventoryCategoryPageViewModel.dart';
@@ -16,10 +18,10 @@ import 'package:greenneeds/ui/consumer/inventory/item/detail/DetailInventoryItem
 import 'package:greenneeds/ui/consumer/inventory/notification/InventoryNotificationPopUpWindowViewModel.dart';
 import 'package:greenneeds/ui/consumer/profile/ConsumerEditProfilePage.dart';
 import 'package:greenneeds/ui/consumer/profile/ConsumerProfileViewModel.dart';
-import 'package:greenneeds/ui/provider/DailyWaste/DailyWastePageViewModel.dart';
-import 'package:greenneeds/ui/provider/DailyWaste/add/AddDailyWastePage.dart';
-import 'package:greenneeds/ui/provider/DailyWaste/add/AddDailyWasteViewModel.dart';
 import 'package:greenneeds/ui/provider/ProviderScreen.dart';
+import 'package:greenneeds/ui/provider/daily_waste/DailyWastePageViewModel.dart';
+import 'package:greenneeds/ui/provider/daily_waste/add/AddDailyWastePage.dart';
+import 'package:greenneeds/ui/provider/daily_waste/add/AddDailyWasteViewModel.dart';
 import 'package:greenneeds/ui/provider/menu/MenuPageViewModel.dart';
 import 'package:greenneeds/ui/provider/menu/item/add/AddMenuPage.dart';
 import 'package:greenneeds/ui/provider/menu/item/add/AddMenuPageViewModel.dart';
@@ -84,6 +86,10 @@ class MyApp extends StatelessWidget {
               create: (context) => AddDailyWastePageViewModel()),
           ChangeNotifierProvider<DailyWastePageViewModel>(
               create: (context) => DailyWastePageViewModel()),
+          ChangeNotifierProvider<AddressViewModel>(
+              create: (context) => AddressViewModel()),
+          ChangeNotifierProvider<MainSearchViewModel>(
+              create: (context) => MainSearchViewModel()),
         ],
         child: MaterialApp(
           debugShowCheckedModeBanner: false,

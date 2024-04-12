@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:greenneeds/model/FirebaseAuthProvider.dart';
 import 'package:greenneeds/model/Profile.dart';
+import 'package:greenneeds/ui/consumer/food_delivery/address/AddressViewModel.dart';
 import 'package:provider/provider.dart';
 
 import 'ConsumerProfileViewModel.dart';
@@ -12,6 +13,7 @@ class ConsumerProfilePopUpWindow extends StatelessWidget {
   Widget build(BuildContext context) {
     final authProvider = Provider.of<FirebaseAuthProvider>(context);
     final consumerProfileViewModel = Provider.of<ConsumerProfileViewModel>(context);
+    final addressViewModel = Provider.of<AddressViewModel>(context);
 
 
     return Dialog(
@@ -93,6 +95,7 @@ class ConsumerProfilePopUpWindow extends StatelessWidget {
               title: const Text("logout"),
               onTap: () async {
                 consumerProfileViewModel.clearData();
+                addressViewModel.clearData();
                 await authProvider.logout();
                 Navigator.of(context)
                     .pushNamedAndRemoveUntil("/introduction", (route) => false);

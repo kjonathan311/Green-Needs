@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:greenneeds/ui/provider/verification/UnverifiedScreen.dart';
 import 'package:greenneeds/ui/provider/verification/VerificationFoodProviderViewModel.dart';
 import 'package:provider/provider.dart';
-
-import 'DailyWaste/DailyWastePage.dart';
+import 'daily_waste/DailyWastePage.dart';
 import 'menu/MenuPage.dart';
 
 class ProviderScreen extends StatefulWidget {

@@ -1,11 +1,8 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
-import 'package:greenneeds/ui/provider/DailyWaste/add/AddDailyWasteViewModel.dart';
 import 'package:greenneeds/ui/utils.dart';
 import 'package:provider/provider.dart';
-
 import '../../../../model/MenuItem.dart';
+import 'AddDailyWasteViewModel.dart';
 
 class AddDailyWastePage extends StatefulWidget {
   const AddDailyWastePage({Key? key}) : super(key: key);
