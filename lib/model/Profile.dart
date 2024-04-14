@@ -34,6 +34,8 @@ class FoodProviderProfile extends Profile {
   final String? postcode;
   final double? rating;
   final String? photoUrl;
+  final double? longitude;
+  final double? latitude;
 
   FoodProviderProfile({
     required this.uid,
@@ -46,5 +48,7 @@ class FoodProviderProfile extends Profile {
     this.rating,
     this.postcode,
     this.photoUrl,
+    this.longitude,
+    this.latitude
   });
 }

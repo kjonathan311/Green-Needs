@@ -1,7 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:greenneeds/model/SearchFoodProvider.dart';
-import 'package:greenneeds/ui/consumer/food_delivery/detail/store/StorePage.dart';
+import 'package:greenneeds/ui/consumer/food_delivery/detail/store/store_page.dart';
 import 'package:greenneeds/ui/consumer/food_delivery/search/SearchViewModel.dart';
 import 'package:provider/provider.dart';
 

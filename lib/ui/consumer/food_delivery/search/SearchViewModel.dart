@@ -265,8 +265,8 @@ class SearchViewModel extends ChangeNotifier {
 
 
 
-  Future<double> _calculateDistance(double userLatitude, double userLongitude, double providerLatitude, double providerLongitude) async {
-    final distanceInMeters = await Geolocator.distanceBetween(userLatitude, userLongitude, providerLatitude, providerLongitude);
+  double _calculateDistance(double userLatitude, double userLongitude, double providerLatitude, double providerLongitude){
+    final distanceInMeters = Geolocator.distanceBetween(userLatitude, userLongitude, providerLatitude, providerLongitude);
     final distanceInKilometers = double.parse((distanceInMeters / 1000).toStringAsFixed(2));
     return distanceInKilometers;
   }

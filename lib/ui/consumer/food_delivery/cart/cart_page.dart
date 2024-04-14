@@ -1,6 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:greenneeds/ui/consumer/food_delivery/checkout/checkout_page.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../model/MenuItem.dart';
@@ -32,15 +31,14 @@ class _CartPageState extends State<CartPage> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         leading:  IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.pop(context);
           },
         ),
-        title: Text("Keranjang"),
+        title: const Text("Keranjang"),
       ),
       body:
-
       cartViewModel.getAllItemsLength() > 0 ?
       Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -55,7 +53,7 @@ class _CartPageState extends State<CartPage> {
                     ListView.builder(
                       shrinkWrap: true,
                       itemCount: cartViewModel.alaCarteCart.length,
-                      physics: NeverScrollableScrollPhysics(),
+                      physics: const NeverScrollableScrollPhysics(),
                       itemBuilder: (context, index) {
                         final item = cartViewModel.alaCarteCart[index];
                         return AlaCarteCartListTile(item: item);
@@ -64,7 +62,7 @@ class _CartPageState extends State<CartPage> {
                     ListView.builder(
                       shrinkWrap: true,
                       itemCount: cartViewModel.paketCart.length,
-                      physics: NeverScrollableScrollPhysics(),
+                      physics: const NeverScrollableScrollPhysics(),
                       itemBuilder: (context, index) {
                         final paket = cartViewModel.paketCart[index];
                         return PaketCartListTile(paket: paket);
@@ -75,18 +73,18 @@ class _CartPageState extends State<CartPage> {
               ),
             ),
           ),
-          //Order Buy
+          // Order Details
           Container(
-            padding: EdgeInsets.symmetric(horizontal: 30,vertical: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 30,vertical: 10),
             decoration: BoxDecoration(
-              color: Colors.white, // You might want to set a background color for the card
+              color: Colors.white,
               borderRadius: BorderRadius.circular(20),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.grey.withOpacity(0.3), // Adjust the shadow color and opacity
-                  spreadRadius: 2, // Adjust the spread radius
-                  blurRadius: 5, // Adjust the blur radius
-                  offset: Offset(0, 2), // Adjust the offset
+                  color: Colors.grey.withOpacity(0.3),
+                  spreadRadius: 2,
+                  blurRadius: 5,
+                  offset: const Offset(0, 2),
                 ),
               ],
             ),
@@ -108,7 +106,7 @@ class _CartPageState extends State<CartPage> {
                             });
                           },
                         ),
-                        Text('kurir'),
+                        const Text('kurir'),
                       ],
                     ),
                     Row(
@@ -123,13 +121,13 @@ class _CartPageState extends State<CartPage> {
                             });
                           },
                         ),
-                        Text('self pick up'),
+                        const Text('self pick up'),
                       ],
                     ),
                   ],
                 ),
                 Container(
-                  padding: EdgeInsets.symmetric(vertical: 10,horizontal: 10),
+                  padding: const EdgeInsets.symmetric(vertical: 10,horizontal: 10),
                   decoration: BoxDecoration(
                     border: Border.all(color: Colors.black),
                     borderRadius: BorderRadius.circular(10),
@@ -140,14 +138,14 @@ class _CartPageState extends State<CartPage> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text("total harga:"),
+                          const Text("total harga:"),
                           Text(formatCurrency(cartViewModel.totalPrice)),
                         ],
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text("biaya admin:"),
+                          const Text("biaya admin:"),
                           FutureBuilder(
                             future: cartViewModel.getTax(),
                             builder: (context, snapshot) {
@@ -164,7 +162,7 @@ class _CartPageState extends State<CartPage> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text("ongkos kirim:"),
+                            const Text("ongkos kirim:"),
                             FutureBuilder(
                               future: cartViewModel.getCostPerKm(),
                               builder: (context, snapshot) {
@@ -177,11 +175,11 @@ class _CartPageState extends State<CartPage> {
                             ),
                           ],
                         ),
-                      Divider(),
+                      const Divider(),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text("total pembayaran:"),
+                          const Text("total pembayaran:"),
                           Text(formatCurrencyWithDouble(cartViewModel.totalPayment)),
                         ],
                       ),
@@ -191,8 +189,14 @@ class _CartPageState extends State<CartPage> {
 
                 Container(
                   width: double.infinity,
-                    margin: EdgeInsets.symmetric(vertical: 10),
-                    child: ElevatedButton(onPressed: (){}, child: const Text("Order",style: TextStyle(fontWeight: FontWeight.bold)))
+                    margin: const EdgeInsets.symmetric(vertical: 10),
+                    child: ElevatedButton(onPressed: (){
+                      Navigator.of(context).push(
+                          MaterialPageRoute(builder: (context) =>
+                              CheckoutPage()
+                          )
+                      );
+                    }, child: const Text("Order",style: TextStyle(fontWeight: FontWeight.bold)))
                 )
               ],
             ),
@@ -201,7 +205,7 @@ class _CartPageState extends State<CartPage> {
       ) :SingleChildScrollView(
         child: Container(
           height: 500,
-          child: Center(child: Text("Tidak ada item dalam cart.")),
+          child: const Center(child: Text("Tidak ada item dalam cart.")),
         ),
       )
     );
@@ -225,7 +229,7 @@ class _AlaCarteCartListTileState extends State<AlaCarteCartListTile> {
   Widget build(BuildContext context) {
     final cartViewModel = Provider.of<CartViewModel>(context);
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 10.0),
+      margin: const EdgeInsets.symmetric(vertical: 10.0),
       decoration: BoxDecoration(
         border: Border.all(color: Colors.grey),
         borderRadius: BorderRadius.circular(10.0),
@@ -241,7 +245,7 @@ class _AlaCarteCartListTileState extends State<AlaCarteCartListTile> {
                     width: 120,
                     height: 130,
                     child: ClipRRect(
-                      borderRadius: BorderRadius.only(
+                      borderRadius: const BorderRadius.only(
                         topLeft: Radius.circular(10.0),
                       ),
                       child: widget.item.menuItem.photoUrl != null
@@ -261,7 +265,7 @@ class _AlaCarteCartListTileState extends State<AlaCarteCartListTile> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Container(
-                          padding: EdgeInsets.symmetric(vertical: 5),
+                          padding: const EdgeInsets.symmetric(vertical: 5),
                           width: 125,
                           child: Text(
                             widget.item.menuItem.name,
@@ -278,13 +282,13 @@ class _AlaCarteCartListTileState extends State<AlaCarteCartListTile> {
                           children: [
                             Text(
                               formatCurrency(widget.item.menuItem.startPrice),
-                              style: TextStyle(
+                              style: const TextStyle(
                                 decoration: TextDecoration.lineThrough,
                                 decorationThickness: 2,
                                 fontSize: 12,
                               ),
                             ),
-                            SizedBox(width: 5),
+                            const SizedBox(width: 5),
                             Text(formatCurrency(
                                 widget.item.menuItem.discountedPrice)),
                           ],
@@ -303,7 +307,7 @@ class _AlaCarteCartListTileState extends State<AlaCarteCartListTile> {
                         cartViewModel.decreaseQuantityAlaCarte(widget.item.quantity, widget.item);
                       }
                     },
-                    child: Text("-"),
+                    child: const Text("-"),
                   ),
                   Text(
                     "${widget.item.quantity}",
@@ -313,14 +317,14 @@ class _AlaCarteCartListTileState extends State<AlaCarteCartListTile> {
                     onPressed: () async {
                       await cartViewModel.increaseQuantityAlaCarte(context,widget.item.quantity, widget.item);
                     },
-                    child: Text("+"),
+                    child: const Text("+"),
                   ),
                 ]),
               ),
             ],
           ),
           if(widget.item.status==false)
-          Positioned(
+          const Positioned(
             top: 10,
               right: 10,
               child: Text("tidak tersedia",style: TextStyle(color: Colors.red,fontSize: 13,fontWeight: FontWeight.bold))
@@ -347,7 +351,7 @@ class _PaketCartListTileState extends State<PaketCartListTile> {
   Widget build(BuildContext context) {
     final cartViewModel = Provider.of<CartViewModel>(context);
     return Container(
-        margin: EdgeInsets.symmetric(vertical: 5.0),
+        margin: const EdgeInsets.symmetric(vertical: 5.0),
         decoration: BoxDecoration(
           border: Border.all(color: Colors.grey),
           borderRadius: BorderRadius.circular(10.0),
@@ -373,20 +377,20 @@ class _PaketCartListTileState extends State<PaketCartListTile> {
                     children: [
                       Text(
                         formatCurrency(widget.paket.startPrice),
-                        style: TextStyle(
+                        style: const TextStyle(
                           decoration: TextDecoration.lineThrough,
                           decorationThickness: 2,
                           fontSize: 12,
                         ),
                       ),
-                      SizedBox(width: 10),
+                      const SizedBox(width: 10),
                       Text(formatCurrency(widget.paket.discountedPrice)),
                     ],
                   ),
                 ),
                 ListView.builder(
                   itemCount: widget.paket.products.length,
-                  physics: NeverScrollableScrollPhysics(),
+                  physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
                   itemBuilder: (BuildContext context, int index) {
                     return PaketItemCartListTile(
@@ -403,7 +407,7 @@ class _PaketCartListTileState extends State<PaketCartListTile> {
                           cartViewModel.decreaseQuantityPaket(widget.paket.quantity, widget.paket);
                         }
                       },
-                      child: Text("-"),
+                      child: const Text("-"),
                     ),
                     Text(
                       "${widget.paket.quantity}",
@@ -413,7 +417,7 @@ class _PaketCartListTileState extends State<PaketCartListTile> {
                       onPressed: () async {
                         await cartViewModel.increaseQuantityPaket(context,widget.paket.quantity, widget.paket);
                       },
-                      child: Text("+"),
+                      child: const Text("+"),
                     ),
                   ]),
                 ),
@@ -421,7 +425,7 @@ class _PaketCartListTileState extends State<PaketCartListTile> {
               ],
             ),
             if(widget.paket.status==false)
-              Positioned(
+              const Positioned(
                   top: 10,
                   right: 10,
                   child: Text("item tidak tersedia",style: TextStyle(color: Colors.red))
@@ -441,7 +445,7 @@ class PaketItemCartListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 15.0),
+      margin: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 15.0),
       decoration: BoxDecoration(
         border: Border.all(color: Colors.grey),
         borderRadius: BorderRadius.circular(10.0),
@@ -454,7 +458,7 @@ class PaketItemCartListTile extends StatelessWidget {
                 width: 100,
                 height: 100,
                 child: ClipRRect(
-                  borderRadius: BorderRadius.only(
+                  borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(10.0),
                   ),
                   child: item.menuItem.photoUrl != null

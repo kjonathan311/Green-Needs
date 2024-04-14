@@ -4,6 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:greenneeds/model/Address.dart';
 import 'package:greenneeds/ui/utils.dart';
 import '../../../../model/MenuItem.dart';
 import '../../../../model/Profile.dart';
@@ -13,14 +15,25 @@ class CartViewModel extends ChangeNotifier {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   List<Product> alaCarteCart=[];
   List<Paket> paketCart=[];
-  FoodProviderProfile? currentFoodProvider;
   int totalPrice=0;
   double totalPayment=0;
   double currentDistance=0.0;
   double taxAmount=0.0;
   double costAmount=0.0;
+  int balance=0;
   StreamSubscription<QuerySnapshot>? _subscription;
+  FoodProviderProfile? currentFoodProvider;
 
+
+
+  Address? _selectedAddress;
+  Address? get selectedAddress => _selectedAddress;
+
+  set selectedAddress(Address? value) {
+    _selectedAddress = value;
+    setDistance();
+    notifyListeners();
+  }
 
   String _selectedOrderType = 'kurir';
   String get selectedOrderType => _selectedOrderType;
@@ -31,6 +44,17 @@ class CartViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  void setDistance() {
+    if (currentFoodProvider != null && _selectedAddress != null) {
+      final distanceInMeters = Geolocator.distanceBetween(
+        _selectedAddress!.latitude!,
+        _selectedAddress!.longitude!,
+        currentFoodProvider!.latitude!,
+        currentFoodProvider!.longitude!,
+      );
+      currentDistance = double.parse((distanceInMeters / 1000).toStringAsFixed(2));
+    }
+  }
 
   void addAlaCarteItemToCart(BuildContext context, FoodProviderProfile foodProvider,double distance, Product item) async {
     if (currentFoodProvider == null) {
@@ -57,6 +81,7 @@ class CartViewModel extends ChangeNotifier {
                 onPressed: () {
                   clearAll();
                   currentFoodProvider = foodProvider;
+                  currentDistance=distance;
                   Navigator.of(context).pop();
 
                   Product newItem=Product(uid:item.uid,menuItem: item.menuItem,quantity: 1);
@@ -104,6 +129,7 @@ class CartViewModel extends ChangeNotifier {
                 onPressed: () {
                   clearAll();
                   currentFoodProvider = foodProvider;
+                  currentDistance=distance;
                   Navigator.of(context).pop();
 
                   Paket newPaket=Paket(uid: item.uid, products: item.products,
@@ -266,6 +292,18 @@ class CartViewModel extends ChangeNotifier {
       costAmount = costPerKm * currentDistance;
       getTotalCost();
       notifyListeners();
+    }
+  }
+
+  Future<void> getBalance() async {
+    User? user = _auth.currentUser;
+    if(user != null){
+      final snapshot = await _firestore.collection('consumers').doc(user.uid).get();
+      if (snapshot.exists) {
+        int bal = snapshot.data()?['balance'];
+        balance = bal;
+        notifyListeners();
+      }
     }
   }
 

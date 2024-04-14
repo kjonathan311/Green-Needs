@@ -487,12 +487,6 @@ class _MenuCheckListTileState extends State<MenuCheckListTile> {
                           Text(formatCurrency(widget.item.discountedPrice)),
                         ],
                       ),
-                      Text(
-                        widget.item.description,
-                        overflow: TextOverflow.ellipsis,
-                        softWrap: false,
-                        maxLines: 1,
-                      ),
                     ],
                   ),
                 ),

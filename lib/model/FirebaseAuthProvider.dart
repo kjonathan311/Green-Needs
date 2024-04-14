@@ -64,7 +64,8 @@ class FirebaseAuthProvider with ChangeNotifier {
       Map<String, dynamic> consumerData = {
         'name': name,
         'email': email,
-        'phoneNumber': phoneNumber
+        'phoneNumber': phoneNumber,
+        'balance':0,
       };
 
       await doc.set(consumerData);
@@ -119,6 +120,7 @@ class FirebaseAuthProvider with ChangeNotifier {
         'address': address,
         'latitude': lat,
         'longitude': lng,
+        'balance':0,
         if(postalcode!=null) 'postalcode':postalcode,
         'city': city,
         'status': 'unverified'

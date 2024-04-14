@@ -261,12 +261,6 @@ class MenuListTile extends StatelessWidget {
                         Text(formatCurrency(item.discountedPrice)),
                       ],
                     ),
-                    Text(
-                      item.description,
-                      overflow: TextOverflow.ellipsis,
-                      softWrap: false,
-                      maxLines: 1,
-                    ),
                   ],
                 ),
               ),

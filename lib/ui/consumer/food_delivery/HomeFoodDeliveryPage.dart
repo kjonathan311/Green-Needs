@@ -12,7 +12,7 @@ import 'package:provider/provider.dart';
 
 import '../../../model/Category.dart';
 import 'address/AddressPage.dart';
-import 'cart/CartPage.dart';
+import 'cart/cart_page.dart';
 
 class HomeFoodDeliveryPage extends StatefulWidget {
   const HomeFoodDeliveryPage({super.key});

@@ -29,7 +29,9 @@ class _DetailMenuPageState extends State<DetailMenuPage> {
   void initState() {
     super.initState();
     _nameController.text=widget.item.name;
-    _descriptionController.text=widget.item.description;
+    if(widget.item.description!=null){
+      _descriptionController.text=widget.item.description!;
+    }
     _priceController.text=widget.item.startPrice.toString();
     _discountedPriceController.text=widget.item.discountedPrice.toString();
     _categoriesFuture = context.read<DetailMenuViewModel>().getCategories();

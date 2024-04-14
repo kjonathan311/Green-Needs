@@ -108,6 +108,8 @@ class StoreViewModel extends ChangeNotifier{
           address: data['address'],
           rating: data['rating'],
           postcode: data['postcode'],
+          longitude: data['longitude'],
+          latitude: data['latitude'],
           status: data['status'],
         );
         return foodProviderProfile;

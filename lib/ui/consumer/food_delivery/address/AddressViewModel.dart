@@ -133,6 +133,7 @@ class AddressViewModel extends ChangeNotifier{
   }
   void clearData(){
     _selectedAddress=null;
+    notifyListeners();
   }
 
 

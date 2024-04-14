@@ -2,12 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:greenneeds/model/SearchFoodProvider.dart';
-import 'package:greenneeds/ui/consumer/food_delivery/cart/CartPage.dart';
+import 'package:greenneeds/ui/consumer/food_delivery/cart/cart_page.dart';
 import 'package:greenneeds/ui/consumer/food_delivery/cart/CartViewModel.dart';
 import 'package:provider/provider.dart';
 import '../../../../../model/MenuItem.dart';
 import '../../../../../model/Profile.dart';
 import '../../../../utils.dart';
+import '../item/detail_alacarte_item_page.dart';
 import 'StoreViewModel.dart';
 
 class StorePage extends StatefulWidget {
@@ -116,7 +117,20 @@ class _StorePageState extends State<StorePage> {
                                   itemCount: snapshot.data!.length,
                                   itemBuilder: (context, index) {
                                     final product = snapshot.data![index];
-                                    return AlaCarteStoreListTile(item: product,distance: widget.searchDetail.distance);
+                                    return GestureDetector(
+                                      onTap: (){
+                                        Navigator.of(context).push(
+                                            MaterialPageRoute(builder: (context) =>
+                                                DetailAlaCarteItemPage(
+                                                  item: product,
+                                                    distance: widget.searchDetail.distance
+                                                ))
+                                        );
+                                      },
+                                        child: AlaCarteStoreListTile(
+                                            item: product,
+                                            distance: widget.searchDetail.distance)
+                                    );
                                   },
                                 ),
                               ],
@@ -201,13 +215,13 @@ class _StorePageState extends State<StorePage> {
                   child: Row(
                     children: [
                       Expanded(
-                        child: Text("${cartViewModel.getAllItemsLength()} items",
+                        child: Text("${cartViewModel.currentFoodProvider?.name}",
                             style: TextStyle(
                                 color: Colors.white, fontWeight: FontWeight.bold)),
                       ),
                       Row(
                         children: [
-                          Text("${cartViewModel.currentFoodProvider?.name}", style: TextStyle(
+                          Text("${cartViewModel.getAllItemsLength()} items", style: TextStyle(
                               color: Colors.white, fontWeight: FontWeight.bold)),
                           SizedBox(width: 10),
                           Icon(Icons.shopping_cart,color: Colors.white)

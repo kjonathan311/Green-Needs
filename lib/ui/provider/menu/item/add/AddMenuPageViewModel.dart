@@ -42,7 +42,7 @@ class AddMenuPageViewModel extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
     if (user != null && user.email != null) {
-      if (name.isEmpty || category.isEmpty || description.isEmpty || startPrice.isEmpty || discountedPrice.isEmpty) {
+      if (name.isEmpty || category.isEmpty || startPrice.isEmpty || discountedPrice.isEmpty) {
         showCustomSnackBar(context, "Semua field perlu diisi.", color: Colors.red);
 
         _isLoading = false;
@@ -69,7 +69,7 @@ class AddMenuPageViewModel extends ChangeNotifier {
         Map<String, dynamic> menuData = {
           'name': name,
           'category':category,
-          'description':description,
+          if(description.isNotEmpty)'description':description,
           'startPrice': int.parse(startPrice),
           'discountedPrice': int.parse(discountedPrice),
         };

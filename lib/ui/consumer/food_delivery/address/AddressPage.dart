@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:greenneeds/model/Address.dart';
+import 'package:greenneeds/ui/consumer/food_delivery/cart/CartViewModel.dart';
 import 'package:greenneeds/ui/consumer/food_delivery/search/SearchViewModel.dart';
 import 'package:provider/provider.dart';
 
@@ -19,6 +20,7 @@ class _AddressPageState extends State<AddressPage> {
   Widget build(BuildContext context) {
     final viewModel = Provider.of<AddressViewModel>(context);
     final searchViewModel = Provider.of<SearchViewModel>(context);
+    final cartViewModel=Provider.of<CartViewModel>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -82,7 +84,11 @@ class _AddressPageState extends State<AddressPage> {
                               value: index,
                               groupValue: viewModel.selectedIndex,
                               onChanged: (int? value) {
-                                viewModel.setSelectedIndex(value!);
+                                if (mounted) {
+                                  setState(() {
+                                    viewModel.setSelectedIndex(value!);
+                                  });
+                                }
                               },
                             ),
                             trailing: IconButton(
@@ -106,7 +112,7 @@ class _AddressPageState extends State<AddressPage> {
               onPressed: () {
                 viewModel.selectAddress(context);
                 searchViewModel.selectedAddress=viewModel.selectedAddress;
-
+                cartViewModel.selectedAddress=viewModel.selectedAddress;
               },
               style: ButtonStyle(
                 backgroundColor:
