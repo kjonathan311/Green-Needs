@@ -6,7 +6,7 @@ import 'package:greenneeds/ui/consumer/inventory/InventoryPage.dart';
 import 'package:provider/provider.dart';
 
 import 'food_delivery/address/AddressPage.dart';
-import 'food_delivery/search/MainSearchPage.dart';
+import 'food_delivery/HomeFoodDeliveryPage.dart';
 
 class ConsumerScreen extends StatefulWidget {
   const ConsumerScreen({Key? key}) : super(key: key);
@@ -35,7 +35,7 @@ class _ConsumerScreenState extends State<ConsumerScreen> {
     _pages = <Widget>[
       const InventoryPage(),
       if (_selectedAddressInitialized)
-        MainSearchPage()
+        HomeFoodDeliveryPage()
       else
         AddressPage(),
       const Center(

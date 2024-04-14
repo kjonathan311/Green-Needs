@@ -98,7 +98,7 @@ class FoodProviderProfilePopUpWindow extends StatelessWidget {
                       ],
                     );
                   } else {
-                    return Center(child: Text('Error fetching profile'));
+                    return Center(child: Text('Error ambil profil'));
                   }
                 }),
             Divider(),

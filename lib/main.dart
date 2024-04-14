@@ -8,7 +8,9 @@ import 'package:greenneeds/ui/authentication/registerConsumer/RegisterConsumerPa
 import 'package:greenneeds/ui/authentication/registerFoodProvider/RegisterFoodProviderPage.dart';
 import 'package:greenneeds/ui/consumer/ConsumerScreen.dart';
 import 'package:greenneeds/ui/consumer/food_delivery/address/AddressViewModel.dart';
-import 'package:greenneeds/ui/consumer/food_delivery/search/MainSearchViewModel.dart';
+import 'package:greenneeds/ui/consumer/food_delivery/cart/CartViewModel.dart';
+import 'package:greenneeds/ui/consumer/food_delivery/detail/store/StoreViewModel.dart';
+import 'package:greenneeds/ui/consumer/food_delivery/search/SearchViewModel.dart';
 import 'package:greenneeds/ui/consumer/inventory/InventoryViewModel.dart';
 import 'package:greenneeds/ui/consumer/inventory/category/InventoryCategoryPage.dart';
 import 'package:greenneeds/ui/consumer/inventory/category/InventoryCategoryPageViewModel.dart';
@@ -88,8 +90,12 @@ class MyApp extends StatelessWidget {
               create: (context) => DailyWastePageViewModel()),
           ChangeNotifierProvider<AddressViewModel>(
               create: (context) => AddressViewModel()),
-          ChangeNotifierProvider<MainSearchViewModel>(
-              create: (context) => MainSearchViewModel()),
+          ChangeNotifierProvider<SearchViewModel>(
+              create: (context) => SearchViewModel()),
+          ChangeNotifierProvider<StoreViewModel>(
+              create: (context) => StoreViewModel()),
+          ChangeNotifierProvider<CartViewModel>(
+              create: (context) => CartViewModel()),
         ],
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
@@ -113,12 +119,10 @@ class MyApp extends StatelessWidget {
             "/register/foodprovider": (context) => RegisterFoodProviderPage(),
             "/consumer": (context) => ConsumerScreen(),
             "/consumer/inventory/add": (context) => AddInventoryItemPage(),
-            "/consumer/inventory/category": (context) =>
-                InventoryCategoryPage(),
+            "/consumer/inventory/category": (context) => InventoryCategoryPage(),
             "/consumer/edit/profile": (context) => ConsumerEditProfilePage(),
             "/provider": (context) => ProviderScreen(),
-            "/provider/edit/profile": (context) =>
-                FoodProviderEditProfilePage(),
+            "/provider/edit/profile": (context) => FoodProviderEditProfilePage(),
             "/provider/menu/add": (context) => AddMenuPage(),
             "/provider/daily/add":(context)=>AddDailyWastePage(),
             "/admin": (context) => AdminScreen(),

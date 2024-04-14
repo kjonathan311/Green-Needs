@@ -1,30 +1,32 @@
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-import 'package:greenneeds/model/MenuItem.dart';
+import 'package:greenneeds/model/Profile.dart';
 
-class DailyWastePageViewModel extends ChangeNotifier {
+import '../../../../../model/MenuItem.dart';
+
+class StoreViewModel extends ChangeNotifier{
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   bool _isLoading = false;
   bool get isLoading => _isLoading;
+  FoodProviderProfile? foodProviderProfile;
 
-  Stream<List<Product>> alaCarteItems() async* {
+  Future<List<Product>?> alaCarteItems(String uid) async{
     User? user = _auth.currentUser;
     if (user != null && user.email != null) {
       CollectionReference inventoryCollectionRef =
-      _firestore.collection('providers').doc(user.uid).collection('products');
+      _firestore.collection('providers').doc(uid).collection('products');
       await for (QuerySnapshot snapshot in inventoryCollectionRef.snapshots()) {
         List<Product> items = [];
         for (QueryDocumentSnapshot doc in snapshot.docs) {
           Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
 
-          if(data['type']=="ala carte" && data['status']==1){
+          if(data['type']=="ala carte" && data['status']==1 && data['quantity']>0){
             Product item = Product(
-              uid: doc.id,
+                uid: doc.id,
                 menuItem: MenuItem(
                   uid: data['menuUid'],
                   name: data['name'],
@@ -37,22 +39,21 @@ class DailyWastePageViewModel extends ChangeNotifier {
             items.add(item);
           }
         }
-        yield items;
+        return items;
       }
     } else {
-      yield [];
+      return [];
     }
   }
 
-  Stream<List<Paket>> PaketItems() async* {
+  Future<List<Paket>?> paketItems(String uid) async {
     User? user = _auth.currentUser;
     if (user != null && user.email != null) {
-      CollectionReference inventoryCollectionRef = _firestore.collection('providers').doc(user.uid).collection('products');
+      CollectionReference inventoryCollectionRef = _firestore.collection('providers').doc(uid).collection('products');
       await for (QuerySnapshot snapshot in inventoryCollectionRef.snapshots()) {
         List<Paket> packets = [];
         for (QueryDocumentSnapshot doc in snapshot.docs) {
           Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-          print(data['type']=="paket");
           if (data['type'] == "paket" && data['status'] == 1) {
             QuerySnapshot itemsSnapshot = await doc.reference.collection('items').get();
             List<Product> products = [];
@@ -81,67 +82,38 @@ class DailyWastePageViewModel extends ChangeNotifier {
             packets.add(paket);
           }
         }
-        yield packets;
+        return packets;
       }
     } else {
-      yield [];
+      return [];
     }
   }
 
-
-  Future<void> deleteItem(BuildContext context, String uid) async {
+  //fetch Food Provider Details
+  Future<FoodProviderProfile?> foodProviderDetails(String uid) async {
     User? user = _auth.currentUser;
     if (user != null && user.email != null) {
-      bool deleteConfirmed = await showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('Delete'),
-            content: Text('Apakah ingin delete item ini?'),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop(false); // Return false (cancel)
-                },
-                child: Text('Cancel'),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop(true); // Return true (confirm)
-                },
-                child: Text('OK'),
-              ),
-            ],
-          );
-        },
-      );
+      DocumentSnapshot snapshot =
+      await _firestore.collection('providers').doc(uid).get();
+      if (snapshot.exists) {
+        Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
 
-      if (deleteConfirmed == true) {
-        await _firestore
-            .collection('providers')
-            .doc(user.uid)
-            .collection('products')
-            .doc(uid)
-            .set({'status': 0}, SetOptions(merge: true));
+        foodProviderProfile= FoodProviderProfile(
+          uid: uid,
+          name: data['name'],
+          email: data['email'],
+          phoneNumber: data['phoneNumber'],
+          photoUrl: data['photoUrl'],
+          city: data['city'],
+          address: data['address'],
+          rating: data['rating'],
+          postcode: data['postcode'],
+          status: data['status'],
+        );
+        return foodProviderProfile;
       }
     }
-  }
-
-  Future<void> decreaseQuantity(String uid,int quantity) async{
-    User? user = _auth.currentUser;
-    if (user != null && user.email != null) {
-      await _firestore.collection('providers').doc(user.uid).collection('products').doc(uid).set({
-        'quantity':quantity-1
-      }, SetOptions(merge: true));
-    }
-  }
-  Future<void> increaseQuantity(String uid,int quantity) async{
-    User? user = _auth.currentUser;
-    if (user != null && user.email != null) {
-      await _firestore.collection('providers').doc(user.uid).collection('products').doc(uid).set({
-        'quantity':quantity+1
-      }, SetOptions(merge: true));
-    }
+    return null;
   }
 
 

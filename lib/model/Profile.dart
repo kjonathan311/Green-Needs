@@ -8,81 +8,43 @@ abstract class Profile {
 }
 
 class ConsumerProfile extends Profile {
-  final String _uid;
-  final String _name;
-  final String _email;
-  final String _phoneNumber;
-  final String? _photoUrl;
+  final String uid;
+  final String name;
+  final String email;
+  final String phoneNumber;
+  final String? photoUrl;
 
   ConsumerProfile({
-    required String uid,
-    required String name,
-    required String email,
-    required String phoneNumber,
-    String? photoUrl,
-  })   : _uid = uid,
-        _name = name,
-        _email = email,
-        _phoneNumber = phoneNumber,
-        _photoUrl = photoUrl;
-
-  @override
-  String get name => _name;
-
-  @override
-  String get email => _email;
-
-  @override
-  String get phoneNumber => _phoneNumber;
-
-  String? get photoUrl => _photoUrl;
-
-  @override
-  String get uid => _uid;
+    required this.uid,
+    required this.name,
+    required this.email,
+    required this.phoneNumber,
+    this.photoUrl,
+  });
 }
 
 class FoodProviderProfile extends Profile {
-  final String _uid;
-  final String _name;
-  final String _email;
-  final String _phoneNumber;
-  final String _address;
-  final String _city;
-  final String _status;
-  final String? _photoUrl;
+  final String uid;
+  final String name;
+  final String email;
+  final String phoneNumber;
+  final String address;
+  final String city;
+  final String status;
+  final String? postcode;
+  final double? rating;
+  final String? photoUrl;
 
   FoodProviderProfile({
-    required String uid,
-    required String name,
-    required String email,
-    required String phoneNumber,
-    required String address,
-    required String city,
-    required String status,
-    String? photoUrl,
-  })   :_uid=uid,
-        _name = name,
-        _email = email,
-        _phoneNumber = phoneNumber,
-        _address= address,
-        _city= city,
-        _status= status,
-        _photoUrl = photoUrl;
-
-  @override
-  String get name => _name;
-
-  @override
-  String get email => _email;
-
-  @override
-  String get phoneNumber => _phoneNumber;
-
-  String? get photoUrl => _photoUrl;
-  String? get address => _address;
-  String? get city => _city;
-  String? get status => _status;
-
-  @override
-  String get uid => _uid;
+    required this.uid,
+    required this.name,
+    required this.email,
+    required this.phoneNumber,
+    required this.address,
+    required this.city,
+    required this.status,
+    this.rating,
+    this.postcode,
+    this.photoUrl,
+  });
 }

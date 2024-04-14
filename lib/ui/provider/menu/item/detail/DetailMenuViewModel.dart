@@ -1,7 +1,5 @@
 
-import 'dart:developer';
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -64,28 +62,74 @@ class DetailMenuViewModel extends ChangeNotifier{
 
 
     }
+    Navigator.pop(context);
     _isLoading = false;
     notifyListeners();
 
   }
 
-  Future<void> deleteMenuitem(BuildContext context,String uid,String? photoUrl)async {
+  Future<void> deleteMenuItem(BuildContext context, String uid, String? photoUrl) async {
     User? user = _auth.currentUser;
     _isLoading = true;
     notifyListeners();
+
     if (user != null && user.email != null) {
-      await _firestore.collection('providers').doc(user.uid).collection('menus').doc(uid).delete();
-      if(photoUrl!=null){
-        String path = Uri.parse(photoUrl).path;
-        Reference ref = storage.ref().child(path);
-        try {
-          await ref.delete();
-        } catch (e) {
-          print('Error deleting image: $e');
+      try {
+        bool checkItemForDelete = true;
+
+        // Check if the menu item is associated with any 'ala carte' product
+        final alaCarteProductsSnapshot = await _firestore
+            .collection('providers')
+            .doc(user.uid)
+            .collection('products')
+            .where('type', isEqualTo: 'ala carte')
+            .where('menuUid', isEqualTo: uid)
+            .where('status', isEqualTo: 1)
+            .get();
+
+        if (alaCarteProductsSnapshot.docs.isNotEmpty) {
+          checkItemForDelete = false;
+        } else {
+          // Check if the menu item is associated with any 'paket' product
+          final paketProductsSnapshot = await _firestore
+              .collection('providers')
+              .doc(user.uid)
+              .collection('products')
+              .where('type', isEqualTo: 'paket')
+              .where('status',isEqualTo: 1)
+              .get();
+
+          for (final productDoc in paketProductsSnapshot.docs) {
+            final itemsSnapshot = await productDoc.reference.collection('items').where('menuUid', isEqualTo: uid).get();
+            if (itemsSnapshot.docs.isNotEmpty) {
+              checkItemForDelete = false;
+              break;
+            }
+          }
         }
+
+        if (checkItemForDelete) {
+          // No associated product found, proceed with deletion
+          await _firestore.collection('providers').doc(user.uid).collection('menus').doc(uid).delete();
+
+          // Delete the associated photoUrl if exists
+          if (photoUrl != null) {
+            try {
+              await storage.refFromURL(photoUrl).delete();
+            } catch (e) {
+              print('Error deleting image: $e');
+            }
+          }
+          Navigator.pop(context);
+        } else {
+          showCustomSnackBar(context, "Menu tidak dapat didelete karena masih dijual.", color: Colors.red);
+        }
+      } catch (e) {
+        print('Error deleting menu item: $e');
+        showCustomSnackBar(context, "error pada saat delete item.", color: Colors.red);
       }
-      Navigator.pop(context);
     }
+
     _isLoading = false;
     notifyListeners();
   }

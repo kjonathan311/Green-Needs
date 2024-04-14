@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:greenneeds/model/Address.dart';
+import 'package:greenneeds/ui/consumer/food_delivery/search/SearchViewModel.dart';
 import 'package:provider/provider.dart';
 
 import 'AddressViewModel.dart';
@@ -17,6 +18,7 @@ class _AddressPageState extends State<AddressPage> {
   @override
   Widget build(BuildContext context) {
     final viewModel = Provider.of<AddressViewModel>(context);
+    final searchViewModel = Provider.of<SearchViewModel>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -103,6 +105,8 @@ class _AddressPageState extends State<AddressPage> {
             child: ElevatedButton(
               onPressed: () {
                 viewModel.selectAddress(context);
+                searchViewModel.selectedAddress=viewModel.selectedAddress;
+
               },
               style: ButtonStyle(
                 backgroundColor:

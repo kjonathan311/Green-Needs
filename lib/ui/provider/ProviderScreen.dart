@@ -58,7 +58,7 @@ class _ProviderScreenState extends State<ProviderScreen> {
                   ),
                   BottomNavigationBarItem(
                     icon: Icon(Icons.wysiwyg),
-                    label: "Menu",
+                    label: "Jual",
                   ),
                   BottomNavigationBarItem(
                     icon: Icon(Icons.shopping_bag),

@@ -49,6 +49,13 @@ String formatCurrency(int price) {
   return 'Rp $formattedPrice';
 }
 
+String formatCurrencyWithDouble(double price) {
+  String formattedPrice = price.round().toString();
+  final RegExp regExp = RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))');
+  formattedPrice = formattedPrice.replaceAllMapped(regExp, (Match match) => '${match[1]},');
+  return 'Rp $formattedPrice';
+}
+
 
 Future<File?> getImageFromDevice(BuildContext context) async {
   final picker = ImagePicker();

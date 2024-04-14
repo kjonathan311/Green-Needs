@@ -20,12 +20,16 @@ class MenuItem {
 }
 
 class Product {
+  final String uid;
   final MenuItem menuItem;
   int quantity;
+  bool status;
 
   Product({
+    required this.uid,
     required this.menuItem,
     this.quantity = 0,
+    this.status=true,
   });
 }
 
@@ -33,14 +37,18 @@ class Paket{
   final List<Product> products;
   final String uid;
   final String name;
-  final int price;
+  final int startPrice;
+  final int discountedPrice;
+  bool status;
   int quantity;
 
   Paket({
     required this.uid,
     required this.products,
     required this.name,
-    required this.price,
+    required this.startPrice,
+    required this.discountedPrice,
     this.quantity = 0,
+    this.status=true,
   });
 }

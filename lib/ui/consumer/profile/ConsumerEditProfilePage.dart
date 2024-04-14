@@ -31,8 +31,7 @@ class _ConsumerEditProfilePageState extends State<ConsumerEditProfilePage> {
             : IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.of(context).pushNamedAndRemoveUntil("/consumer", (route) => false);
-            Navigator.pushReplacementNamed(context, "/consumer");
+            Navigator.pop(context);
           },
         ),
         title: Text("Edit Profile"),

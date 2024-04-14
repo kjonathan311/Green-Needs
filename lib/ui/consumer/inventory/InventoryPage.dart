@@ -78,9 +78,6 @@ class _InventoryPageState extends State<InventoryPage>
               ),
             ];
           },
-          onSelected: (value) {
-            print('Selected: $value');
-          },
         ),
         title: Text("Inventori"),
         actions: [
@@ -126,7 +123,6 @@ class _InventoryPageState extends State<InventoryPage>
                             _selectedCategory = categories.first;
                             _selectedCategoryController.add(_selectedCategory);
                           }
-                          print("Selected category: $_selectedCategory");
                           return TabBar(
                             isScrollable: true,
                             controller: _tabController,

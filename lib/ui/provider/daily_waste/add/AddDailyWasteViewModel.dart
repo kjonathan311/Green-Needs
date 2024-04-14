@@ -41,7 +41,7 @@ class AddDailyWastePageViewModel extends ChangeNotifier{
   }
 
 
-  Future<void> addAlaCarteProducts(BuildContext context,List<Product> products)async{
+  Future<void> addAlaCarteProduct(BuildContext context,List<Product> products)async{
     User? user = _auth.currentUser;
     _isLoading = true;
     notifyListeners();
@@ -61,6 +61,7 @@ class AddDailyWastePageViewModel extends ChangeNotifier{
       try{
         products.forEach((element) async{
           Map<String, dynamic> productData = {
+            'menuUid':element.uid,
             'name': element.menuItem.name,
             'type':"ala carte",
             'category':element.menuItem.category,
@@ -87,7 +88,7 @@ class AddDailyWastePageViewModel extends ChangeNotifier{
     notifyListeners();
   }
 
-  Future<void> addPaketProduct(BuildContext context,String name,int quantity,String price,List<Product> products)async{
+  Future<void> addPaketProduct(BuildContext context,String name,int quantity,int startPrice,String discountedPrice,List<Product> products)async{
     User? user = _auth.currentUser;
     _isLoading = true;
     notifyListeners();
@@ -100,7 +101,7 @@ class AddDailyWastePageViewModel extends ChangeNotifier{
         notifyListeners();
         return;
       }
-      if(name.isEmpty || price.isEmpty){
+      if(name.isEmpty || discountedPrice.isEmpty){
         showCustomSnackBar(context, "Semua field harus diisi.", color: Colors.red);
         _isLoading = false;
         notifyListeners();
@@ -130,7 +131,8 @@ class AddDailyWastePageViewModel extends ChangeNotifier{
         Map<String, dynamic> paketData = {
           'name':name,
           'type':"paket",
-          'price':int.parse(price),
+          'startPrice':startPrice,
+          'discountedPrice':int.parse(discountedPrice),
           'status': 1,
           'quantity':quantity
         };
@@ -138,6 +140,7 @@ class AddDailyWastePageViewModel extends ChangeNotifier{
 
         products.forEach((element) async{
           Map<String, dynamic> productData = {
+            'menuUid':element.uid,
             'name': element.menuItem.name,
             'category':element.menuItem.category,
             'description':element.menuItem.description,

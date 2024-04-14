@@ -101,8 +101,7 @@ class ConsumerProfileViewModel extends ChangeNotifier{
         });
 
     clearData();
-    Navigator.of(context).pushNamedAndRemoveUntil("/consumer", (route) => false);
-      Navigator.pushReplacementNamed(context, '/consumer');
+    Navigator.pop(context);
   }
 
   void clearData(){

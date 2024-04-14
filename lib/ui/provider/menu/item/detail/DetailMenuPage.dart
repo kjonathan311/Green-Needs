@@ -54,7 +54,7 @@ class _DetailMenuPageState extends State<DetailMenuPage> {
         title: Text("Detail menu"),
         actions: [
           IconButton(onPressed: ()async{
-            await viewModel.deleteMenuitem(context,widget.item.uid,widget.item.photoUrl);
+            await viewModel.deleteMenuItem(context,widget.item.uid,widget.item.photoUrl);
           }, icon:Icon(Icons.delete)),
           IconButton(onPressed: ()async{
             await viewModel.editMenuitem(context, widget.item.uid, _nameController.text.trim(), _priceController.text.trim(),

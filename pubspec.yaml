@@ -44,6 +44,7 @@ dependencies:
   provider: ^6.1.2
   firebase_storage: ^11.6.11
   flutter_local_notifications: ^17.0.0
+  geolocator: ^11.0.0
 
 dev_dependencies:
   flutter_test:

@@ -36,11 +36,12 @@ class _AddDailyWastePageState extends State<AddDailyWastePage> {
           count=itemQuantities[element.uid]!;
         }
         Product product = Product(
+            uid:element.uid,
             menuItem: element,
             quantity: count);
         products.add(product);
       } else {
-        Product product = Product(menuItem: element, quantity: 1);
+        Product product = Product(uid:element.uid,menuItem: element, quantity: 1);
         products.add(product);
       }
     });
@@ -86,21 +87,23 @@ class _AddDailyWastePageState extends State<AddDailyWastePage> {
               selectedItems.forEach((element) {
                 if (itemQuantities[element.uid] != null) {
                   Product product = Product(
+                      uid:element.uid,
                       menuItem: element,
                       quantity: itemQuantities[element.uid]!);
                   products.add(product);
                 } else {
-                  Product product = Product(menuItem: element, quantity: 0);
+                  Product product = Product(uid:element.uid,menuItem: element, quantity: 0);
                   products.add(product);
                 }
               });
               if (_selectedType == "ala carte") {
-                await viewModel.addAlaCarteProducts(context, products);
+                await viewModel.addAlaCarteProduct(context, products);
               } else {
                 await viewModel.addPaketProduct(
                     context,
                     _nameController.text.trim(),
                     quantityPaket,
+                    totalPrice,
                     _priceController.text.trim(),
                     products);
               }

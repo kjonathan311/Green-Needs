@@ -20,7 +20,7 @@ class _DailyWastePageState extends State<DailyWastePage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("Menu"),
+          title: Text("Jual Daily Waste"),
           actions: [
             IconButton(
               icon: Icon(Icons.person),
@@ -206,6 +206,7 @@ class _PacketLayoutState extends State<PacketLayout> {
             ],
           ),
         ),
+        SizedBox(height: 100),
         Positioned(
           bottom: 32.0,
           right: 32.0,
@@ -224,7 +225,6 @@ class _PacketLayoutState extends State<PacketLayout> {
 
 class AlaCarteListTile extends StatefulWidget {
   final Product item;
-  final String placeholderImageUrl = 'images/placeholder_food.png';
 
   const AlaCarteListTile({super.key, required this.item});
 
@@ -233,6 +233,8 @@ class AlaCarteListTile extends StatefulWidget {
 }
 
 class _AlaCarteListTileState extends State<AlaCarteListTile> {
+  final String placeholderImageUrl = 'images/placeholder_food.png';
+
   @override
   Widget build(BuildContext context) {
     final viewModel = Provider.of<DailyWastePageViewModel>(context);
@@ -262,7 +264,7 @@ class _AlaCarteListTileState extends State<AlaCarteListTile> {
                               fit: BoxFit.cover,
                             )
                           : Image.asset(
-                              widget.placeholderImageUrl,
+                              placeholderImageUrl,
                               fit: BoxFit.cover,
                             ),
                     ),
@@ -342,7 +344,7 @@ class _AlaCarteListTileState extends State<AlaCarteListTile> {
             right: 0,
             child: IconButton(
               onPressed: () async{
-                await viewModel.deleteItem(widget.item.menuItem.uid);
+                await viewModel.deleteItem(context,widget.item.uid);
               },
               icon: Icon(Icons.close),
             ),
@@ -389,7 +391,19 @@ class _PaketListTileState extends State<PaketListTile> {
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child:Text(formatCurrency(widget.paket.price)),
+                  child: Row(
+                    children: [
+                      Text(
+                        formatCurrency(widget.paket.startPrice),
+                        style: TextStyle(
+                          decoration: TextDecoration.lineThrough,
+                          decorationThickness: 2,
+                        ),
+                      ),
+                      SizedBox(width: 10),
+                      Text(formatCurrency(widget.paket.discountedPrice)),
+                    ],
+                  ),
                 ),
                 Divider(color: Color(0xFF8AAB97)),
                 ListView.builder(
@@ -441,7 +455,9 @@ class _PaketListTileState extends State<PaketListTile> {
               top: 0,
               right: 0,
               child: IconButton(
-                onPressed: () {},
+                onPressed: () async{
+                  await viewModel.deleteItem(context,widget.paket.uid);
+                },
                 icon: Icon(Icons.close),
               ),
             ),
@@ -450,12 +466,12 @@ class _PaketListTileState extends State<PaketListTile> {
   }
 }
 
-
 class PaketItemListTile extends StatelessWidget {
   final Product item;
-  final String placeholderImageUrl = 'images/placeholder_food.png';
 
   const PaketItemListTile({super.key, required this.item});
+
+  final String placeholderImageUrl = 'images/placeholder_food.png';
 
   @override
   Widget build(BuildContext context) {
