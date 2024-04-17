@@ -6,7 +6,6 @@ class Address{
   final double latitude;
   final String postalcode;
   final String city;
-  final String? note;
 
   Address({
     required this.uid,
@@ -15,7 +14,6 @@ class Address{
     required this.latitude,
     required this.postalcode,
     required this.city,
-    this.note,
   });
 
 }

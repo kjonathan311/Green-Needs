@@ -30,8 +30,8 @@ class FoodProviderProfile extends Profile {
   final String phoneNumber;
   final String address;
   final String city;
-  final String status;
-  final String? postcode;
+  final String? status;
+  final String? postalcode;
   final double? rating;
   final String? photoUrl;
   final double? longitude;
@@ -44,9 +44,9 @@ class FoodProviderProfile extends Profile {
     required this.phoneNumber,
     required this.address,
     required this.city,
-    required this.status,
+    this.status,
     this.rating,
-    this.postcode,
+    this.postalcode,
     this.photoUrl,
     this.longitude,
     this.latitude

@@ -45,6 +45,8 @@ dependencies:
   firebase_storage: ^11.6.11
   flutter_local_notifications: ^17.0.0
   geolocator: ^11.0.0
+  xendit: ^0.0.16
+  webview_flutter: ^4.7.0
 
 dev_dependencies:
   flutter_test:

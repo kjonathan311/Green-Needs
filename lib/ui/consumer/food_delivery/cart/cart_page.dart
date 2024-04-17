@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../../../../model/MenuItem.dart';
 import '../../../utils.dart';
-import 'CartViewModel.dart';
+import 'cart_view_model.dart';
 
 class CartPage extends StatefulWidget {
   const CartPage({Key? key});
@@ -22,6 +22,8 @@ class _CartPageState extends State<CartPage> {
     final cartViewModel = Provider.of<CartViewModel>(context,listen: false);
     cartViewModel.checkCartItemAvailability();
     cartViewModel.getTotalCost();
+    _selectedOrderType='kurir';
+    cartViewModel.setSelectedOrderType(_selectedOrderType);
   }
 
   @override
@@ -121,7 +123,7 @@ class _CartPageState extends State<CartPage> {
                             });
                           },
                         ),
-                        const Text('self pick up'),
+                        const Text('self pickup'),
                       ],
                     ),
                   ],
@@ -152,7 +154,7 @@ class _CartPageState extends State<CartPage> {
                               if (snapshot.hasError) {
                                 return Text("${snapshot.error}");
                               } else {
-                                return Text(formatCurrencyWithDouble(cartViewModel.taxAmount));
+                                return Text(formatCurrency(cartViewModel.taxAmount));
                               }
                             },
                           ),
@@ -169,7 +171,7 @@ class _CartPageState extends State<CartPage> {
                                 if (snapshot.hasError) {
                                   return Text("${snapshot.error}");
                                 } else {
-                                  return Text(formatCurrencyWithDouble(cartViewModel.costAmount));
+                                  return Text(formatCurrency(cartViewModel.costAmount));
                                 }
                               },
                             ),
@@ -180,7 +182,7 @@ class _CartPageState extends State<CartPage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           const Text("total pembayaran:"),
-                          Text(formatCurrencyWithDouble(cartViewModel.totalPayment)),
+                          Text(formatCurrency(cartViewModel.totalPayment)),
                         ],
                       ),
                     ],
@@ -190,12 +192,16 @@ class _CartPageState extends State<CartPage> {
                 Container(
                   width: double.infinity,
                     margin: const EdgeInsets.symmetric(vertical: 10),
-                    child: ElevatedButton(onPressed: (){
-                      Navigator.of(context).push(
-                          MaterialPageRoute(builder: (context) =>
-                              CheckoutPage()
-                          )
-                      );
+                    child: ElevatedButton(onPressed: ()async{
+                      if(cartViewModel.checkCartStatus()){
+                        Navigator.of(context).push(
+                            MaterialPageRoute(builder: (context) =>
+                                CheckoutPage()
+                            )
+                        );
+                      }else{
+                          showCustomSnackBar(context, "ada item yang pada cart yang tidak tersedia", color: Colors.red);
+                      }
                     }, child: const Text("Order",style: TextStyle(fontWeight: FontWeight.bold)))
                 )
               ],

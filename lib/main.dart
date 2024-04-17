@@ -1,40 +1,43 @@
 import 'package:flutter/material.dart';
-import 'package:greenneeds/ui/admin/AdminScreen.dart';
-import 'package:greenneeds/ui/admin/verification/AdminVerificationViewModel.dart';
-import 'package:greenneeds/ui/authentication/introduction/IntroductionPage.dart';
-import 'package:greenneeds/ui/authentication/login/LoginPage.dart';
+import 'package:greenneeds/ui/admin/admin_screen.dart';
+import 'package:greenneeds/ui/admin/verification/admin_verification_view_model.dart';
+import 'package:greenneeds/ui/authentication/introduction/introduction_page.dart';
+import 'package:greenneeds/ui/authentication/login/login_page.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:greenneeds/ui/authentication/registerConsumer/RegisterConsumerPage.dart';
-import 'package:greenneeds/ui/authentication/registerFoodProvider/RegisterFoodProviderPage.dart';
-import 'package:greenneeds/ui/consumer/ConsumerScreen.dart';
-import 'package:greenneeds/ui/consumer/food_delivery/address/AddressViewModel.dart';
-import 'package:greenneeds/ui/consumer/food_delivery/cart/CartViewModel.dart';
-import 'package:greenneeds/ui/consumer/food_delivery/detail/store/StoreViewModel.dart';
-import 'package:greenneeds/ui/consumer/food_delivery/search/SearchViewModel.dart';
-import 'package:greenneeds/ui/consumer/inventory/InventoryViewModel.dart';
-import 'package:greenneeds/ui/consumer/inventory/category/InventoryCategoryPage.dart';
-import 'package:greenneeds/ui/consumer/inventory/category/InventoryCategoryPageViewModel.dart';
-import 'package:greenneeds/ui/consumer/inventory/item/add/AddInventoryItemPage.dart';
-import 'package:greenneeds/ui/consumer/inventory/item/add/AddInventoryItemPageViewModel.dart';
-import 'package:greenneeds/ui/consumer/inventory/item/detail/DetailInventoryItemPageViewModel.dart';
-import 'package:greenneeds/ui/consumer/inventory/notification/InventoryNotificationPopUpWindowViewModel.dart';
-import 'package:greenneeds/ui/consumer/profile/ConsumerEditProfilePage.dart';
-import 'package:greenneeds/ui/consumer/profile/ConsumerProfileViewModel.dart';
-import 'package:greenneeds/ui/provider/ProviderScreen.dart';
-import 'package:greenneeds/ui/provider/daily_waste/DailyWastePageViewModel.dart';
-import 'package:greenneeds/ui/provider/daily_waste/add/AddDailyWastePage.dart';
-import 'package:greenneeds/ui/provider/daily_waste/add/AddDailyWasteViewModel.dart';
-import 'package:greenneeds/ui/provider/menu/MenuPageViewModel.dart';
-import 'package:greenneeds/ui/provider/menu/item/add/AddMenuPage.dart';
-import 'package:greenneeds/ui/provider/menu/item/add/AddMenuPageViewModel.dart';
-import 'package:greenneeds/ui/provider/menu/item/detail/DetailMenuViewModel.dart';
-import 'package:greenneeds/ui/provider/profile/FoodProviderEditProfilePage.dart';
-import 'package:greenneeds/ui/provider/profile/FoodProviderProfileViewModel.dart';
-import 'package:greenneeds/ui/provider/verification/VerificationFoodProviderViewModel.dart';
+import 'package:greenneeds/ui/authentication/registerConsumer/register_consumer_page.dart';
+import 'package:greenneeds/ui/authentication/registerFoodProvider/register_food_provider_page.dart';
+import 'package:greenneeds/ui/consumer/Balance/add_balance_page.dart';
+import 'package:greenneeds/ui/consumer/consumer_screen.dart';
+import 'package:greenneeds/ui/consumer/balance/add_balance_view_model.dart';
+import 'package:greenneeds/ui/consumer/food_delivery/address/address_view_model.dart';
+import 'package:greenneeds/ui/consumer/food_delivery/cart/cart_view_model.dart';
+import 'package:greenneeds/ui/consumer/food_delivery/detail/store/store_view_model.dart';
+import 'package:greenneeds/ui/consumer/food_delivery/search/search_view_model.dart';
+import 'package:greenneeds/ui/consumer/inventory/inventory_view_model.dart';
+import 'package:greenneeds/ui/consumer/inventory/category/inventory_category_page.dart';
+import 'package:greenneeds/ui/consumer/inventory/category/inventory_category_page_view_model.dart';
+import 'package:greenneeds/ui/consumer/inventory/item/add/add_inventory_item_page.dart';
+import 'package:greenneeds/ui/consumer/inventory/item/add/add_inventory_item_page_view_model.dart';
+import 'package:greenneeds/ui/consumer/inventory/item/detail/detail_inventory_item_page_viewmodel.dart';
+import 'package:greenneeds/ui/consumer/inventory/notification/inventory_notification_popupwindow_view_model.dart';
+import 'package:greenneeds/ui/consumer/order/consumer_order_view_model.dart';
+import 'package:greenneeds/ui/consumer/profile/consumer_edit_profile_page.dart';
+import 'package:greenneeds/ui/consumer/profile/consumer_profile_view_model.dart';
+import 'package:greenneeds/ui/provider/food_provider_screen.dart';
+import 'package:greenneeds/ui/provider/daily_waste/daily_waste_page_view_model.dart';
+import 'package:greenneeds/ui/provider/daily_waste/add/add_daily_waste_page.dart';
+import 'package:greenneeds/ui/provider/daily_waste/add/add_daily_waste_view_model.dart';
+import 'package:greenneeds/ui/provider/menu/menu_page_view_model.dart';
+import 'package:greenneeds/ui/provider/menu/item/add/add_menu_page.dart';
+import 'package:greenneeds/ui/provider/menu/item/add/add_menu_page_view_model.dart';
+import 'package:greenneeds/ui/provider/menu/item/detail/detail_menu_view_model.dart';
+import 'package:greenneeds/ui/provider/profile/food_provider_edit_profile_page.dart';
+import 'package:greenneeds/ui/provider/profile/food_provider_profile_view_model.dart';
+import 'package:greenneeds/ui/provider/verification/verification_food_provider_view_model.dart';
 import 'package:provider/provider.dart';
 import '/firebase_options.dart';
 import 'model/FirebaseAuthProvider.dart';
-import 'services/NotificationService.dart';
+import 'services/notification_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -96,6 +99,12 @@ class MyApp extends StatelessWidget {
               create: (context) => StoreViewModel()),
           ChangeNotifierProvider<CartViewModel>(
               create: (context) => CartViewModel()),
+         ChangeNotifierProvider<AddBalanceViewModel>(
+             create: (context)=>AddBalanceViewModel(),
+         ),
+          ChangeNotifierProvider<ConsumerOrderViewModel>(
+            create: (context)=>ConsumerOrderViewModel(),
+          )
         ],
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
@@ -126,6 +135,7 @@ class MyApp extends StatelessWidget {
             "/provider/menu/add": (context) => AddMenuPage(),
             "/provider/daily/add":(context)=>AddDailyWastePage(),
             "/admin": (context) => AdminScreen(),
+            "/consumer/balance":(context)=>AddBalancePage(),
           },
         ));
   }

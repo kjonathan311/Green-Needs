@@ -42,6 +42,35 @@ String formatDateWithMonth(DateTime dateTime) {
   return formattedDate;
 }
 
+String formatDateWithMonthAndTime(DateTime dateTime) {
+  List<String> indonesianMonthNames = [
+    '',
+    'Januari',
+    'Februari',
+    'Maret',
+    'April',
+    'Mei',
+    'Juni',
+    'Juli',
+    'Agustus',
+    'September',
+    'Oktober',
+    'November',
+    'Desember'
+  ];
+
+  // Format the date
+  String formattedDate = '${dateTime.day} ${indonesianMonthNames[dateTime.month]} ${dateTime.year}';
+
+  // Format the time
+  String formattedTime = '${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}';
+
+  // Combine date and time
+  formattedDate += ' $formattedTime';
+
+  return formattedDate;
+}
+
 String formatCurrency(int price) {
   String formattedPrice = price.toString();
   final RegExp regExp = RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))');

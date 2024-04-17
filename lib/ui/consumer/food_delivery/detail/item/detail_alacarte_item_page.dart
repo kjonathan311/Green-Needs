@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:greenneeds/model/MenuItem.dart';
-import 'package:greenneeds/ui/consumer/food_delivery/cart/CartViewModel.dart';
-import 'package:greenneeds/ui/consumer/food_delivery/detail/store/StoreViewModel.dart';
+import 'package:greenneeds/ui/consumer/food_delivery/detail/store/store_view_model.dart';
 import 'package:greenneeds/ui/utils.dart';
 import 'package:provider/provider.dart';
 
 import '../../cart/cart_page.dart';
+import '../../cart/cart_view_model.dart';
 
 class DetailAlaCarteItemPage extends StatefulWidget {
   final Product item;

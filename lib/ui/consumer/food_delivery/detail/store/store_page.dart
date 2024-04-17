@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:greenneeds/model/SearchFoodProvider.dart';
 import 'package:greenneeds/ui/consumer/food_delivery/cart/cart_page.dart';
-import 'package:greenneeds/ui/consumer/food_delivery/cart/CartViewModel.dart';
 import 'package:provider/provider.dart';
 import '../../../../../model/MenuItem.dart';
 import '../../../../../model/Profile.dart';
 import '../../../../utils.dart';
+import '../../cart/cart_view_model.dart';
 import '../item/detail_alacarte_item_page.dart';
-import 'StoreViewModel.dart';
+import 'store_view_model.dart';
 
 class StorePage extends StatefulWidget {
   final SearchFoodProvider searchDetail;

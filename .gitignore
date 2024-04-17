@@ -45,3 +45,6 @@ app.*.map.json
 # Ignore Firebase configuration files
 .firebaserc
 firebase.json
+
+/lib/firebase_options.dart
+/lib/xendit_api_key.dart
