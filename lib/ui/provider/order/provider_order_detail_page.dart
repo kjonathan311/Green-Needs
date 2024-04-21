@@ -1,27 +1,27 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:greenneeds/model/OrderItem.dart';
+import 'package:greenneeds/ui/provider/order/provider_order_view_model.dart';
 import 'package:greenneeds/ui/utils.dart';
 import 'package:provider/provider.dart';
 import '../../../model/Address.dart';
 import '../../../model/MenuItem.dart';
-import 'consumer_order_view_model.dart';
 
-class ConsumerOrderDetailPage extends StatefulWidget {
+class ProviderOrderDetailPage extends StatefulWidget {
   final OrderItemWithProviderAndConsumer transaction;
 
-  const ConsumerOrderDetailPage({super.key, required this.transaction});
+  const ProviderOrderDetailPage({super.key, required this.transaction});
 
   @override
-  State<ConsumerOrderDetailPage> createState() =>
-      _ConsumerOrderDetailPageState();
+  State<ProviderOrderDetailPage> createState() =>
+      _ProviderOrderDetailPageState();
 }
 
-class _ConsumerOrderDetailPageState extends State<ConsumerOrderDetailPage> {
-
+class _ProviderOrderDetailPageState extends State<ProviderOrderDetailPage> {
   @override
   Widget build(BuildContext context) {
-    final consumerOrderViewModel = Provider.of<ConsumerOrderViewModel>(context);
+    final providerOrderViewModel = Provider.of<ProviderOrderViewModel>(context);
     return Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
@@ -53,15 +53,16 @@ class _ConsumerOrderDetailPageState extends State<ConsumerOrderDetailPage> {
                         ],
                       ),
                     ),
-
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 30, vertical: 10),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           const Text("Status:"),
                           StreamBuilder(
-                            stream: consumerOrderViewModel.getStatus(widget.transaction.order.uid),
+                            stream: providerOrderViewModel
+                                .getStatus(widget.transaction.order.uid),
                             builder: (context, snapshot) {
                               if (snapshot.hasError) {
                                 return Text("${snapshot.error}");
@@ -69,10 +70,10 @@ class _ConsumerOrderDetailPageState extends State<ConsumerOrderDetailPage> {
                                 if (snapshot.hasData && snapshot.data != null) {
                                   String status = snapshot.data!;
                                   Color textColor = statusColor(status);
-
-                                  return Text(snapshot.data!,style: TextStyle(color: textColor));
+                                  return Text(snapshot.data!,
+                                      style: TextStyle(color: textColor));
                                 } else {
-                                  return Container(); // Placeholder or empty widget
+                                  return Container();
                                 }
                               }
                             },
@@ -80,11 +81,10 @@ class _ConsumerOrderDetailPageState extends State<ConsumerOrderDetailPage> {
                         ],
                       ),
                     ),
-
                     const Divider(thickness: 10, color: Colors.black12),
-
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 30, vertical: 10),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -93,10 +93,7 @@ class _ConsumerOrderDetailPageState extends State<ConsumerOrderDetailPage> {
                         ],
                       ),
                     ),
-
                     const Divider(thickness: 10, color: Colors.black12),
-
-
                     Container(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 30, vertical: 10),
@@ -104,22 +101,18 @@ class _ConsumerOrderDetailPageState extends State<ConsumerOrderDetailPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             const Text(
-                              "Detail Penyedia Makanan ",
+                              "Detail Pembeli",
                               style: TextStyle(fontSize: 16),
                             ),
-                            Text(widget.transaction.provider.name),
-                            Text(widget.transaction.provider.phoneNumber),
-                            Text("${widget.transaction.provider
-                                .address}, ${widget.transaction.provider
-                                .postalcode}, ${widget.transaction.provider
-                                .city}"),
-                          ]
-                      ),
+                            Text(widget.transaction.consumer.name),
+                            Text(widget.transaction.consumer.email),
+                            Text(widget.transaction.consumer.phoneNumber),
+                          ]),
                     ),
-
-                    if(widget.transaction.order.type == "kurir")
+                    if (widget.transaction.order.type == "kurir")
                       FutureBuilder<Address?>(
-                        future: consumerOrderViewModel.getAddress(
+                        future: providerOrderViewModel.getAddress(
+                            widget.transaction.consumer.uid,
                             widget.transaction.order.addressDestinationId),
                         builder: (context, snapshot) {
                           if (snapshot.connectionState ==
@@ -134,10 +127,10 @@ class _ConsumerOrderDetailPageState extends State<ConsumerOrderDetailPage> {
                                 'Alamat tidak tersedia';
                             final postalcode = snapshot.data?.postalcode ??
                                 'Kode pos tidak tersedia';
-                            final city = snapshot.data?.city ??
-                                'Kota tidak tersedia';
-                            final note = widget.transaction.order
-                                .consumerNote ?? '';
+                            final city =
+                                snapshot.data?.city ?? 'Kota tidak tersedia';
+                            final note =
+                                widget.transaction.order.consumerNote ?? '';
 
                             return Container(
                               padding: const EdgeInsets.symmetric(
@@ -150,9 +143,10 @@ class _ConsumerOrderDetailPageState extends State<ConsumerOrderDetailPage> {
                                     style: TextStyle(fontSize: 16),
                                   ),
                                   Text("$address, $postalcode, $city"),
-                                  if(note.isNotEmpty)
-                                  Text("catatan: $note", maxLines: 2,
-                                      overflow: TextOverflow.ellipsis),
+                                  if (note.isNotEmpty)
+                                    Text("catatan: $note",
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis),
                                 ],
                               ),
                             );
@@ -167,17 +161,19 @@ class _ConsumerOrderDetailPageState extends State<ConsumerOrderDetailPage> {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 30, vertical: 5),
                       child: const Text(
-                      "Rangkuman Order :",
-                      style: TextStyle(fontSize: 16), ),
+                        "Rangkuman Order :",
+                        style: TextStyle(fontSize: 16),
+                      ),
                     ),
-
                     FutureBuilder<List<Product>?>(
-                      future: consumerOrderViewModel.getAlaCarteItems(widget.transaction.order.providerId, widget.transaction.order.uid),
+                      future: providerOrderViewModel.getAlaCarteItems(
+                          widget.transaction.order.providerId,
+                          widget.transaction.order.uid),
                       builder: (context, snapshot) {
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
                           return Container(
-                            width: 300,
+                              width: 300,
                               child: Center(
                                 child: CircularProgressIndicator(),
                               ));
@@ -199,13 +195,17 @@ class _ConsumerOrderDetailPageState extends State<ConsumerOrderDetailPage> {
                                       padding: const EdgeInsets.symmetric(
                                           horizontal: 30),
                                       child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           Row(
-                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
                                             children: [
-                                              Text("${product.quantity}x ${product.menuItem.name}"),
-                                              Text("${formatCurrency(product.menuItem.discountedPrice*product.quantity)}")
+                                              Text(
+                                                  "${product.quantity}x ${product.menuItem.name}"),
+                                              Text(
+                                                  "${formatCurrency(product.menuItem.discountedPrice * product.quantity)}")
                                             ],
                                           ),
                                         ],
@@ -215,14 +215,18 @@ class _ConsumerOrderDetailPageState extends State<ConsumerOrderDetailPage> {
                                 ),
                               ],
                             );
-                          }else{return Container();}
-                        }else{
+                          } else {
+                            return Container();
+                          }
+                        } else {
                           return Container();
                         }
                       },
                     ),
                     FutureBuilder<List<Paket>?>(
-                      future: consumerOrderViewModel.getPaketItems(widget.transaction.order.providerId, widget.transaction.order.uid),
+                      future: providerOrderViewModel.getPaketItems(
+                          widget.transaction.order.providerId,
+                          widget.transaction.order.uid),
                       builder: (context, snapshot) {
                         if (snapshot.hasError) {
                           return Text('${snapshot.error}');
@@ -242,23 +246,32 @@ class _ConsumerOrderDetailPageState extends State<ConsumerOrderDetailPage> {
                                       padding: const EdgeInsets.symmetric(
                                           horizontal: 30),
                                       child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           Row(
-                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
                                             children: [
-                                              Text("${paket.quantity}x ${paket.name}"),
-                                              Text("${formatCurrency(paket.discountedPrice*paket.quantity)}")
+                                              Text(
+                                                  "${paket.quantity}x ${paket.name}"),
+                                              Text(
+                                                  "${formatCurrency(paket.discountedPrice * paket.quantity)}")
                                             ],
                                           ),
                                           Padding(
-                                            padding: const EdgeInsets.symmetric(horizontal: 30),
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 30),
                                             child: ListView.builder(
                                               itemCount: paket.products.length,
-                                              physics: NeverScrollableScrollPhysics(),
+                                              physics:
+                                                  NeverScrollableScrollPhysics(),
                                               shrinkWrap: true,
-                                              itemBuilder: (BuildContext context, int index) {
-                                                return Text("${paket.products[index].quantity}x ${paket.products[index].menuItem.name}");
+                                              itemBuilder:
+                                                  (BuildContext context,
+                                                      int index) {
+                                                return Text(
+                                                    "${paket.products[index].quantity}x ${paket.products[index].menuItem.name}");
                                               },
                                             ),
                                           ),
@@ -269,8 +282,10 @@ class _ConsumerOrderDetailPageState extends State<ConsumerOrderDetailPage> {
                                 ),
                               ],
                             );
-                          }else{return Container();}
-                        }else{
+                          } else {
+                            return Container();
+                          }
+                        } else {
                           return Container();
                         }
                       },
@@ -280,48 +295,48 @@ class _ConsumerOrderDetailPageState extends State<ConsumerOrderDetailPage> {
                       child: Divider(thickness: 10, color: Colors.black12),
                     ),
                     Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 30),
+                      padding: const EdgeInsets.symmetric(horizontal: 30),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Row(
-                            mainAxisAlignment: MainAxisAlignment
-                                .spaceBetween,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               const Text("Subtotal:"),
-                              Text(formatCurrency(widget.transaction.order.totalPrice)),
+                              Text(formatCurrency(
+                                  widget.transaction.order.totalPrice)),
                             ],
                           ),
                           Row(
-                            mainAxisAlignment: MainAxisAlignment
-                                .spaceBetween,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               const Text("Biaya Admin:"),
-                            Text(
-                          formatCurrency(
-                              widget.transaction.order.adminFee))
+                              Text(formatCurrency(
+                                  widget.transaction.order.adminFee))
                             ],
                           ),
-                          if (widget.transaction.order.type== "kurir")
+                          if (widget.transaction.order.type == "kurir")
                             Row(
-                              mainAxisAlignment: MainAxisAlignment
-                                  .spaceBetween,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 const Text("Ongkos Kirim:"),
-                                Text(
-                                    formatCurrency(
-                                        widget.transaction.order.shippingFee!))
+                                Text(formatCurrency(
+                                    widget.transaction.order.shippingFee!))
                               ],
                             ),
                           const Divider(),
                           Row(
-                            mainAxisAlignment: MainAxisAlignment
-                                .spaceBetween,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              const Text("Total :",style: TextStyle(fontWeight: FontWeight.bold),),
-                              Text(formatCurrency(
-                                  widget.transaction.order.totalPayment),style: TextStyle(fontWeight: FontWeight.bold)),
+                              const Text(
+                                "Total :",
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              Text(
+                                  formatCurrency(
+                                      widget.transaction.order.totalPayment),
+                                  style:
+                                      TextStyle(fontWeight: FontWeight.bold)),
                             ],
                           ),
                         ],
@@ -332,7 +347,7 @@ class _ConsumerOrderDetailPageState extends State<ConsumerOrderDetailPage> {
               ),
             ),
             StreamBuilder<String?>(
-              stream: consumerOrderViewModel.getStatus(widget.transaction.order.uid),
+              stream: providerOrderViewModel.getStatus(widget.transaction.order.uid),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return Center(child: CircularProgressIndicator());
@@ -340,35 +355,104 @@ class _ConsumerOrderDetailPageState extends State<ConsumerOrderDetailPage> {
                   return Text('Error: ${snapshot.error}');
                 } else {
                   final status = snapshot.data;
-                  if (status == "sedang dikirim" || status == "order bisa diambil") {
-                    return Container(
-                      width: double.infinity,
-                      margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                      child: ElevatedButton(
-                        onPressed: () async {
-                          await consumerOrderViewModel.changeStatusOrder(widget.transaction, "order selesai");
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.green,
-                        ),
-                        child: Text(
-                          "order sudah diterima",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    );
+                  if (status == "sedang diproses") {
+                    return ConfirmOrderWidget(transaction: widget.transaction);
+                  }
+                  if(status == "telah dikonfirmasi"){
+                    return DeliverOrderWidget(transaction: widget.transaction);
                   } else {
                     return SizedBox();
                   }
                 }
               },
             )
-          ]
-          ,
-        )
+
+          ],
+        ));
+  }
+}
+
+class ConfirmOrderWidget extends StatelessWidget {
+  final OrderItemWithProviderAndConsumer transaction;
+  const ConfirmOrderWidget({super.key, required this.transaction});
+
+  @override
+  Widget build(BuildContext context) {
+    final providerOrderViewModel = Provider.of<ProviderOrderViewModel>(context);
+    return  Container(
+        width: double.infinity,
+        margin: const EdgeInsets.symmetric(vertical: 10,horizontal: 10),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Expanded(
+              child: ElevatedButton(
+                onPressed: () async {
+                  await providerOrderViewModel.confirmOrder(transaction, false);
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.red,
+                ),
+                child: const Text(
+                  "Batal",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(width: 10),
+            Expanded(
+              child: ElevatedButton(
+                onPressed: () async {
+                  await providerOrderViewModel.confirmOrder(transaction, true);
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blue,
+                ),
+                child: const Text(
+                  "Konfirmasi",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ));
+  }
+}
+
+class DeliverOrderWidget extends StatelessWidget {
+  final OrderItemWithProviderAndConsumer transaction;
+  const DeliverOrderWidget({Key? key, required this.transaction}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final providerOrderViewModel = Provider.of<ProviderOrderViewModel>(context);
+    String newStatus = transaction.order.type == "kurir" ? "sedang dikirim" : "order bisa diambil";
+    String newStatusButton = transaction.order.type == "kurir" ? "update order:   sedang dikirim" : "update order:   order bisa diambil";
+
+    return Container(
+      width: double.infinity,
+      margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+      child: ElevatedButton(
+        onPressed: () async {
+          await providerOrderViewModel.changeStatusOrder(transaction, newStatus);
+        },
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.teal,
+        ),
+        child: Text(
+          "${newStatusButton}",
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
+      ),
     );
   }
 }

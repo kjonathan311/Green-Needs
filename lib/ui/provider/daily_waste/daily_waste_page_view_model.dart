@@ -137,6 +137,8 @@ class DailyWastePageViewModel extends ChangeNotifier {
   }
   Future<void> increaseQuantity(String uid,int quantity) async{
     User? user = _auth.currentUser;
+    print(uid);
+    print(quantity);
     if (user != null && user.email != null) {
       await _firestore.collection('providers').doc(user.uid).collection('products').doc(uid).set({
         'quantity':quantity+1

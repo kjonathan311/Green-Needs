@@ -1,18 +1,21 @@
+
 import 'package:flutter/material.dart';
 import 'package:greenneeds/model/OrderItem.dart';
-import 'package:greenneeds/ui/consumer/order/consumer_order_detail_page.dart';
-import 'package:greenneeds/ui/consumer/order/consumer_order_view_model.dart';
-import 'package:greenneeds/ui/utils.dart';
+import 'package:greenneeds/ui/provider/order/provider_order_detail_page.dart';
+import 'package:greenneeds/ui/provider/order/provider_order_view_model.dart';
 import 'package:provider/provider.dart';
 
-class ConsumerOrderPage extends StatefulWidget {
-  const ConsumerOrderPage({super.key});
+import '../../../model/Address.dart';
+import '../../utils.dart';
+
+class ProviderOrderPage extends StatefulWidget {
+  const ProviderOrderPage({super.key});
 
   @override
-  State<ConsumerOrderPage> createState() => _ConsumerOrderPageState();
+  State<ProviderOrderPage> createState() => _ProviderOrderPageState();
 }
 
-class _ConsumerOrderPageState extends State<ConsumerOrderPage> {
+class _ProviderOrderPageState extends State<ProviderOrderPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,16 +56,16 @@ class OrderLayout extends StatefulWidget {
 class _OrderLayoutState extends State<OrderLayout> {
   @override
   Widget build(BuildContext context) {
-    final consumerOrderViewModel = Provider.of<ConsumerOrderViewModel>(context);
+    final providerOrderViewModel = Provider.of<ProviderOrderViewModel>(context);
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 10),
         child: StreamBuilder<List<OrderItemWithProviderAndConsumer>>(
-          stream: consumerOrderViewModel.ordersStream(1),
+          stream: providerOrderViewModel.ordersStream(1),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Container(
-                height: 500,
+                  height: 500,
                   child: Center(child: CircularProgressIndicator())
               );
             } else if (snapshot.hasError) {
@@ -89,12 +92,12 @@ class HistoryLayout extends StatefulWidget {
 class _HistoryLayoutState extends State<HistoryLayout> {
   @override
   Widget build(BuildContext context) {
-    final consumerOrderViewModel = Provider.of<ConsumerOrderViewModel>(context);
+    final providerOrderViewModel = Provider.of<ProviderOrderViewModel>(context);
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 10),
         child: StreamBuilder<List<OrderItemWithProviderAndConsumer>>(
-          stream: consumerOrderViewModel.ordersStream(2),
+          stream: providerOrderViewModel.ordersStream(2),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Container(
@@ -116,6 +119,8 @@ class _HistoryLayoutState extends State<HistoryLayout> {
   }
 }
 
+
+
 class OrderListTile extends StatefulWidget {
   final OrderItemWithProviderAndConsumer transaction;
   const OrderListTile({super.key,required this.transaction});
@@ -128,16 +133,15 @@ class _OrderListTileState extends State<OrderListTile> {
 
   @override
   Widget build(BuildContext context) {
-
+    final providerOrderViewModel = Provider.of<ProviderOrderViewModel>(context);
     String status=widget.transaction.order.status;
-    Color textStatusColor = statusColor(status); // Default color
+    Color textStatusColor = statusColor(status);
 
-    // Set color based on status
     return GestureDetector(
       onTap: (){
         Navigator.of(context).push(
             MaterialPageRoute(builder: (context) =>
-                ConsumerOrderDetailPage(
+                ProviderOrderDetailPage(
                   transaction: widget.transaction,
                 ))
         );
@@ -158,9 +162,15 @@ class _OrderListTileState extends State<OrderListTile> {
                   children: [
                     Container(
                         width:250,
-                        child: Text("${widget.transaction.provider.name}",maxLines: 1,overflow: TextOverflow.ellipsis)
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(width:150,child: Text("${widget.transaction.order.uid}",maxLines: 1,overflow: TextOverflow.ellipsis)),
+                            Text("Tipe order : ${widget.transaction.order.type}",maxLines: 1,overflow: TextOverflow.ellipsis),
+                            Text("${widget.transaction.itemCount} items"),
+                          ],
+                        )
                     ),
-                    Text("${widget.transaction.itemCount} items"),
                     Text("${formatDateWithMonthAndTime(widget.transaction.order.date)}",style: TextStyle(color: Colors.grey),)
                   ],
                 ),

@@ -2,8 +2,10 @@
 import 'package:flutter/material.dart';
 import 'package:greenneeds/model/FirebaseAuthProvider.dart';
 import 'package:greenneeds/model/Profile.dart';
+import 'package:greenneeds/ui/provider/balance/provider_balance_view_model.dart';
 import 'package:provider/provider.dart';
 
+import '../../utils.dart';
 import 'food_provider_profile_view_model.dart';
 
 class FoodProviderProfilePopUpWindow extends StatelessWidget {
@@ -13,6 +15,7 @@ class FoodProviderProfilePopUpWindow extends StatelessWidget {
   Widget build(BuildContext context) {
     final authProvider = Provider.of<FirebaseAuthProvider>(context);
     final foodProviderProfileViewModel = Provider.of<FoodProviderProfileViewModel>(context);
+    final balanceViewModel = Provider.of<ProviderBalanceViewModel>(context);
 
 
     return Dialog(
@@ -121,8 +124,30 @@ class FoodProviderProfilePopUpWindow extends StatelessWidget {
               height: 10.0,
             ),
             ListTile(
+              leading: const Icon(Icons.attach_money),
+              title: FutureBuilder<int>(
+                future: balanceViewModel.getBalance(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) {
+                    return Text("${snapshot.error}");
+                  } else if (snapshot.hasData && snapshot.data != null) {
+                    int balance = snapshot.data as int;
+                    return Text("Saldo:  " + formatCurrency(balance));
+                  } else {
+                    return Text("saldo:  Loading...");
+                  }
+                },
+              ),
+              onTap: () async {
+                Navigator.pushNamed(context, "/provider/balance");
+              },
+            ),
+            const SizedBox(
+              height: 10.0,
+            ),
+            ListTile(
               leading: Icon(Icons.logout),
-              title: Text("logout"),
+              title: Text("Logout"),
               onTap: () async {
                 await authProvider.logout();
                 Navigator.of(context)

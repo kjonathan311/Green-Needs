@@ -27,12 +27,14 @@ class OrderItem {
     required this.status,
     required this.type,
     this.consumerNote,
-  }) : totalPayment = type == "kurir" ? totalPrice + adminFee : totalPrice + adminFee + (shippingFee ?? 0);
+  }) : totalPayment = type == "kurir" ? totalPrice + adminFee + (shippingFee ?? 0) : totalPrice + adminFee;
 }
 
-class OrderItemWithProvider {
+class OrderItemWithProviderAndConsumer {
   final OrderItem order;
   final FoodProviderProfile provider;
+  final ConsumerProfile consumer;
+  final int itemCount;
 
-  OrderItemWithProvider({required this.order, required this.provider});
+  OrderItemWithProviderAndConsumer({required this.order, required this.provider,required this.consumer,required this.itemCount});
 }

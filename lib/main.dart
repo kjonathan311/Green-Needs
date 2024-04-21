@@ -8,7 +8,7 @@ import 'package:greenneeds/ui/authentication/registerConsumer/register_consumer_
 import 'package:greenneeds/ui/authentication/registerFoodProvider/register_food_provider_page.dart';
 import 'package:greenneeds/ui/consumer/Balance/add_balance_page.dart';
 import 'package:greenneeds/ui/consumer/consumer_screen.dart';
-import 'package:greenneeds/ui/consumer/balance/add_balance_view_model.dart';
+import 'package:greenneeds/ui/consumer/balance/consumer_balance_view_model.dart';
 import 'package:greenneeds/ui/consumer/food_delivery/address/address_view_model.dart';
 import 'package:greenneeds/ui/consumer/food_delivery/cart/cart_view_model.dart';
 import 'package:greenneeds/ui/consumer/food_delivery/detail/store/store_view_model.dart';
@@ -23,6 +23,8 @@ import 'package:greenneeds/ui/consumer/inventory/notification/inventory_notifica
 import 'package:greenneeds/ui/consumer/order/consumer_order_view_model.dart';
 import 'package:greenneeds/ui/consumer/profile/consumer_edit_profile_page.dart';
 import 'package:greenneeds/ui/consumer/profile/consumer_profile_view_model.dart';
+import 'package:greenneeds/ui/provider/balance/provider_balance_view_model.dart';
+import 'package:greenneeds/ui/provider/balance/withdraw_page.dart';
 import 'package:greenneeds/ui/provider/food_provider_screen.dart';
 import 'package:greenneeds/ui/provider/daily_waste/daily_waste_page_view_model.dart';
 import 'package:greenneeds/ui/provider/daily_waste/add/add_daily_waste_page.dart';
@@ -31,6 +33,7 @@ import 'package:greenneeds/ui/provider/menu/menu_page_view_model.dart';
 import 'package:greenneeds/ui/provider/menu/item/add/add_menu_page.dart';
 import 'package:greenneeds/ui/provider/menu/item/add/add_menu_page_view_model.dart';
 import 'package:greenneeds/ui/provider/menu/item/detail/detail_menu_view_model.dart';
+import 'package:greenneeds/ui/provider/order/provider_order_view_model.dart';
 import 'package:greenneeds/ui/provider/profile/food_provider_edit_profile_page.dart';
 import 'package:greenneeds/ui/provider/profile/food_provider_profile_view_model.dart';
 import 'package:greenneeds/ui/provider/verification/verification_food_provider_view_model.dart';
@@ -99,11 +102,17 @@ class MyApp extends StatelessWidget {
               create: (context) => StoreViewModel()),
           ChangeNotifierProvider<CartViewModel>(
               create: (context) => CartViewModel()),
-         ChangeNotifierProvider<AddBalanceViewModel>(
-             create: (context)=>AddBalanceViewModel(),
+         ChangeNotifierProvider<ConsumerBalanceViewModel>(
+             create: (context)=>ConsumerBalanceViewModel(),
          ),
+          ChangeNotifierProvider<ProviderBalanceViewModel>(
+            create: (context)=>ProviderBalanceViewModel(),
+          ),
           ChangeNotifierProvider<ConsumerOrderViewModel>(
             create: (context)=>ConsumerOrderViewModel(),
+          ),
+          ChangeNotifierProvider<ProviderOrderViewModel>(
+              create: (context)=>ProviderOrderViewModel(),
           )
         ],
         child: MaterialApp(
@@ -136,6 +145,7 @@ class MyApp extends StatelessWidget {
             "/provider/daily/add":(context)=>AddDailyWastePage(),
             "/admin": (context) => AdminScreen(),
             "/consumer/balance":(context)=>AddBalancePage(),
+            "/provider/balance":(context)=>WithdrawPage(),
           },
         ));
   }

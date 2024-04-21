@@ -10,7 +10,7 @@ import 'package:xendit/xendit.dart';
 import '../../../xendit_api_key.dart';
 import '../../utils.dart';
 
-class AddBalanceViewModel extends ChangeNotifier{
+class ConsumerBalanceViewModel extends ChangeNotifier{
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   Xendit xendit = Xendit(apiKey: xenditApiKey);
@@ -53,8 +53,6 @@ class AddBalanceViewModel extends ChangeNotifier{
           "amount": payment,
         },
       );
-      print(res);
-      print(balance);
       if (res != null) {
         var status = res["status"];
         var invoiceUrl = res["invoice_url"];

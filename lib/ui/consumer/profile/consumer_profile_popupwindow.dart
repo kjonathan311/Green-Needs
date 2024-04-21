@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:greenneeds/model/FirebaseAuthProvider.dart';
 import 'package:greenneeds/model/Profile.dart';
-import 'package:greenneeds/ui/consumer/balance/add_balance_view_model.dart';
+import 'package:greenneeds/ui/consumer/balance/consumer_balance_view_model.dart';
 import 'package:greenneeds/ui/consumer/food_delivery/address/address_view_model.dart';
 import 'package:provider/provider.dart';
 
@@ -23,7 +23,7 @@ class _ConsumerProfilePopUpWindowState extends State<ConsumerProfilePopUpWindow>
     final consumerProfileViewModel = Provider.of<ConsumerProfileViewModel>(context);
     final addressViewModel = Provider.of<AddressViewModel>(context);
     final cartViewModel = Provider.of<CartViewModel>(context);
-    final balanceViewModel = Provider.of<AddBalanceViewModel>(context);
+    final balanceViewModel = Provider.of<ConsumerBalanceViewModel>(context);
 
 
     return Dialog(

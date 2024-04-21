@@ -16,6 +16,8 @@ class AddressPage extends StatefulWidget {
 }
 
 class _AddressPageState extends State<AddressPage> {
+
+
   @override
   Widget build(BuildContext context) {
     final viewModel = Provider.of<AddressViewModel>(context);
@@ -83,10 +85,10 @@ class _AddressPageState extends State<AddressPage> {
                             leading: Radio<int>(
                               value: index,
                               groupValue: viewModel.selectedIndex,
-                              onChanged: (int? value) {
-                                if (mounted) {
+                              onChanged: (int? value) async{
+                                if (mounted==true) {
                                   setState(() {
-                                    viewModel.setSelectedIndex(value!);
+                                     viewModel.setSelectedIndex(value!);
                                   });
                                 }
                               },
@@ -127,7 +129,7 @@ class _AddressPageState extends State<AddressPage> {
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
                   'Pilih alamat',
-                  style: Theme.of(context).textTheme.headline6!.copyWith(
+                  style: Theme.of(context).textTheme.titleMedium!.copyWith(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
                   ),

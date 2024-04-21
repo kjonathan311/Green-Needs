@@ -318,7 +318,7 @@ class _AlaCarteListTileState extends State<AlaCarteListTile> {
                       TextButton(
                         onPressed: () async {
                           if(widget.item.quantity>=1){
-                            await viewModel.decreaseQuantity(widget.item.menuItem.uid, widget.item.quantity);
+                            await viewModel.decreaseQuantity(widget.item.uid, widget.item.quantity);
                           }
                         },
                         child: Text("-"),
@@ -329,7 +329,7 @@ class _AlaCarteListTileState extends State<AlaCarteListTile> {
                       ),
                       TextButton(
                         onPressed: () async {
-                          await viewModel.increaseQuantity(widget.item.menuItem.uid, widget.item.quantity);
+                          await viewModel.increaseQuantity(widget.item.uid, widget.item.quantity);
                         },
                         child: Text("+"),
                       ),

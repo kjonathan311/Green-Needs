@@ -53,7 +53,6 @@ class AddressViewModel extends ChangeNotifier{
 
   void setSelectedIndex(int index) {
     _selectedIndex = index;
-    notifyListeners();
   }
 
   void selectAddress(BuildContext context){

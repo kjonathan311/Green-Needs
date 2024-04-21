@@ -1,6 +1,6 @@
 
 import 'package:flutter/material.dart';
-import 'package:greenneeds/ui/consumer/balance/add_balance_view_model.dart';
+import 'package:greenneeds/ui/consumer/balance/consumer_balance_view_model.dart';
 import 'package:provider/provider.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -11,7 +11,7 @@ class PaymentPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final balanceViewModel = Provider.of<AddBalanceViewModel>(context);
+    final balanceViewModel = Provider.of<ConsumerBalanceViewModel>(context);
     WebViewController webViewController =
     WebViewController()..setJavaScriptMode(JavaScriptMode.unrestricted);
 

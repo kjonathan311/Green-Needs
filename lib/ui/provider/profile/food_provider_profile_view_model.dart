@@ -137,6 +137,8 @@ class FoodProviderProfileViewModel extends ChangeNotifier{
     Navigator.pushReplacementNamed(context, '/provider');
   }
 
+  
+
   void clearData(){
     foodProviderProfile=null;
   }

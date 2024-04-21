@@ -42,6 +42,39 @@ String formatDateWithMonth(DateTime dateTime) {
   return formattedDate;
 }
 
+Color statusColor(String status){
+  Color textColor = Colors.black; // Default color
+  if (status == "sedang diproses") {
+    textColor = Colors.orange;
+  } else if (status == "telah dikonfirmasi") {
+    textColor = Colors.blue;
+  }else if(status=="sedang dikirim"){
+    textColor = Colors.blue;
+  }else if(status=="order selesai"){
+    textColor = Colors.green;
+  }else if(status=="sedang dikirim"){
+    textColor = Colors.teal;
+  }else if(status=="order bisa diambil"){
+    textColor = Colors.teal;
+  }else if(status=="order dibatalkan"){
+    textColor = Colors.red;
+  }
+  return textColor;
+}
+Color statusWithdrawColor(String status){
+  Color textColor = Colors.black; // Default color
+  if (status == "PENDING") {
+    textColor = Colors.orange;
+  } else if (status == "CLAIMED") {
+    textColor = Colors.blue;
+  }else if(status=="COMPLETED"){
+    textColor = Colors.green;
+  }else if(status=="FAILED"){
+    textColor = Colors.red;
+  }
+  return textColor;
+}
+
 String formatDateWithMonthAndTime(DateTime dateTime) {
   List<String> indonesianMonthNames = [
     '',

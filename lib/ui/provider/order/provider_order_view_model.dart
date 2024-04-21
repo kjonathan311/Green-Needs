@@ -2,11 +2,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:greenneeds/model/OrderItem.dart';
+
 import '../../../model/Address.dart';
 import '../../../model/MenuItem.dart';
 import '../../../model/Profile.dart';
 
-class ConsumerOrderViewModel extends ChangeNotifier {
+class ProviderOrderViewModel extends ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
@@ -21,10 +22,11 @@ class ConsumerOrderViewModel extends ChangeNotifier {
 
         for (DocumentSnapshot doc in snapshot.docs) {
           Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-          String consumerId = data['consumerId'];
-          if (consumerId == user.uid) {
+          String providerId = data['providerId'];
+          if (providerId == user.uid) {
             if (tab == 1) {
-              if (data['status'] != "order selesai" && data['status'] != "order dibatalkan") {
+              if (data['status'] != "order selesai" &&
+                  data['status'] != "order dibatalkan") {
                 DocumentSnapshot providerDoc = await _firestore
                     .collection('providers')
                     .doc(data['providerId'])
@@ -56,8 +58,8 @@ class ConsumerOrderViewModel extends ChangeNotifier {
                 Map<String, dynamic> consumerData =
                 consumerDoc.data() as Map<String, dynamic>;
 
-                ConsumerProfile consumer= ConsumerProfile(
-                  uid: user.uid,
+                ConsumerProfile consumer = ConsumerProfile(
+                  uid: consumerDoc.id,
                   name: consumerData['name'],
                   email: consumerData['email'],
                   phoneNumber: consumerData['phoneNumber'],
@@ -85,9 +87,11 @@ class ConsumerOrderViewModel extends ChangeNotifier {
                     .get())
                     .size;
 
-                orders
-                    .add(
-                    OrderItemWithProviderAndConsumer(order: order, provider: provider,consumer: consumer,itemCount:itemCount));
+                orders.add(OrderItemWithProviderAndConsumer(
+                    order: order,
+                    provider: provider,
+                    consumer: consumer,
+                    itemCount: itemCount));
               }
             } else {
               if (data['status'] == "order selesai" ||
@@ -123,7 +127,7 @@ class ConsumerOrderViewModel extends ChangeNotifier {
                 Map<String, dynamic> consumerData =
                 consumerDoc.data() as Map<String, dynamic>;
 
-                ConsumerProfile consumer= ConsumerProfile(
+                ConsumerProfile consumer = ConsumerProfile(
                   uid: consumerDoc.id,
                   name: consumerData['name'],
                   email: consumerData['email'],
@@ -152,21 +156,22 @@ class ConsumerOrderViewModel extends ChangeNotifier {
                     .get())
                     .size;
 
-                orders
-                    .add(
-                    OrderItemWithProviderAndConsumer(order: order, provider: provider,consumer: consumer,itemCount:itemCount));
+                orders.add(OrderItemWithProviderAndConsumer(
+                    order: order,
+                    provider: provider,
+                    consumer: consumer,
+                    itemCount: itemCount));
               }
             }
           }
         }
-        orders.sort((a, b) => b.order.date.compareTo(a.order.date));
+        orders.sort((a, b) => a.order.date.compareTo(b.order.date));
         return orders;
       });
     } else {
       return Stream.value([]);
     }
   }
-
 
   Stream<String?> getStatus(String transactionId) {
     return _firestore.collection('transactions').doc(transactionId).snapshots().map((snapshot) {
@@ -179,13 +184,13 @@ class ConsumerOrderViewModel extends ChangeNotifier {
     });
   }
 
-  Future<Address?> getAddress(String addressDestinationId) async {
+  Future<Address?> getAddress(String consumerId, String addressDestinationId) async {
     User? user = _auth.currentUser;
-    if (user != null && user.uid.isNotEmpty) {
+    if (user != null) {
       try {
         DocumentSnapshot addressSnapshot = await _firestore
             .collection('consumers')
-            .doc(user.uid)
+            .doc(consumerId)
             .collection('addresses')
             .doc(addressDestinationId)
             .get();
@@ -193,6 +198,7 @@ class ConsumerOrderViewModel extends ChangeNotifier {
         if (addressSnapshot.exists) {
           Map<String, dynamic> addressData =
           addressSnapshot.data() as Map<String, dynamic>;
+          print(addressData['address']);
           return Address(
             uid: addressSnapshot.id,
             address: addressData['address'],
@@ -333,12 +339,99 @@ class ConsumerOrderViewModel extends ChangeNotifier {
     }
     return null;
   }
-  Future<void> changeStatusOrder(OrderItemWithProviderAndConsumer transaction,String status)async {
+
+  Future<void> confirmOrder(OrderItemWithProviderAndConsumer transaction, bool confirm) async {
+    User? user = _auth.currentUser;
+    if (user != null && user.email != null) {
+
+      if (confirm) {
+        //add Balance
+        final providerBalanceSnapshot = await _firestore.collection('providers')
+            .doc(user.uid)
+            .get();
+
+        int bal = providerBalanceSnapshot.data()?['balance'] ?? 0;
+
+        if (transaction.order.type == "kurir") {
+          bal = bal + transaction.order.totalPrice +
+              transaction.order.shippingFee!;
+        } else {
+          bal = bal + transaction.order.totalPrice;
+        }
+        await _firestore.collection('providers')
+            .doc(user.uid)
+            .set({
+          'balance': bal
+        }, SetOptions(merge: true));
+
+        //change status confirm
+        await _firestore.collection('transactions')
+            .doc(transaction.order.uid)
+            .set({
+          'status': "telah dikonfirmasi"
+        }, SetOptions(merge: true));
+      } else {
+        //bring back balance
+        final providerBalanceSnapshot = await _firestore.collection('consumers')
+            .doc(transaction.consumer.uid)
+            .get();
+
+        int bal = providerBalanceSnapshot.data()?['balance'] ?? 0;
+
+        await _firestore.collection('consumers')
+            .doc(transaction.consumer.uid)
+            .set({
+          'balance': bal + transaction.order.totalPayment
+        }, SetOptions(merge: true));
+
+
+        //bring back quantity items
+        DocumentSnapshot transactionSnapshot = await _firestore.collection(
+            'transactions').doc(transaction.order.uid).get();
+
+        if (transactionSnapshot.exists) {
+          CollectionReference itemsCollectionRef = _firestore.collection(
+              'transactions').doc(transaction.order.uid).collection('items');
+
+          QuerySnapshot itemsQuerySnapshot = await itemsCollectionRef.get();
+
+          for (QueryDocumentSnapshot transactionItemDoc in itemsQuerySnapshot
+              .docs) {
+            String productUid = transactionItemDoc['productUid'];
+
+            CollectionReference inventoryCollectionRef = _firestore.collection(
+                'providers').doc(transaction.order.providerId).collection(
+                'products');
+            QuerySnapshot snapshot = await inventoryCollectionRef
+                .snapshots()
+                .first;
+
+            for (QueryDocumentSnapshot doc in snapshot.docs) {
+              Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+              if (doc.id == productUid) {
+                await _firestore.collection('providers').doc(
+                    transaction.order.providerId).collection('products').doc(
+                    doc.id).set({
+                  'quantity': transactionItemDoc['quantity'] + data['quantity']
+                }, SetOptions(merge: true));
+              }
+            }
+          }
+        }
+        await _firestore.collection('transactions')
+            .doc(transaction.order.uid)
+            .set({
+          'status': "order dibatalkan"
+        }, SetOptions(merge: true));
+      }
+    }
+  }
+
+  Future<void> changeStatusOrder(OrderItemWithProviderAndConsumer transaction, String status) async {
     await _firestore.collection('transactions')
         .doc(transaction.order.uid)
         .set({
       'status': status
     }, SetOptions(merge: true));
   }
-
 }

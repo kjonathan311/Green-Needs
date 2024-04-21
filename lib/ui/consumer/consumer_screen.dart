@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
 import 'package:flutter/widgets.dart';
 import 'package:greenneeds/ui/consumer/food_delivery/address/address_view_model.dart';
 import 'package:greenneeds/ui/consumer/inventory/inventory_page.dart';
@@ -19,19 +18,23 @@ class ConsumerScreen extends StatefulWidget {
 class _ConsumerScreenState extends State<ConsumerScreen> {
   int _selectedTab = 0;
   late AddressViewModel addressViewModel;
-  bool _selectedAddressInitialized = false;
-
   late List<Widget> _pages;
+  bool _selectedAddressInitialized = false;
 
   @override
   void initState() {
     super.initState();
     addressViewModel = Provider.of<AddressViewModel>(context, listen: false);
-
     _updatePages();
     _listenToSelectedAddress();
   }
 
+  @override
+  void dispose() {
+    // Dispose of the listener when the widget is disposed
+    addressViewModel.removeListener(_updatePages);
+    super.dispose();
+  }
   void _updatePages() {
     _pages = <Widget>[
       const InventoryPage(),
@@ -48,10 +51,12 @@ class _ConsumerScreenState extends State<ConsumerScreen> {
 
   void _listenToSelectedAddress() {
     addressViewModel.addListener(() {
-      setState(() {
-        _selectedAddressInitialized = addressViewModel.selectedAddress != null;
-        _updatePages();
-      });
+      if (mounted) {
+        setState(() {
+          _selectedAddressInitialized = addressViewModel.selectedAddress != null;
+          _updatePages();
+        });
+      }
     });
   }
 
@@ -71,15 +76,15 @@ class _ConsumerScreenState extends State<ConsumerScreen> {
         unselectedItemColor: const Color.fromRGBO(214, 218, 200, 1.0),
         selectedItemColor: const Color.fromRGBO(156, 175, 170, 1.0),
         items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.inventory), label: "Inventori"),
-          BottomNavigationBarItem(icon: Icon(Icons.food_bank), label: "Beli Food Waste"),
-          BottomNavigationBarItem(icon: Icon(Icons.shopping_bag), label: "Orders"),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.inventory), label: "Inventori"),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.food_bank), label: "Beli Food Waste"),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.shopping_bag), label: "Orders"),
           BottomNavigationBarItem(icon: Icon(Icons.forum), label: "Forum"),
         ],
       ),
     );
   }
 }
-
-
-
