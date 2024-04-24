@@ -5,6 +5,7 @@ import 'package:greenneeds/model/OrderItem.dart';
 import '../../../model/Address.dart';
 import '../../../model/MenuItem.dart';
 import '../../../model/Profile.dart';
+import '../../../model/Rating.dart';
 
 class ConsumerOrderViewModel extends ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -143,6 +144,7 @@ class ConsumerOrderViewModel extends ChangeNotifier {
                   status: data['status'],
                   type: data['type'],
                   consumerNote: data['consumerNote'],
+                  rating:data['rating'],
                 );
 
                 int itemCount = (await _firestore
@@ -338,6 +340,70 @@ class ConsumerOrderViewModel extends ChangeNotifier {
         .doc(transaction.order.uid)
         .set({
       'status': status
+    }, SetOptions(merge: true));
+  }
+
+  Future<Rating?> getRating(OrderItemWithProviderAndConsumer transaction) async {
+    try {
+      DocumentSnapshot snapshot = await _firestore
+          .collection('transactions')
+          .doc(transaction.order.uid)
+          .get();
+      if (snapshot.exists) {
+        Map<String, dynamic>? data = snapshot.data() as Map<String, dynamic>?;
+        if (data != null) {
+          int? ratingValue = data['rating'];
+          String? comment = data['comment'];
+
+          if (ratingValue == null) {
+            return null;
+          } else {
+            return Rating(
+              rating: ratingValue,
+              comment: comment ?? '',
+            );
+          }
+        } else {
+          return null;
+        }
+      } else {
+        return null;
+      }
+    } catch (e) {
+      print('Error getting rating: $e');
+      return null;
+    }
+  }
+
+
+  Future<void>addRating(OrderItemWithProviderAndConsumer transaction,int rating,String comment)async{
+    await _firestore.collection('transactions')
+        .doc(transaction.order.uid)
+        .set({
+      'rating': rating,
+      'comment':comment
+    }, SetOptions(merge: true));
+
+    QuerySnapshot ordersSnapshot = await _firestore
+        .collection('transactions')
+        .where('providerId', isEqualTo: transaction.order.providerId)
+        .get();
+
+    int totalRating = 0;
+    int orderCount = 0;
+    for (QueryDocumentSnapshot orderDoc in ordersSnapshot.docs) {
+      Map<String, dynamic>? data = orderDoc.data() as Map<String, dynamic>?;
+      if (data != null && data.containsKey('rating')) {
+        int? rating = data['rating'];
+        if (rating != null) {
+          totalRating += rating;
+          orderCount++;
+        }
+      }
+    }
+    double averageRating = orderCount > 0 ? totalRating / orderCount : 0;
+    await _firestore.collection('providers').doc(transaction.order.providerId).set({
+      'rating': averageRating,
     }, SetOptions(merge: true));
   }
 

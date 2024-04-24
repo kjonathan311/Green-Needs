@@ -1,11 +1,29 @@
 import 'dart:developer';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 
+
+class MediaService {
+  static Future<Uint8List?> pickImage() async {
+    try {
+      final imagePicker = ImagePicker();
+      final file = await imagePicker.pickImage(
+          source: ImageSource.gallery);
+      if (file != null) {
+        return await file.readAsBytes();
+      }
+    } on PlatformException catch (e) {
+      debugPrint('Failed to pick image: $e');
+    }
+    return null;
+  }
+}
 void showCustomSnackBar(BuildContext context, String message, {Duration duration = const Duration(seconds: 1), required Color color}) {
   final snackBar = SnackBar(
     content: Text(message),

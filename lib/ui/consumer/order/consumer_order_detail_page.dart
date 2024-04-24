@@ -1,10 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:greenneeds/model/OrderItem.dart';
+import 'package:greenneeds/model/UserChat.dart';
+import 'package:greenneeds/ui/chat/chat_screen.dart';
 import 'package:greenneeds/ui/utils.dart';
 import 'package:provider/provider.dart';
 import '../../../model/Address.dart';
 import '../../../model/MenuItem.dart';
+import '../../../model/Rating.dart';
 import 'consumer_order_view_model.dart';
 
 class ConsumerOrderDetailPage extends StatefulWidget {
@@ -32,6 +35,83 @@ class _ConsumerOrderDetailPageState extends State<ConsumerOrderDetailPage> {
             },
           ),
           title: const Text("Detail Order"),
+          actions: [
+            IconButton(onPressed: ()async{
+              await Navigator.of(context).push(
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          ChatScreen(user:UserChat(
+                              uid: widget.transaction.provider.uid,
+                              name: widget.transaction.provider.name,
+                              email: widget.transaction.provider.email,
+                              photoUrl: widget.transaction.provider.photoUrl,
+                              transactionId: widget.transaction.order.uid,
+                              type: 'provider',
+                          ))));
+            }, icon: Icon(Icons.chat)),
+            StreamBuilder(
+              stream: consumerOrderViewModel.getStatus(widget.transaction.order.uid),
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return Text("${snapshot.error}");
+                } else {
+                  if (snapshot.hasData && snapshot.data != null) {
+                    String status = snapshot.data!;
+                    if (status == "order selesai") {
+                      return FutureBuilder<Rating?>(
+                        future: consumerOrderViewModel.getRating(widget.transaction),
+                        builder: (context, ratingSnapshot) {
+                          if (ratingSnapshot.hasError) {
+                            return Text("${ratingSnapshot.error}");
+                          } else {
+                            final rating = ratingSnapshot.data;
+                            if (rating != null) {
+                              return IconButton(
+                                onPressed: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return ViewRatingDialog(
+                                        rating: rating.rating,
+                                        comment: rating.comment,
+                                      );
+                                    },
+                                  );
+                                },
+                                icon: Icon(Icons.rate_review),
+                              );
+                            } else {
+                              return IconButton(
+                                onPressed: () async {
+                                  await showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return RatingDialog(
+                                        onSubmit: (int rating, String comment) {
+                                          consumerOrderViewModel.addRating(widget.transaction, rating, comment);
+                                        },
+                                      );
+                                    },
+                                  );
+                                },
+                                icon: Icon(Icons.rate_review),
+                              );
+                            }
+                          }
+                        },
+                      );
+                    } else {
+                      return Container();
+                    }
+                  } else {
+                    return Container();
+                  }
+                }
+              },
+            ),
+
+
+          ],
         ),
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -369,6 +449,112 @@ class _ConsumerOrderDetailPageState extends State<ConsumerOrderDetailPage> {
           ]
           ,
         )
+    );
+  }
+}
+class RatingDialog extends StatefulWidget {
+  final Function(int, String) onSubmit;
+  const RatingDialog({Key? key, required this.onSubmit}) : super(key: key);
+
+  @override
+  _RatingDialogState createState() => _RatingDialogState();
+}
+
+class _RatingDialogState extends State<RatingDialog> {
+  int _rating = 0;
+  TextEditingController _commentController = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: Text("Rate order ini"),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: List.generate(5, (index) {
+              return IconButton(
+                icon: Icon(
+                  index < _rating ? Icons.star : Icons.star_border,
+                  color: Colors.orange,
+                  size: 40.0,
+                ),
+                onPressed: () {
+                  setState(() {
+                    _rating = index + 1;
+                  });
+                },
+              );
+            }),
+          ),
+          SizedBox(height: 20),
+          TextField(
+            controller: _commentController,
+            decoration: InputDecoration(
+              border: OutlineInputBorder(),
+            ),
+            maxLines: 3,
+          ),
+        ],
+      ),
+      actions: <Widget>[
+        TextButton(
+          onPressed: () {
+            widget.onSubmit(_rating, _commentController.text);
+            Navigator.of(context).pop();
+
+          },
+          child: Text('Submit'),
+        ),
+      ],
+    );
+  }
+}
+
+class ViewRatingDialog extends StatelessWidget {
+  final int rating;
+  final String comment;
+
+  const ViewRatingDialog({
+    Key? key,
+    required this.rating,
+    required this.comment,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: Text("Rating Detail"),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: List.generate(5, (index) {
+              return Icon(
+                index < rating ? Icons.star : Icons.star_border,
+                color: Colors.orange,
+                size: 40.0,
+              );
+            }),
+          ),
+          SizedBox(height: 20),
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Text(comment,maxLines: 3,overflow: TextOverflow.ellipsis),
+          ),
+        ],
+      ),
+      actions: <Widget>[
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          child: Text('Close'),
+        ),
+      ],
     );
   }
 }

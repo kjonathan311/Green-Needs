@@ -52,6 +52,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                           horizontal: 25.0, vertical: 10),
                       child: Column(
                         children: [
+                          if(cartViewModel.selectedOrderType=="kurir")
                           Container(
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 30.0, vertical: 10),

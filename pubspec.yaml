@@ -47,6 +47,8 @@ dependencies:
   geolocator: ^11.0.0
   xendit: ^0.0.16
   webview_flutter: ^4.7.0
+  firebase_messaging: ^14.9.0
+  timeago: ^3.6.1
 
 dev_dependencies:
   flutter_test:

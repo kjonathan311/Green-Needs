@@ -36,6 +36,7 @@ class FoodProviderProfileViewModel extends ChangeNotifier{
           city: data['city'],
           address: data['address'],
           status: data['status'],
+          rating: data['rating'],
         );
         return foodProviderProfile;
       }

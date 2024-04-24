@@ -44,9 +44,7 @@ class ConsumerBalanceViewModel extends ChangeNotifier{
     try {
       var res = await xendit.invoke(
         endpoint: "POST https://api.xendit.co/v2/invoices",
-        headers: {
-          // "for-user-id": "",
-        },
+        headers: {},
         parameters: {
           "external_id": currentUser.uid,
           "payer_email": currentUser.email,
@@ -80,6 +78,7 @@ class ConsumerBalanceViewModel extends ChangeNotifier{
       return null;
     }
   }
+
   Future<void> getPaymentStatus(BuildContext context) async{
     _isLoading=true;
     notifyListeners();

@@ -68,6 +68,13 @@ class FoodProviderProfilePopUpWindow extends StatelessWidget {
                               Text('alamat:',overflow: TextOverflow.ellipsis),
                               Text('${profile.address}',overflow: TextOverflow.ellipsis),
                               const SizedBox(height: 5.0),
+                              if(profile.rating!=null)
+                                Row(
+                                  children: [
+                                    Icon(Icons.star,color: Colors.orange),
+                                    Text('${profile.rating}'),
+                                  ],
+                                ),
                               Row(
                                 children: [
                                   Text('Status:'),

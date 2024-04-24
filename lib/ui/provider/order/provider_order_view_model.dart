@@ -6,6 +6,7 @@ import 'package:greenneeds/model/OrderItem.dart';
 import '../../../model/Address.dart';
 import '../../../model/MenuItem.dart';
 import '../../../model/Profile.dart';
+import '../../../model/Rating.dart';
 
 class ProviderOrderViewModel extends ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -147,6 +148,7 @@ class ProviderOrderViewModel extends ChangeNotifier {
                   status: data['status'],
                   type: data['type'],
                   consumerNote: data['consumerNote'],
+                  rating:data['rating'],
                 );
 
                 int itemCount = (await _firestore
@@ -165,7 +167,7 @@ class ProviderOrderViewModel extends ChangeNotifier {
             }
           }
         }
-        orders.sort((a, b) => a.order.date.compareTo(b.order.date));
+        orders.sort((a, b) => b.order.date.compareTo(a.order.date));
         return orders;
       });
     } else {
@@ -433,5 +435,37 @@ class ProviderOrderViewModel extends ChangeNotifier {
         .set({
       'status': status
     }, SetOptions(merge: true));
+  }
+
+  Future<Rating?> getRating(OrderItemWithProviderAndConsumer transaction) async {
+    try {
+      DocumentSnapshot snapshot = await _firestore
+          .collection('transactions')
+          .doc(transaction.order.uid)
+          .get();
+      if (snapshot.exists) {
+        Map<String, dynamic>? data = snapshot.data() as Map<String, dynamic>?;
+        if (data != null) {
+          int? ratingValue = data['rating'];
+          String? comment = data['comment'];
+
+          if (ratingValue == null) {
+            return null;
+          } else {
+            return Rating(
+              rating: ratingValue,
+              comment: comment ?? '',
+            );
+          }
+        } else {
+          return null;
+        }
+      } else {
+        return null;
+      }
+    } catch (e) {
+      print('Error getting rating: $e');
+      return null;
+    }
   }
 }

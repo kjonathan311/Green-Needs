@@ -6,6 +6,7 @@ import 'package:greenneeds/ui/provider/order/provider_order_view_model.dart';
 import 'package:provider/provider.dart';
 
 import '../../../model/Address.dart';
+import '../../../services/notification_service.dart';
 import '../../utils.dart';
 
 class ProviderOrderPage extends StatefulWidget {
@@ -16,6 +17,14 @@ class ProviderOrderPage extends StatefulWidget {
 }
 
 class _ProviderOrderPageState extends State<ProviderOrderPage> {
+  final notificationService=NotificationService();
+
+
+  @override
+  void initState() {
+    super.initState();
+    notificationService.firebaseNotification(context);
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -133,7 +142,6 @@ class _OrderListTileState extends State<OrderListTile> {
 
   @override
   Widget build(BuildContext context) {
-    final providerOrderViewModel = Provider.of<ProviderOrderViewModel>(context);
     String status=widget.transaction.order.status;
     Color textStatusColor = statusColor(status);
 
@@ -168,6 +176,14 @@ class _OrderListTileState extends State<OrderListTile> {
                             Container(width:150,child: Text("${widget.transaction.order.uid}",maxLines: 1,overflow: TextOverflow.ellipsis)),
                             Text("Tipe order : ${widget.transaction.order.type}",maxLines: 1,overflow: TextOverflow.ellipsis),
                             Text("${widget.transaction.itemCount} items"),
+                            if(widget.transaction.order.rating!=null)
+                              Row(
+                                children: [
+                                  Text("Rating : "),
+                                  Icon(Icons.star,color: Colors.orange),
+                                  Text("${widget.transaction.order.rating}")
+                                ],
+                              )
                           ],
                         )
                     ),
@@ -183,7 +199,8 @@ class _OrderListTileState extends State<OrderListTile> {
               Positioned(
                   bottom: 0,
                   right: 0,
-                  child: Text("${widget.transaction.order.status}",style: TextStyle(color: textStatusColor)))
+                  child: Text("${widget.transaction.order.status}",style: TextStyle(color: textStatusColor)),
+                  )
             ],
           )
       ),

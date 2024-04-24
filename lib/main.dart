@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:greenneeds/ui/admin/admin_screen.dart';
 import 'package:greenneeds/ui/admin/verification/admin_verification_view_model.dart';
@@ -6,6 +7,7 @@ import 'package:greenneeds/ui/authentication/login/login_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:greenneeds/ui/authentication/registerConsumer/register_consumer_page.dart';
 import 'package:greenneeds/ui/authentication/registerFoodProvider/register_food_provider_page.dart';
+import 'package:greenneeds/ui/chat/chat_view_model.dart';
 import 'package:greenneeds/ui/consumer/Balance/add_balance_page.dart';
 import 'package:greenneeds/ui/consumer/consumer_screen.dart';
 import 'package:greenneeds/ui/consumer/balance/consumer_balance_view_model.dart';
@@ -42,12 +44,20 @@ import '/firebase_options.dart';
 import 'model/FirebaseAuthProvider.dart';
 import 'services/notification_service.dart';
 
+Future<void> _backgroundMessageHandler(
+    RemoteMessage message) async {
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+}
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
   NotificationService().initNotifications();
+  await FirebaseMessaging.instance.getInitialMessage();
+  FirebaseMessaging.onBackgroundMessage(_backgroundMessageHandler);
   runApp(const MyApp());
 }
 
@@ -113,6 +123,9 @@ class MyApp extends StatelessWidget {
           ),
           ChangeNotifierProvider<ProviderOrderViewModel>(
               create: (context)=>ProviderOrderViewModel(),
+          ),
+          ChangeNotifierProvider<ChatViewModel>(
+            create: (context)=>ChatViewModel(),
           )
         ],
         child: MaterialApp(

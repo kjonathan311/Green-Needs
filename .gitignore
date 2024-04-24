@@ -48,3 +48,4 @@ firebase.json
 
 /lib/firebase_options.dart
 /lib/xendit_api_key.dart
+/lib/firebase_cloud_messaging_key.dart

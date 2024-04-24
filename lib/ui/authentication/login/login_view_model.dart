@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:greenneeds/model/FirebaseAuthProvider.dart';
+import 'package:greenneeds/services/notification_service.dart';
 import 'package:greenneeds/ui/utils.dart';
 
 class LoginViewModel extends ChangeNotifier {
   final FirebaseAuthProvider authProvider;
+  final notifications=NotificationService();
 
   LoginViewModel(this.authProvider);
   //loading
@@ -23,6 +25,10 @@ class LoginViewModel extends ChangeNotifier {
     }
 
     AuthResult result = await authProvider.login(email, password);
+    await notifications.requestPermission();
+    await notifications.getToken(result.type!);
+
+
 
     if (result.user != null) {
       if(result.type=="consumer"){

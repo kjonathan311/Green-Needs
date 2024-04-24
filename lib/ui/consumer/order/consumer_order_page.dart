@@ -5,6 +5,8 @@ import 'package:greenneeds/ui/consumer/order/consumer_order_view_model.dart';
 import 'package:greenneeds/ui/utils.dart';
 import 'package:provider/provider.dart';
 
+import '../../../services/notification_service.dart';
+
 class ConsumerOrderPage extends StatefulWidget {
   const ConsumerOrderPage({super.key});
 
@@ -125,14 +127,21 @@ class OrderListTile extends StatefulWidget {
 }
 
 class _OrderListTileState extends State<OrderListTile> {
+  final notificationService=NotificationService();
+
+
+  @override
+  void initState() {
+    super.initState();
+    notificationService.firebaseNotification(context);
+  }
 
   @override
   Widget build(BuildContext context) {
 
     String status=widget.transaction.order.status;
-    Color textStatusColor = statusColor(status); // Default color
+    Color textStatusColor = statusColor(status);
 
-    // Set color based on status
     return GestureDetector(
       onTap: (){
         Navigator.of(context).push(

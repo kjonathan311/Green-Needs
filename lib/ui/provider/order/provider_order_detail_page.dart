@@ -7,6 +7,9 @@ import 'package:greenneeds/ui/utils.dart';
 import 'package:provider/provider.dart';
 import '../../../model/Address.dart';
 import '../../../model/MenuItem.dart';
+import '../../../model/Rating.dart';
+import '../../../model/UserChat.dart';
+import '../../chat/chat_screen.dart';
 
 class ProviderOrderDetailPage extends StatefulWidget {
   final OrderItemWithProviderAndConsumer transaction;
@@ -32,6 +35,69 @@ class _ProviderOrderDetailPageState extends State<ProviderOrderDetailPage> {
             },
           ),
           title: const Text("Detail Order"),
+          actions: [
+            IconButton(onPressed: ()async{
+              await Navigator.of(context).push(
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          ChatScreen(user:UserChat(
+                            uid: widget.transaction.consumer.uid,
+                            name: widget.transaction.consumer.name,
+                            email: widget.transaction.consumer.email,
+                            photoUrl: widget.transaction.consumer.photoUrl,
+                            transactionId: widget.transaction.order.uid,
+                            type: 'consumer',
+                          ))));
+            }, icon: Icon(Icons.chat)),
+
+            StreamBuilder(
+              stream: providerOrderViewModel.getStatus(widget.transaction.order.uid),
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return Text("${snapshot.error}");
+                } else {
+                  if (snapshot.hasData && snapshot.data != null) {
+                    String status = snapshot.data!;
+                    if (status == "order selesai") {
+                      return FutureBuilder<Rating?>(
+                        future: providerOrderViewModel.getRating(widget.transaction),
+                        builder: (context, ratingSnapshot) {
+                          if (ratingSnapshot.hasError) {
+                            return Text("${ratingSnapshot.error}");
+                          } else {
+                            final rating = ratingSnapshot.data;
+                            if (rating != null) {
+                              return IconButton(
+                                onPressed: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return ViewRatingDialog(
+                                        rating: rating.rating,
+                                        comment: rating.comment,
+                                      );
+                                    },
+                                  );
+                                },
+                                icon: Icon(Icons.rate_review),
+                              );
+                            }else{
+                              return Container();
+                            }
+                          }
+                        },
+                      );
+                    } else {
+                      return Container();
+                    }
+                  } else {
+                    return Container();
+                  }
+                }
+              },
+            ),
+
+          ],
         ),
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -453,6 +519,53 @@ class DeliverOrderWidget extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class ViewRatingDialog extends StatelessWidget {
+  final int rating;
+  final String comment;
+
+  const ViewRatingDialog({
+    Key? key,
+    required this.rating,
+    required this.comment,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: Text("Rating Detail"),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: List.generate(5, (index) {
+              return Icon(
+                index < rating ? Icons.star : Icons.star_border,
+                color: Colors.orange,
+                size: 40.0,
+              );
+            }),
+          ),
+          SizedBox(height: 20),
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Text(comment,maxLines: 3,overflow: TextOverflow.ellipsis),
+          ),
+        ],
+      ),
+      actions: <Widget>[
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          child: Text('Close'),
+        ),
+      ],
     );
   }
 }

@@ -95,7 +95,7 @@ class _HomeFoodDeliveryPageState extends State<HomeFoodDeliveryPage> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('Search',style: TextStyle(fontSize: 16.0,color: Colors.grey)),
+                    Text('Cari',style: TextStyle(fontSize: 16.0,color: Colors.grey)),
                     Icon(Icons.search,color: Colors.grey),
                   ],
                 ),
