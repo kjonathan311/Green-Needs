@@ -87,7 +87,7 @@ Color statusWithdrawColor(String status){
     textColor = Colors.blue;
   }else if(status=="COMPLETED"){
     textColor = Colors.green;
-  }else if(status=="FAILED"){
+  }else if(status=="EXPIRED"){
     textColor = Colors.red;
   }
   return textColor;

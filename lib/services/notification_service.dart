@@ -73,6 +73,7 @@ class NotificationService{
 
 
   Future<void> getToken(String type) async {
+    receiverToken='';
     final token =
     await FirebaseMessaging.instance.getToken();
     _saveToken(token!,type);

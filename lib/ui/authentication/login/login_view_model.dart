@@ -25,21 +25,18 @@ class LoginViewModel extends ChangeNotifier {
     }
 
     AuthResult result = await authProvider.login(email, password);
-    await notifications.requestPermission();
-    await notifications.getToken(result.type!);
-
-
+    if(result.error==null && result.type!="admin"){
+        await notifications.requestPermission();
+        await notifications.getToken(result.type!);
+    }
 
     if (result.user != null) {
       if(result.type=="consumer"){
-        Navigator.of(context).pushNamedAndRemoveUntil("/consumer", (route) => false);
-        Navigator.pushReplacementNamed(context, "/consumer");
+        await Navigator.of(context).pushNamedAndRemoveUntil("/consumer", (route) => false);
       }else if(result.type=="provider"){
-        Navigator.of(context).pushNamedAndRemoveUntil("/provider", (route) => false);
-        Navigator.pushReplacementNamed(context, "/provider");
+        await Navigator.of(context).pushNamedAndRemoveUntil("/provider", (route) => false);
       }else if(result.type=="admin"){
-        Navigator.of(context).pushNamedAndRemoveUntil("/admin", (route) => false);
-        Navigator.pushReplacementNamed(context, "/admin");
+        await Navigator.of(context).pushNamedAndRemoveUntil("/admin", (route) => false);
       }else{
         showCustomSnackBar(context,"login gagal", color: Colors.red);
       }

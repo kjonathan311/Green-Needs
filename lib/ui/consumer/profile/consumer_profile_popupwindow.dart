@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:greenneeds/model/FirebaseAuthProvider.dart';
 import 'package:greenneeds/model/Profile.dart';
@@ -126,7 +127,8 @@ class _ConsumerProfilePopUpWindowState extends State<ConsumerProfilePopUpWindow>
                 consumerProfileViewModel.clearData();
                 addressViewModel.clearData();
                 await authProvider.logout();
-                cartViewModel.clearAll();
+                FirebaseMessaging.instance.deleteToken();
+                 cartViewModel.clearAll();
                 Navigator.of(context)
                     .pushNamedAndRemoveUntil("/introduction", (route) => false);
                 Navigator.pushReplacementNamed(context, "/introduction");

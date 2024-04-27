@@ -6,6 +6,7 @@ import 'package:greenneeds/ui/utils.dart';
 import 'package:provider/provider.dart';
 
 import '../../../services/notification_service.dart';
+import '../profile/consumer_profile_popupwindow.dart';
 
 class ConsumerOrderPage extends StatefulWidget {
   const ConsumerOrderPage({super.key});
@@ -20,6 +21,18 @@ class _ConsumerOrderPageState extends State<ConsumerOrderPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Riwayat Order"),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.person_2),
+            onPressed: () {
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return const ConsumerProfilePopUpWindow();
+                  });
+            },
+          ),
+        ],
       ),
       body: DefaultTabController(
           length: 2,

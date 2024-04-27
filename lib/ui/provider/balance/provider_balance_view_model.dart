@@ -137,7 +137,7 @@ class ProviderBalanceViewModel extends ChangeNotifier {
                 .doc(doc.id)
                 .set({'status': res['status']}, SetOptions(merge: true));
           }
-          if ((res['status'] == "FAILED" || res['status'] == "VOIDED") && data['returnBalance'] == null) {
+          if ((res['status'] == "EXPIRED" || res['status'] == "VOIDED") && data['returnBalance'] == null) {
             int currentBal = 0;
             final providerSnapshot = await _firestore.collection('providers')
                 .doc(user.uid)

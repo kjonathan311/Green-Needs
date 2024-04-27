@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:greenneeds/ui/admin/settings/settings_page.dart';
 import 'package:greenneeds/ui/admin/verification/verification_page.dart';
 import 'package:provider/provider.dart';
 
 import '../../model/FirebaseAuthProvider.dart';
+import '../forum/admin_forum_page.dart';
 
 class AdminScreen extends StatefulWidget {
   const AdminScreen({Key? key}) : super(key: key);
@@ -22,9 +24,7 @@ class _AdminScreenState extends State<AdminScreen> {
     Center(
       child: Text("Laporan user"),
     ),
-    Center(
-      child: Text("Forum"),
-    ),
+    AdminForumPage()
   ];
 
   _changeTab(int index) {
@@ -36,21 +36,6 @@ class _AdminScreenState extends State<AdminScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        actions: [
-          IconButton(
-            icon: Icon(Icons.person_2),
-            onPressed: () {
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return AdminProfilePopUpWindow();
-                },
-              );
-            },
-          ),
-        ],
-      ),
       body: IndexedStack(
         index: _selectedTab,
         children: _pages,
@@ -100,16 +85,22 @@ class AdminProfilePopUpWindow extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            Divider(),
             Align(
                 alignment: Alignment.centerLeft,
                 child: Text("Pengaturan",
                     style: Theme.of(context).textTheme.titleMedium)),
             const SizedBox(
-              height: 10.0,
+              height: 20.0,
             ),
-            const SizedBox(
-              height: 10.0,
+            ListTile(
+              leading: Icon(Icons.settings),
+              title: Text("pengaturan global"),
+              onTap: () async {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => SettingsPage()),
+                );
+              },
             ),
             ListTile(
               leading: Icon(Icons.logout),

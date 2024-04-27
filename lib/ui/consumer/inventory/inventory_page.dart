@@ -12,8 +12,6 @@ import 'package:greenneeds/ui/consumer/profile/consumer_profile_popupwindow.dart
 import 'package:greenneeds/ui/utils.dart';
 import 'package:provider/provider.dart';
 
-import '../../../services/notification_service.dart';
-
 class InventoryPage extends StatefulWidget {
   const InventoryPage({super.key});
 

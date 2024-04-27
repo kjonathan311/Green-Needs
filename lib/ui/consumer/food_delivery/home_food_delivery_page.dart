@@ -4,12 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/widgets.dart';
 import 'package:greenneeds/ui/consumer/food_delivery/address/address_view_model.dart';
+import 'package:greenneeds/ui/consumer/food_delivery/cart/cart_view_model.dart';
 import 'package:greenneeds/ui/consumer/food_delivery/search/category_search_view_page.dart';
 import 'package:greenneeds/ui/consumer/food_delivery/search/search_view_model.dart';
 import 'package:greenneeds/ui/consumer/food_delivery/search/search_view_page.dart';
 import 'package:greenneeds/ui/consumer/profile/consumer_profile_popupwindow.dart';
 import 'package:provider/provider.dart';
-
+import 'package:badges/badges.dart' as badges;
 import '../../../model/Category.dart';
 import 'address/address_page.dart';
 import 'cart/cart_page.dart';
@@ -27,6 +28,7 @@ class _HomeFoodDeliveryPageState extends State<HomeFoodDeliveryPage> {
   Widget build(BuildContext context) {
     final addressViewModel = Provider.of<AddressViewModel>(context);
     final searchViewModel = Provider.of<SearchViewModel>(context);
+    final cartViewModel = Provider.of<CartViewModel>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -35,7 +37,9 @@ class _HomeFoodDeliveryPageState extends State<HomeFoodDeliveryPage> {
           onPressed: (){
             Navigator.of(context).push(MaterialPageRoute(
                 builder: (context) => CartPage()));
-          }, icon: Icon(Icons.shopping_cart),
+          }, icon: badges.Badge(
+            badgeContent: Text("${cartViewModel.getAllItemsLength()}"),
+            child: Icon(Icons.shopping_cart)),
         ),
         title: Text("Beli Food Waste",style: TextStyle(fontSize: 16)),
         actions: [

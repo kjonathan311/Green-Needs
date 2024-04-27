@@ -40,7 +40,7 @@ class _AddMenuPageState extends State<AddMenuPage> {
             Navigator.pop(context);
           },
         ),
-        title: Text("Tambah menu"),
+        title: Text("Tambah Menu"),
         actions: [
           IconButton(onPressed: ()async{
             await viewModel.addMenuItem(context, _nameController.text.trim(), _selectedCategory, _descriptionController.text.trim(),

@@ -407,4 +407,58 @@ class ConsumerOrderViewModel extends ChangeNotifier {
     }, SetOptions(merge: true));
   }
 
+  Future<void>cancelOrder(OrderItemWithProviderAndConsumer transaction)async{
+    final providerBalanceSnapshot = await _firestore.collection('consumers')
+        .doc(transaction.consumer.uid)
+        .get();
+
+    int bal = providerBalanceSnapshot.data()?['balance'] ?? 0;
+
+    await _firestore.collection('consumers')
+        .doc(transaction.consumer.uid)
+        .set({
+      'balance': bal + transaction.order.totalPayment
+    }, SetOptions(merge: true));
+
+
+    //bring back quantity items
+    DocumentSnapshot transactionSnapshot = await _firestore.collection(
+        'transactions').doc(transaction.order.uid).get();
+
+    if (transactionSnapshot.exists) {
+      CollectionReference itemsCollectionRef = _firestore.collection(
+          'transactions').doc(transaction.order.uid).collection('items');
+
+      QuerySnapshot itemsQuerySnapshot = await itemsCollectionRef.get();
+
+      for (QueryDocumentSnapshot transactionItemDoc in itemsQuerySnapshot
+          .docs) {
+        String productUid = transactionItemDoc['productUid'];
+
+        CollectionReference inventoryCollectionRef = _firestore.collection(
+            'providers').doc(transaction.order.providerId).collection(
+            'products');
+        QuerySnapshot snapshot = await inventoryCollectionRef
+            .snapshots()
+            .first;
+
+        for (QueryDocumentSnapshot doc in snapshot.docs) {
+          Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+          if (doc.id == productUid) {
+            await _firestore.collection('providers').doc(
+                transaction.order.providerId).collection('products').doc(
+                doc.id).set({
+              'quantity': transactionItemDoc['quantity'] + data['quantity']
+            }, SetOptions(merge: true));
+          }
+        }
+      }
+    }
+    await _firestore.collection('transactions')
+        .doc(transaction.order.uid)
+        .set({
+      'status': "order dibatalkan"
+    }, SetOptions(merge: true));
+  }
+
 }

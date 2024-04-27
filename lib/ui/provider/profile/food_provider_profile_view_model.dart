@@ -109,6 +109,17 @@ class FoodProviderProfileViewModel extends ChangeNotifier{
           if (photoUrl != null) 'photoUrl': photoUrl,
         }, SetOptions(merge: true));
 
+        QuerySnapshot postSnapshot = await _firestore.collection('posts').where('uidUser', isEqualTo: user.uid).get();
+
+        WriteBatch batch = _firestore.batch();
+        postSnapshot.docs.forEach((postDoc) {
+          batch.update(postDoc.reference, {
+            'name': name,
+            if (photoUrl != null) 'photoUrl': photoUrl,
+          });
+        });
+        await batch.commit();
+
       }catch(e){
         showCustomSnackBar(context, "${e}", color: Colors.red);
       }

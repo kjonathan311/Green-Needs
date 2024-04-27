@@ -216,9 +216,7 @@ class _AddAddressPopUpWindowState extends State<AddAddressPopUpWindow> {
                   width: double.infinity,
                   height: 50,
                   child: ElevatedButton(
-                    onPressed: viewModel.isLoading
-                        ? null
-                        : () async {
+                    onPressed: () async {
                       await viewModel.addAddress(
                           context,
                           _addressController.text.trim(),

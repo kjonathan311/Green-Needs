@@ -1,4 +1,5 @@
 
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:greenneeds/model/FirebaseAuthProvider.dart';
 import 'package:greenneeds/model/Profile.dart';
@@ -156,6 +157,7 @@ class FoodProviderProfilePopUpWindow extends StatelessWidget {
               leading: Icon(Icons.logout),
               title: Text("Logout"),
               onTap: () async {
+                FirebaseMessaging.instance.deleteToken();
                 await authProvider.logout();
                 Navigator.of(context)
                     .pushNamedAndRemoveUntil("/introduction", (route) => false);

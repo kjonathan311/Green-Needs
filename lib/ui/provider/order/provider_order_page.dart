@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import '../../../model/Address.dart';
 import '../../../services/notification_service.dart';
 import '../../utils.dart';
+import '../profile/food_provider_profile_popupwindow.dart';
 
 class ProviderOrderPage extends StatefulWidget {
   const ProviderOrderPage({super.key});
@@ -30,6 +31,19 @@ class _ProviderOrderPageState extends State<ProviderOrderPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Riwayat Order"),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.person),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return FoodProviderProfilePopUpWindow();
+                },
+              );
+            },
+          ),
+        ],
       ),
       body: DefaultTabController(
           length: 2,

@@ -43,9 +43,6 @@ class FirebaseAuthProvider with ChangeNotifier {
         if (snapshotAdmin.exists) {
           return "admin";
         }
-        if (snapshotAdmin.exists!) {
-          return null;
-        }
       }
     }
   }
@@ -160,7 +157,6 @@ class FirebaseAuthProvider with ChangeNotifier {
           await consumersCollection.doc(userId).get();
 
       if (snapshotConsumer.exists) {
-        notifyListeners();
         return AuthResult(user: credential.user, type: "consumer");
       } else {
         CollectionReference foodProviderCollection =
@@ -168,8 +164,6 @@ class FirebaseAuthProvider with ChangeNotifier {
         DocumentSnapshot snapshotFoodProvider =
             await foodProviderCollection.doc(userId).get();
         if (snapshotFoodProvider.exists) {
-          notifyListeners();
-
           return AuthResult(user: credential.user, type: "provider");
         } else {
           CollectionReference adminCollection =
@@ -177,17 +171,13 @@ class FirebaseAuthProvider with ChangeNotifier {
           DocumentSnapshot snapshotAdmin =
               await adminCollection.doc(userId).get();
           if (snapshotAdmin.exists) {
-            notifyListeners();
-
+            print("working");
             return AuthResult(user: credential.user, type: "admin");
-          }
-          if (snapshotAdmin.exists) {
-            return AuthResult(error: 'user tidak ditemukan');
+          }else{
+            return AuthResult(error: "user tidak ditemukan");
           }
         }
       }
-
-      return AuthResult(user: credential.user);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'invalid-email' || e.code == 'invalid-credential') {
         return AuthResult(error: ' Email atau Password Salah');

@@ -440,6 +440,26 @@ class _ConsumerOrderDetailPageState extends State<ConsumerOrderDetailPage> {
                         ),
                       ),
                     );
+                  }else if(status == "sedang diproses"){
+                    return Container(
+                      width: double.infinity,
+                      margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          await consumerOrderViewModel.cancelOrder(widget.transaction);
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.red,
+                        ),
+                        child: Text(
+                          "order dibatalkan",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    );
                   } else {
                     return SizedBox();
                   }

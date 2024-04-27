@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:greenneeds/ui/consumer/food_delivery/address/address_view_model.dart';
 import 'package:greenneeds/ui/consumer/inventory/inventory_page.dart';
 import 'package:greenneeds/ui/consumer/order/consumer_order_page.dart';
+import 'package:greenneeds/ui/forum/forum_page.dart';
 import 'package:provider/provider.dart';
 
 import 'food_delivery/address/address_page.dart';
@@ -31,7 +32,6 @@ class _ConsumerScreenState extends State<ConsumerScreen> {
 
   @override
   void dispose() {
-    // Dispose of the listener when the widget is disposed
     addressViewModel.removeListener(_updatePages);
     super.dispose();
   }
@@ -43,9 +43,7 @@ class _ConsumerScreenState extends State<ConsumerScreen> {
       else
         AddressPage(),
       ConsumerOrderPage(),
-      const Center(
-        child: Text("Forum"),
-      ),
+      ForumPage(),
     ];
   }
 
