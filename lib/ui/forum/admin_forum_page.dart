@@ -129,9 +129,15 @@ class _AdminForumPageState extends State<AdminForumPage> {
                                                     child:
                                                         Text('lihat laporan'),
                                                     onTap: () async {
-                                                      _showReportCommentsPopup(
-                                                          context,
-                                                          snapshot.data!);
+                                                      showDialog(
+                                                        context: context,
+                                                        builder: (BuildContext context) {
+                                                          return ReportCommentsPopup(
+                                                            reportComments: snapshot.data!,
+                                                            post: post,
+                                                          );
+                                                        },
+                                                      );
                                                     },
                                                   ),
                                                 PopupMenuItem(
@@ -225,40 +231,47 @@ class _AdminForumPageState extends State<AdminForumPage> {
   }
 }
 
-void _showReportCommentsPopup(
-    BuildContext context, List<String> reportComments) {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: Text("List laporan post"),
-        content: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              for (String comment in reportComments)
-                Container(
-                  width: double.infinity,
-                    padding: EdgeInsets.all(10),
-                    margin: EdgeInsets.symmetric(vertical: 5),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(color: Colors.black)
-                    ),
-                    child: Text(comment)
+class ReportCommentsPopup extends StatelessWidget {
+  final List<String> reportComments;
+  final Post post;
+
+  ReportCommentsPopup({
+    required this.reportComments,
+    required this.post,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final forumViewModel = Provider.of<ForumViewModel>(context);
+    return AlertDialog(
+      title: Text("List laporan post"),
+      content: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            for (String comment in reportComments)
+              Container(
+                width: double.infinity,
+                padding: EdgeInsets.all(10),
+                margin: EdgeInsets.symmetric(vertical: 5),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: Colors.black),
                 ),
-            ],
-          ),
+                child: Text(comment),
+              ),
+          ],
         ),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: Text("Close"),
-          ),
-        ],
-      );
-    },
-  );
+      ),
+      actions: <Widget>[
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          child: Text("Close"),
+        ),
+      ],
+    );
+  }
 }
+

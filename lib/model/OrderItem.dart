@@ -15,6 +15,8 @@ class OrderItem {
   final String type;
   final String? consumerNote;
   final int? rating;
+  final String? reportPhoto;
+  final String? reportReason;
 
   OrderItem({
     required this.uid,
@@ -29,6 +31,8 @@ class OrderItem {
     required this.type,
     this.consumerNote,
     this.rating,
+    this.reportPhoto,
+    this.reportReason,
   }) : totalPayment = type == "kurir" ? totalPrice + adminFee + (shippingFee ?? 0) : totalPrice + adminFee;
 }
 

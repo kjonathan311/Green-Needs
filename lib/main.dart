@@ -1,7 +1,9 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:greenneeds/ui/admin/admin_screen.dart';
+import 'package:greenneeds/ui/admin/revenue_report/admin_revenue_view_model.dart';
 import 'package:greenneeds/ui/admin/settings/settings_view_model.dart';
+import 'package:greenneeds/ui/admin/user_report/report_view_model.dart';
 import 'package:greenneeds/ui/admin/verification/admin_verification_view_model.dart';
 import 'package:greenneeds/ui/authentication/introduction/introduction_page.dart';
 import 'package:greenneeds/ui/authentication/login/login_page.dart';
@@ -27,7 +29,6 @@ import 'package:greenneeds/ui/consumer/order/consumer_order_view_model.dart';
 import 'package:greenneeds/ui/consumer/profile/consumer_edit_profile_page.dart';
 import 'package:greenneeds/ui/consumer/profile/consumer_profile_view_model.dart';
 import 'package:greenneeds/ui/forum/add_post_page.dart';
-import 'package:greenneeds/ui/forum/forum_page.dart';
 import 'package:greenneeds/ui/forum/forum_view_model.dart';
 import 'package:greenneeds/ui/provider/balance/provider_balance_view_model.dart';
 import 'package:greenneeds/ui/provider/balance/withdraw_page.dart';
@@ -42,6 +43,7 @@ import 'package:greenneeds/ui/provider/menu/item/detail/detail_menu_view_model.d
 import 'package:greenneeds/ui/provider/order/provider_order_view_model.dart';
 import 'package:greenneeds/ui/provider/profile/food_provider_edit_profile_page.dart';
 import 'package:greenneeds/ui/provider/profile/food_provider_profile_view_model.dart';
+import 'package:greenneeds/ui/provider/revenue_report/provider_revenue_view_model.dart';
 import 'package:greenneeds/ui/provider/verification/verification_food_provider_view_model.dart';
 import 'package:provider/provider.dart';
 import '/firebase_options.dart';
@@ -136,6 +138,15 @@ class MyApp extends StatelessWidget {
           ),
           ChangeNotifierProvider<SettingsViewModel>(
             create: (context)=>SettingsViewModel(),
+          ),
+          ChangeNotifierProvider<ReportViewModel>(
+            create: (context)=>ReportViewModel(),
+          ),
+          ChangeNotifierProvider<AdminRevenueViewModel>(
+            create: (context)=>AdminRevenueViewModel(),
+          ),
+          ChangeNotifierProvider<ProviderRevenueViewModel>(
+            create: (context)=>ProviderRevenueViewModel(),
           )
         ],
         child: MaterialApp(

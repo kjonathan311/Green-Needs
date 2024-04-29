@@ -215,11 +215,11 @@ class _ReportPopUpWindowState extends State<ReportPopUpWindow> {
   @override
   Widget build(BuildContext context) {
     final viewModel = Provider.of<ForumViewModel>(context);
-    return Dialog(
+    return AlertDialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10.0),
       ),
-      child: SingleChildScrollView(
+      content: SingleChildScrollView(
         child: Container(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -240,7 +240,7 @@ class _ReportPopUpWindowState extends State<ReportPopUpWindow> {
                   decoration: const InputDecoration(
                     contentPadding:
                     EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
-                    hintText: "alasan laporan",
+                    hintText: "alasan",
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.all(
                         Radius.circular(10.0),
@@ -249,42 +249,19 @@ class _ReportPopUpWindowState extends State<ReportPopUpWindow> {
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: SizedBox(
-                  width: double.infinity,
-                  height: 50,
-                  child: ElevatedButton(
-                    onPressed: () async {
-                      await viewModel.reportPost(
-                          context,
-                          widget.post,
-                          _contentController.text.trim(),
-                      );
-                    },
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all<Color>(
-                          const Color(0xFF7A779E)),
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                      ),
-                    ),
-                    child: Text(
-                      'Submit',
-                      style: Theme.of(context)
-                          .textTheme
-                          .titleLarge!
-                          .copyWith(color: Colors.white),
-                    ),
-                  ),
-                ),
-              ),
             ],
           ),
         ),
       ),
+      actions: [
+        TextButton(onPressed: ()async{
+          await viewModel.reportPost(
+            context,
+            widget.post,
+            _contentController.text.trim(),
+          );
+        }, child: Text("Submit"))
+      ],
     );
   }
 }

@@ -121,8 +121,9 @@ class ForumViewModel extends ChangeNotifier {
 
   Future<int> getReportsLength(String uidPost) async {
     QuerySnapshot reportSnapshot = await FirebaseFirestore.instance
+        .collection('posts')
+        .doc(uidPost)
         .collection('reports')
-        .where('uidPost', isEqualTo: uidPost)
         .get();
 
     return reportSnapshot.docs.length;
@@ -130,8 +131,9 @@ class ForumViewModel extends ChangeNotifier {
 
   Future<List<String>> getReportComments(String uidPost) async {
     QuerySnapshot reportSnapshot = await FirebaseFirestore.instance
+        .collection('posts')
+        .doc(uidPost)
         .collection('reports')
-        .where('uidPost', isEqualTo: uidPost)
         .get();
 
     List<String> comments = [];
@@ -148,9 +150,10 @@ class ForumViewModel extends ChangeNotifier {
       return;
     }
     QuerySnapshot reportSnapshot = await _firestore
+        .collection('posts')
+        .doc(post.uid)
         .collection('reports')
         .where('uidUser', isEqualTo: user.uid)
-        .where('uidPost', isEqualTo: post.uid)
         .get();
 
     if (reportSnapshot.docs.isNotEmpty) {
@@ -179,8 +182,7 @@ class ForumViewModel extends ChangeNotifier {
       return;
     }
     try {
-      await _firestore.collection('reports').add({
-        'uidPost': post.uid,
+      await _firestore..collection('posts').doc(post.uid).collection('reports').add({
         'comment': comment,
         'uidUser': user.uid,
       });

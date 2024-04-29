@@ -160,11 +160,11 @@ class _AddAddressPopUpWindowState extends State<AddAddressPopUpWindow> {
   @override
   Widget build(BuildContext context) {
     final viewModel = Provider.of<AddressViewModel>(context);
-    return Dialog(
+    return AlertDialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10.0),
       ),
-      child: SingleChildScrollView(
+      content: SingleChildScrollView(
         child: Container(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -210,41 +210,18 @@ class _AddAddressPopUpWindowState extends State<AddAddressPopUpWindow> {
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: SizedBox(
-                  width: double.infinity,
-                  height: 50,
-                  child: ElevatedButton(
-                    onPressed: () async {
-                      await viewModel.addAddress(
-                          context,
-                          _addressController.text.trim(),
-                          _cityController.text.trim());
-                    },
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all<Color>(
-                          const Color(0xFF7A779E)),
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                      ),
-                    ),
-                    child: Text(
-                      'Tambah',
-                      style: Theme.of(context)
-                          .textTheme
-                          .titleLarge!
-                          .copyWith(color: Colors.white),
-                    ),
-                  ),
-                ),
-              ),
             ],
           ),
         ),
       ),
+      actions: <Widget>[
+        TextButton(onPressed: ()async{
+          await viewModel.addAddress(
+              context,
+              _addressController.text.trim(),
+              _cityController.text.trim());
+        }, child: Text("Tambah"))
+      ],
     );
   }
 }

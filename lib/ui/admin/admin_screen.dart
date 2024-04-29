@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:greenneeds/ui/admin/revenue_report/admin_revenue_page.dart';
 import 'package:greenneeds/ui/admin/settings/settings_page.dart';
+import 'package:greenneeds/ui/admin/user_report/admin_report_page.dart';
 import 'package:greenneeds/ui/admin/verification/verification_page.dart';
 import 'package:provider/provider.dart';
 
@@ -18,12 +20,8 @@ class _AdminScreenState extends State<AdminScreen> {
 
   final List<Widget> _pages = [
     VerificationPage(),
-    Center(
-      child: Text("Laporan"),
-    ),
-    Center(
-      child: Text("Laporan user"),
-    ),
+    AdminRevenuePage(),
+    AdminReportPage(),
     AdminForumPage()
   ];
 

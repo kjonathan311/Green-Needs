@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:greenneeds/model/OrderItem.dart';
+import 'package:greenneeds/ui/utils.dart';
 import '../../../model/Address.dart';
 import '../../../model/MenuItem.dart';
 import '../../../model/Profile.dart';
@@ -10,6 +13,9 @@ import '../../../model/Rating.dart';
 class ConsumerOrderViewModel extends ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  bool _isLoading = false;
+  bool get isLoading => _isLoading;
 
   Stream<List<OrderItemWithProviderAndConsumer>> ordersStream(int tab) {
     User? user = _auth.currentUser;
@@ -145,6 +151,8 @@ class ConsumerOrderViewModel extends ChangeNotifier {
                   type: data['type'],
                   consumerNote: data['consumerNote'],
                   rating:data['rating'],
+                  reportPhoto: data['reportPhoto'],
+                  reportReason: data['reportReason']
                 );
 
                 int itemCount = (await _firestore
@@ -381,7 +389,7 @@ class ConsumerOrderViewModel extends ChangeNotifier {
         .doc(transaction.order.uid)
         .set({
       'rating': rating,
-      'comment':comment
+      if(comment!=null)'comment':comment
     }, SetOptions(merge: true));
 
     QuerySnapshot ordersSnapshot = await _firestore
@@ -461,4 +469,18 @@ class ConsumerOrderViewModel extends ChangeNotifier {
     }, SetOptions(merge: true));
   }
 
+  Future<void> reportOrder(OrderItemWithProviderAndConsumer transaction,File imageFile,String comment)async{
+    User? user = _auth.currentUser;
+    _isLoading = true;
+    notifyListeners();
+    if (user != null && user.email != null) {
+      String? photoUrl = await uploadReportImage(imageFile, transaction.order.uid);
+      await _firestore.collection('transactions').doc(transaction.order.uid).set({
+        if (photoUrl != null) 'reportPhoto': photoUrl,
+        'reportReason':comment,
+      }, SetOptions(merge: true));
+    }
+    _isLoading = false;
+    notifyListeners();
+  }
 }

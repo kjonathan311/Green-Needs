@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:greenneeds/ui/forum/forum_page.dart';
 import 'package:greenneeds/ui/provider/order/provider_order_page.dart';
+import 'package:greenneeds/ui/provider/revenue_report/provider_revenue_page.dart';
 import 'package:greenneeds/ui/provider/verification/unverified_screen.dart';
 import 'package:greenneeds/ui/provider/verification/verification_food_provider_view_model.dart';
 import 'package:provider/provider.dart';
@@ -21,9 +22,7 @@ class _ProviderScreenState extends State<ProviderScreen> {
     MenuPage(),
     DailyWastePage(),
     ProviderOrderPage(),
-    Center(
-      child: Text("Laporan"),
-    ),
+    ProviderRevenuePage(),
     ForumPage(),
   ];
 

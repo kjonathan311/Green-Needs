@@ -194,7 +194,27 @@ Future<String?> uploadMenuImage(File imageFile,String uid) async {
 
     return url;
   } catch (e) {
-    log('Error uploading profile image: $e');
+    log('Error uploading menu image: $e');
+    return null;
+  }
+}
+
+Future<String?> uploadReportImage(File imageFile,String uid) async {
+  try {
+    FirebaseStorage storage = FirebaseStorage.instance;
+    final FirebaseAuth _auth = FirebaseAuth.instance;
+    String url = "";
+    final metadata = SettableMetadata(contentType: "image/jpeg");
+    Reference ref = storage.ref().child("images/transaction/report/${_auth.currentUser?.uid}/${uid}.jpg");
+    final uploadTask = ref.putFile(imageFile, metadata);
+
+    await uploadTask.whenComplete(() async {
+      url = await ref.getDownloadURL();
+    });
+
+    return url;
+  } catch (e) {
+    log('Error uploading menu image: $e');
     return null;
   }
 }

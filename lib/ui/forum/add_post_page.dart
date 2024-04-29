@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:greenneeds/ui/consumer/profile/consumer_profile_view_model.dart';
 import 'package:greenneeds/ui/forum/forum_view_model.dart';
 import 'package:provider/provider.dart';
-
-import '../provider/profile/food_provider_profile_view_model.dart';
 
 class AddPostPage extends StatefulWidget {
   const AddPostPage({super.key});
