@@ -28,6 +28,7 @@ import 'package:greenneeds/ui/consumer/inventory/notification/inventory_notifica
 import 'package:greenneeds/ui/consumer/order/consumer_order_view_model.dart';
 import 'package:greenneeds/ui/consumer/profile/consumer_edit_profile_page.dart';
 import 'package:greenneeds/ui/consumer/profile/consumer_profile_view_model.dart';
+import 'package:greenneeds/ui/consumer/verification/consumer_verification_view_model.dart';
 import 'package:greenneeds/ui/forum/add_post_page.dart';
 import 'package:greenneeds/ui/forum/forum_view_model.dart';
 import 'package:greenneeds/ui/provider/balance/provider_balance_view_model.dart';
@@ -44,7 +45,7 @@ import 'package:greenneeds/ui/provider/order/provider_order_view_model.dart';
 import 'package:greenneeds/ui/provider/profile/food_provider_edit_profile_page.dart';
 import 'package:greenneeds/ui/provider/profile/food_provider_profile_view_model.dart';
 import 'package:greenneeds/ui/provider/revenue_report/provider_revenue_view_model.dart';
-import 'package:greenneeds/ui/provider/verification/verification_food_provider_view_model.dart';
+import 'package:greenneeds/ui/provider/verification/food_provider_verification_view_model.dart';
 import 'package:provider/provider.dart';
 import '/firebase_options.dart';
 import 'model/FirebaseAuthProvider.dart';
@@ -85,6 +86,9 @@ class MyApp extends StatelessWidget {
           ),
           ChangeNotifierProvider<FoodProviderVerificationViewModel>(
             create: (context) => FoodProviderVerificationViewModel(),
+          ),
+          ChangeNotifierProvider<ConsumerVerificationViewModel>(
+            create: (context) => ConsumerVerificationViewModel(),
           ),
           ChangeNotifierProvider<AdminVerificationViewModel>(
             create: (context) => AdminVerificationViewModel(),

@@ -19,7 +19,7 @@ class UnverifiedScreen extends StatelessWidget {
     if(verification=="unverified"){
       message="Akun belum terverifikasi. Silahkan menunggu akun untuk diverifikasi oleh admin";
     }else{
-      message="Akun telah ditolak. Silakan logout dari aplikasi";
+      message="Akun telah diblock. Silakan logout dari aplikasi";
     }
     PreferredSizeWidget? appBar = null; // Initialize as null
     if (verification == "denied") {

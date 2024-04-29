@@ -3,7 +3,7 @@ import 'package:greenneeds/ui/forum/forum_page.dart';
 import 'package:greenneeds/ui/provider/order/provider_order_page.dart';
 import 'package:greenneeds/ui/provider/revenue_report/provider_revenue_page.dart';
 import 'package:greenneeds/ui/provider/verification/unverified_screen.dart';
-import 'package:greenneeds/ui/provider/verification/verification_food_provider_view_model.dart';
+import 'package:greenneeds/ui/provider/verification/food_provider_verification_view_model.dart';
 import 'package:provider/provider.dart';
 import 'daily_waste/daily_waste_page.dart';
 import 'menu/menu_page.dart';
@@ -82,7 +82,7 @@ class _ProviderScreenState extends State<ProviderScreen> {
           }
         } else {
           return Container(
-            color: Colors.black.withOpacity(0.2),
+            color: Colors.white,
             child: const Center(
               child: CircularProgressIndicator(),
             ),

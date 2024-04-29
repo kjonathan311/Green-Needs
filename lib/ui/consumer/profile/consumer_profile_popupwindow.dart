@@ -126,9 +126,9 @@ class _ConsumerProfilePopUpWindowState extends State<ConsumerProfilePopUpWindow>
               onTap: () async {
                 consumerProfileViewModel.clearData();
                 addressViewModel.clearData();
+                cartViewModel.clearAll();
                 await authProvider.logout();
                 FirebaseMessaging.instance.deleteToken();
-                 cartViewModel.clearAll();
                 Navigator.of(context)
                     .pushNamedAndRemoveUntil("/introduction", (route) => false);
                 Navigator.pushReplacementNamed(context, "/introduction");

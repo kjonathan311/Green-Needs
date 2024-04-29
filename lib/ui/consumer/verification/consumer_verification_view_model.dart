@@ -1,29 +1,28 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
+import 'package:flutter/cupertino.dart';
 
-class FoodProviderVerificationViewModel extends ChangeNotifier {
+class ConsumerVerificationViewModel extends ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  Stream<String> get verificationStream async* {
+  Stream<bool> get verificationStream async* {
     User? user = _auth.currentUser;
     if (user != null && user.email != null) {
       yield* _firestore
-          .collection('providers')
+          .collection('consumers')
           .doc(user.uid)
           .snapshots()
           .map((snapshot) {
         if (snapshot.exists) {
           Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
-          return data['status'] as String; // Return status as String
+          return data['status'] ;
         } else {
-          return 'unverified'; // Default to 'unverified' if document doesn't exist
+          return false;
         }
       });
     } else {
-      yield 'unverified'; // Default to 'unverified' if user is null
+      yield false;
     }
   }
 }

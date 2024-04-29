@@ -59,7 +59,7 @@ class _ProviderRevenuePageState extends State<ProviderRevenuePage> {
   }
   @override
   Widget build(BuildContext context) {
-    final adminRevenueViewModel =
+    final providerRevenueViewModel =
     Provider.of<ProviderRevenueViewModel>(context);
     return Scaffold(
       appBar: AppBar(
@@ -122,7 +122,7 @@ class _ProviderRevenuePageState extends State<ProviderRevenuePage> {
             const SizedBox(height: 20),
 
             StreamBuilder<Map<String, dynamic>>(
-              stream: adminRevenueViewModel.reportRevenueStream(startDate, endDate),
+              stream: providerRevenueViewModel.reportRevenueStream(startDate, endDate),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   Map<String, dynamic> data = snapshot.data!;

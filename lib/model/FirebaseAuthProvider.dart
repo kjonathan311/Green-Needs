@@ -63,6 +63,7 @@ class FirebaseAuthProvider with ChangeNotifier {
         'email': email,
         'phoneNumber': phoneNumber,
         'balance':0,
+        'status':true
       };
 
       await doc.set(consumerData);
