@@ -22,7 +22,11 @@ class _CartPageState extends State<CartPage> {
     final cartViewModel = Provider.of<CartViewModel>(context,listen: false);
     cartViewModel.checkCartItemAvailability();
     cartViewModel.getTotalCost();
-    _selectedOrderType=cartViewModel.selectedOrderType;
+    if(cartViewModel.selectedOrderType==""){
+      cartViewModel.setSelectedOrderType('kurir');
+    }else{
+      _selectedOrderType=cartViewModel.selectedOrderType;
+    }
   }
 
   @override

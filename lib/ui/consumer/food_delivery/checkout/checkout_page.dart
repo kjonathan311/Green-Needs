@@ -75,10 +75,10 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                     ),
                                   ),
                                 ),
+                                const Divider(),
                               ],
                             ),
                           ),
-                          const Divider(),
                           Container(
                             margin: EdgeInsets.symmetric(vertical: 20),
                             padding: const EdgeInsets.symmetric(
