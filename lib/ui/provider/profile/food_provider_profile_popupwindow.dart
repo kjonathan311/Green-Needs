@@ -73,7 +73,7 @@ class FoodProviderProfilePopUpWindow extends StatelessWidget {
                                 Row(
                                   children: [
                                     Icon(Icons.star,color: Colors.orange),
-                                    Text('${profile.rating}'),
+                                    Text('${profile.rating?.toStringAsFixed(2)}'),
                                   ],
                                 ),
                               Row(

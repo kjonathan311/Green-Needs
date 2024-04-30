@@ -87,7 +87,7 @@ class _InventoryNotificationPopUpWindowState extends State<InventoryNotification
               child: ElevatedButton(
                 onPressed: () async{
                   await viewModel.addDuration(_selectedValue);
-                  Navigator.pop(context);
+                  Navigator.of(context).pushNamedAndRemoveUntil("/consumer", (route) => false);
                 },
                 style: ButtonStyle(
                     backgroundColor:

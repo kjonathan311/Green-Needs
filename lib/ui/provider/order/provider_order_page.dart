@@ -94,10 +94,19 @@ class _OrderLayoutState extends State<OrderLayout> {
             } else if (snapshot.hasError) {
               return Text('Error: ${snapshot.error}');
             } else {
-              List<OrderItemWithProviderAndConsumer> orders = snapshot.data ?? [];
-              return Column(
-                children: orders.map((order) => OrderListTile(transaction: order)).toList(),
-              );
+              List<OrderItemWithProviderAndConsumer> orders = snapshot.data ??
+                  [];
+              if (orders.isEmpty) {
+                return Container(
+                    height: 500,
+                    child: Center(child: Text("Tidak ada order aktif."))
+                );
+              } else {
+                return Column(
+                  children: orders.map((order) =>
+                      OrderListTile(transaction: order)).toList(),
+                );
+              }
             }
           },
         ),
@@ -130,10 +139,19 @@ class _HistoryLayoutState extends State<HistoryLayout> {
             } else if (snapshot.hasError) {
               return Text('Error: ${snapshot.error}');
             } else {
-              List<OrderItemWithProviderAndConsumer> orders = snapshot.data ?? [];
-              return Column(
-                children: orders.map((order) => OrderListTile(transaction: order)).toList(),
-              );
+              List<OrderItemWithProviderAndConsumer> orders = snapshot.data ??
+                  [];
+              if (orders.isEmpty) {
+                return Container(
+                    height: 500,
+                    child: Center(child: Text("Tidak ada order aktif."))
+                );
+              } else {
+                return Column(
+                  children: orders.map((order) =>
+                      OrderListTile(transaction: order)).toList(),
+                );
+              }
             }
           },
         ),

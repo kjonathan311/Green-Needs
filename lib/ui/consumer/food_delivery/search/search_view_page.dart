@@ -260,7 +260,7 @@ class SearchResultListTile extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(top: 2),
                     child: Text(
-                      item.rating != null ? "${item.rating}" : "",
+                      item.rating != null ? "${item.rating?.toStringAsFixed(2)}" : "",
                       style: TextStyle(fontSize: 14),
                     ),
                   ),

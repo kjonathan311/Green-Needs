@@ -338,7 +338,7 @@ class StoreHeader extends StatelessWidget {
                           padding: const EdgeInsets.only(top: 2),
                           child: Text(
                             profile.rating != null
-                                ? "${profile.rating}"
+                                ? "${profile.rating?.toStringAsFixed(2)}"
                                 : "0.0",
                             style: TextStyle(fontSize: 14),
                           ),
