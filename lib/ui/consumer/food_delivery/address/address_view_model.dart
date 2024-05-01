@@ -76,7 +76,7 @@ class AddressViewModel extends ChangeNotifier{
     if (user != null && user.email != null) {
 
       if (address.isEmpty || city.isEmpty) {
-        showCustomSnackBar(context, "Semua field perlu diisi.", color: Colors.red);
+        showCustomSnackBar(context, "semua field perlu diisi.", color: Colors.red);
 
         _isLoading = false;
         notifyListeners();
@@ -110,6 +110,10 @@ class AddressViewModel extends ChangeNotifier{
         };
         await documentRef.collection('addresses').add(addressData);
       }catch(e){
+        if (e.toString() == "Could not find any result for the supplied address or coordinates.") {
+          showCustomSnackBar(context, "alamat/kota tidak sesuai.", color: Colors.red);
+
+        }
         _isLoading = false;
         notifyListeners();
       }

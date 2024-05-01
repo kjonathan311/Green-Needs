@@ -181,7 +181,7 @@ class FirebaseAuthProvider with ChangeNotifier {
       }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'invalid-email' || e.code == 'invalid-credential') {
-        return AuthResult(error: ' Email atau Password Salah');
+        return AuthResult(error: ' email atau Password Salah');
       } else {
         return AuthResult(error: 'error: ${e.code}');
       }

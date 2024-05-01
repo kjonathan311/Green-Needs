@@ -20,7 +20,7 @@ class _DailyWastePageState extends State<DailyWastePage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("Jual Daily Waste"),
+          title: Text("Jual Food Waste"),
           actions: [
             IconButton(
               icon: Icon(Icons.person),
@@ -123,6 +123,7 @@ class _AlaCarteLayoutState extends State<AlaCarteLayout> {
                   },
                 ),
                 ),
+              const SizedBox(height: 60)
             ],
           ),
         ),
@@ -203,6 +204,7 @@ class _PacketLayoutState extends State<PacketLayout> {
                   },
                 ),
               ),
+              const SizedBox(height: 60)
             ],
           ),
         ),

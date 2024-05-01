@@ -22,21 +22,29 @@ class ProviderRevenueViewModel extends ChangeNotifier{
           Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
           DateTime transactionDate = (data['date'] as Timestamp).toDate();
 
+          if (data['providerId'] == user.uid) {
+            int transactionYear = transactionDate.year;
+            int transactionMonth = transactionDate.month;
+            int transactionDay = transactionDate.day;
 
-          if(data['providerId']==user.uid) {
-            if (transactionDate.isAfter(startDate) ||
-                transactionDate.isAtSameMomentAs(startDate)) {
-              if (transactionDate.isBefore(endDate) ||
-                  transactionDate.isAtSameMomentAs(endDate)) {
-                if (data['status'] == "order selesai") {
-                  successfulTransactions++;
-                  totalSell += data['totalPrice'];
-                  if(data['shippingFee']!=null){
-                    totalCost+=data['shippingFee'];
-                  }
-                } else if (data['status'] == 'order dibatalkan') {
-                  canceledTransactions++;
+            int startYear = startDate.year;
+            int startMonth = startDate.month;
+            int startDay = startDate.day;
+
+            int endYear = endDate.year;
+            int endMonth = endDate.month;
+            int endDay = endDate.day;
+
+            if ((transactionYear > startYear || (transactionYear == startYear && transactionMonth > startMonth) || (transactionYear == startYear && transactionMonth == startMonth && transactionDay >= startDay)) &&
+                (transactionYear < endYear || (transactionYear == endYear && transactionMonth < endMonth) || (transactionYear == endYear && transactionMonth == endMonth && transactionDay <= endDay))) {
+              if (data['status'] == "order selesai") {
+                successfulTransactions++;
+                totalSell += data['totalPrice'];
+                if (data['shippingFee'] != null) {
+                  totalCost += data['shippingFee'];
                 }
+              } else if (data['status'] == 'order dibatalkan') {
+                canceledTransactions++;
               }
             }
           }

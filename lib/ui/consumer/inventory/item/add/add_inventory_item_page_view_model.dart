@@ -26,6 +26,13 @@ class AddInventoryItemPageViewModel extends ChangeNotifier{
         notifyListeners();
         return;
       }
+      if(startDate.isAfter(endDate)){
+        showCustomSnackBar(context, "tanggal beli/tambah item tidak boleh melebihi tanggal expire item.", color: Colors.red);
+
+        _isLoading = false;
+        notifyListeners();
+        return;
+      }
 
       DocumentReference documentRef = _firestore.collection('consumers').doc(
           user.uid);

@@ -98,7 +98,7 @@ class _DetailConsumerPageState extends State<DetailConsumerPage> {
                     future: adminVerificationViewModel.getTotalPostsForUser(widget.consumer.uid),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
-                        return CircularProgressIndicator();
+                        return Text("Loading..");
                       } else if (snapshot.hasError) {
                         return Text('Error: ${snapshot.error}');
                       } else {

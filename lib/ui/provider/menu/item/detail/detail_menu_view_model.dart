@@ -55,6 +55,45 @@ class DetailMenuViewModel extends ChangeNotifier{
           'discountedPrice': int.parse(discountedPrice),
           if (photoUrl != null) 'photoUrl': photoUrl,
         }, SetOptions(merge: true));
+
+        await _firestore.collection('providers').doc(user.uid).collection('products')
+            .where('menuUid', isEqualTo: uid)
+            .get()
+            .then((QuerySnapshot querySnapshot) {
+          querySnapshot.docs.forEach((doc) async {
+            await doc.reference.update({
+              'name': name,
+              'category': category,
+              'description': description,
+              'startPrice': int.parse(startPrice),
+              'discountedPrice': int.parse(discountedPrice),
+              if (photoUrl != null) 'photoUrl': photoUrl,
+            });
+          });
+        });
+
+        final paketProductsSnapshot = await _firestore
+            .collection('providers')
+            .doc(user.uid)
+            .collection('products')
+            .where('type', isEqualTo: 'paket')
+            .get();
+
+        for (final productDoc in paketProductsSnapshot.docs) {
+          await productDoc.reference.collection('items').where('menuUid', isEqualTo: uid).get().then((QuerySnapshot querySnapshot) {
+            querySnapshot.docs.forEach((doc) async {
+              await doc.reference.update({
+                'name': name,
+                'category': category,
+                'description': description,
+                'startPrice': int.parse(startPrice),
+                'discountedPrice': int.parse(discountedPrice),
+                if (photoUrl != null) 'photoUrl': photoUrl,
+              });
+            });
+        });
+        }
+
       }catch(e){
         _isLoading = false;
         notifyListeners();

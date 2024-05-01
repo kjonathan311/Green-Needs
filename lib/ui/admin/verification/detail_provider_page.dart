@@ -100,7 +100,7 @@ class _DetailProviderPageState extends State<DetailProviderPage> {
                     future: adminVerificationViewModel.getTotalPostsForUser(widget.provider.uid),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
-                        return CircularProgressIndicator();
+                        return Text("Loading..");
                       } else if (snapshot.hasError) {
                         return Text('Error: ${snapshot.error}');
                       } else {

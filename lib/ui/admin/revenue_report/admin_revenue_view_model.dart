@@ -21,16 +21,27 @@ class AdminRevenueViewModel extends ChangeNotifier{
           Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
           DateTime transactionDate = (data['date'] as Timestamp).toDate();
 
+          int transactionYear = transactionDate.year;
+          int transactionMonth = transactionDate.month;
+          int transactionDay = transactionDate.day;
 
-          if(transactionDate.isAfter(startDate) || transactionDate.isAtSameMomentAs(startDate)) {
-            if (transactionDate.isBefore(endDate) || transactionDate.isAtSameMomentAs(endDate)) {
+          int startYear = startDate.year;
+          int startMonth = startDate.month;
+          int startDay = startDate.day;
+
+          int endYear = endDate.year;
+          int endMonth = endDate.month;
+          int endDay = endDate.day;
+
+
+          if ((transactionYear > startYear || (transactionYear == startYear && transactionMonth > startMonth) || (transactionYear == startYear && transactionMonth == startMonth && transactionDay >= startDay)) &&
+              (transactionYear < endYear || (transactionYear == endYear && transactionMonth < endMonth) || (transactionYear == endYear && transactionMonth == endMonth && transactionDay <= endDay))) {
               if (data['status'] == "order selesai") {
                 successfulTransactions++;
                 totalRevenue += data['adminFee'];
               } else if (data['status'] == 'order dibatalkan') {
                 canceledTransactions++;
               }
-            }
           }
         }
 

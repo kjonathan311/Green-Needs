@@ -195,7 +195,11 @@ class _CartPageState extends State<CartPage> {
                 Container(
                   width: double.infinity,
                     margin: const EdgeInsets.symmetric(vertical: 10),
-                    child: ElevatedButton(onPressed: ()async{
+                    child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: Color(0xFF7A779E),
+                            foregroundColor: Colors.white),
+                        onPressed: ()async{
                       if(cartViewModel.checkCartStatus()){
                         Navigator.of(context).push(
                             MaterialPageRoute(builder: (context) =>

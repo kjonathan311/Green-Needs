@@ -10,35 +10,42 @@ import '../../utils.dart';
 import '../profile/food_provider_profile_view_model.dart';
 
 class WithdrawPage extends StatefulWidget {
-  const WithdrawPage({super.key});
+  const WithdrawPage({Key? key});
 
   @override
   State<WithdrawPage> createState() => _WithdrawPageState();
 }
 
 class _WithdrawPageState extends State<WithdrawPage> {
+  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
     final TextEditingController _balanceController = TextEditingController();
     final balanceViewModel = Provider.of<ProviderBalanceViewModel>(context);
     final foodProviderProfileViewModel = Provider.of<FoodProviderProfileViewModel>(context);
+
     return Scaffold(
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
-          title: Text("Saldo"),
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
         ),
-        body: Stack(
+        title: Text("Saldo"),
+      ),
+      body: RefreshIndicator(
+        key: _refreshIndicatorKey,
+        onRefresh: () async {
+          // Perform the refresh action here
+          setState(() {});
+        },
+        child: Stack(
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(
-                  horizontal: 25.0, vertical: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 10),
               child: SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -46,8 +53,7 @@ class _WithdrawPageState extends State<WithdrawPage> {
                     Container(
                       padding: EdgeInsets.symmetric(vertical: 10),
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment
-                            .spaceBetween,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           const Text("Saldo sekarang:"),
                           FutureBuilder(
@@ -58,7 +64,7 @@ class _WithdrawPageState extends State<WithdrawPage> {
                               } else if (snapshot.hasError) {
                                 return Text("${snapshot.error}");
                               } else {
-                                _balanceController.text=balanceViewModel.balance.toString();
+                                _balanceController.text = balanceViewModel.balance.toString();
                                 return Text("${formatCurrency(balanceViewModel.balance)}");
                               }
                             },
@@ -66,32 +72,41 @@ class _WithdrawPageState extends State<WithdrawPage> {
                         ],
                       ),
                     ),
-                    Container(
-                        width: double.infinity,
-                        padding: EdgeInsets.symmetric(vertical: 10),
-                        child: ElevatedButton( style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.green,
-                        ),onPressed: ()async{
-                          if(_balanceController.text.isNotEmpty){
-                            await balanceViewModel.getInvoice(context,foodProviderProfileViewModel.foodProviderProfile!,int.parse(_balanceController.text.trim()));
-                          }
-                        }, child: Text("Tarik Saldo",style: TextStyle(color: Colors.white),))
-                    ),
-                    Padding(padding: EdgeInsets.symmetric(vertical: 10),child: Text("History Pegambilan saldo")),
                     FutureBuilder<List<WithdrawBalance>>(
                       future: balanceViewModel.changeBalancesItems(),
                       builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.waiting && balanceViewModel.isLoading==false) {
+                        if (snapshot.connectionState == ConnectionState.waiting && balanceViewModel.isLoading == false) {
                           return Container(
-                              height: 500,
-                              child: Center(child: CircularProgressIndicator())
+                            height: 500,
+                            child: Center(child: CircularProgressIndicator()),
                           );
                         } else if (snapshot.hasError) {
                           return Text('Error: ${snapshot.error}');
                         } else {
                           List<WithdrawBalance> items = snapshot.data ?? [];
                           return Column(
-                            children: items.map((item) => WithdrawBalanceListTile(withdrawBalance: item)).toList(),
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                width: double.infinity,
+                                padding: EdgeInsets.symmetric(vertical: 10),
+                                child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.green,
+                                  ),
+                                  onPressed: () async {
+                                    if (_balanceController.text.isNotEmpty) {
+                                      await balanceViewModel.getInvoice(context, foodProviderProfileViewModel.foodProviderProfile!, int.parse(_balanceController.text.trim()));
+                                    }
+                                  },
+                                  child: Text("Tarik Saldo", style: TextStyle(color: Colors.white)),
+                                ),
+                              ),
+                              Padding(padding: EdgeInsets.symmetric(vertical: 10), child: Text("History Pegambilan saldo")),
+                              Column(
+                                children: items.map((item) => WithdrawBalanceListTile(withdrawBalance: item)).toList(),
+                              ),
+                            ],
                           );
                         }
                       },
@@ -99,7 +114,6 @@ class _WithdrawPageState extends State<WithdrawPage> {
                   ],
                 ),
               ),
-
             ),
             if (balanceViewModel.isLoading)
               Container(
@@ -109,7 +123,8 @@ class _WithdrawPageState extends State<WithdrawPage> {
                 ),
               )
           ],
-        )
+        ),
+      ),
     );
   }
 }

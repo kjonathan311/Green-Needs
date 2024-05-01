@@ -5,11 +5,12 @@ import 'package:flutter/material.dart';
 import '../../../model/Profile.dart';
 import '../../utils.dart';
 
-class AdminVerificationViewModel extends ChangeNotifier{
+class AdminVerificationViewModel extends ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  Stream<List<FoodProviderProfile>> unverifiedFoodProvidersStream(String status) async* {
+  Stream<List<FoodProviderProfile>> unverifiedFoodProvidersStream(
+      String status) async* {
     User? user = _auth.currentUser;
     if (user != null && user.email != null) {
       yield* _firestore
@@ -45,7 +46,7 @@ class AdminVerificationViewModel extends ChangeNotifier{
     if (user != null && user.email != null) {
       yield* _firestore
           .collection('consumers')
-          .where('status',isEqualTo: status)
+          .where('status', isEqualTo: status)
           .snapshots()
           .map((snapshot) {
         List<ConsumerProfile> consumerProfiles = [];
@@ -67,24 +68,25 @@ class AdminVerificationViewModel extends ChangeNotifier{
     }
   }
 
-
   Future<int> getTotalPostsForUser(String uid) async {
     QuerySnapshot snapshot = await FirebaseFirestore.instance
         .collection('posts')
         .where('uidUser', isEqualTo: uid)
-        .where('status',isEqualTo: true)
+        .where('status', isEqualTo: true)
         .get();
     return snapshot.size;
   }
 
-  Stream<Map<String, dynamic>> reportRevenueStream(DateTime startDate, DateTime endDate,FoodProviderProfile provider) {
+  Stream<Map<String, dynamic>> reportRevenueStream(
+      DateTime startDate, DateTime endDate, FoodProviderProfile provider) {
     User? user = _auth.currentUser;
     if (user != null && user.email != null) {
-      CollectionReference transactionCollectionRef = _firestore.collection('transactions');
+      CollectionReference transactionCollectionRef =
+          _firestore.collection('transactions');
 
       return transactionCollectionRef.snapshots().asyncMap((snapshot) async {
         double totalSell = 0;
-        double totalCost=0;
+        double totalCost = 0;
         int successfulTransactions = 0;
         int canceledTransactions = 0;
 
@@ -92,21 +94,39 @@ class AdminVerificationViewModel extends ChangeNotifier{
           Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
           DateTime transactionDate = (data['date'] as Timestamp).toDate();
 
+          if (data['providerId'] == provider.uid) {
+            int transactionYear = transactionDate.year;
+            int transactionMonth = transactionDate.month;
+            int transactionDay = transactionDate.day;
 
-          if(data['providerId']==provider.uid) {
-            if (transactionDate.isAfter(startDate) ||
-                transactionDate.isAtSameMomentAs(startDate)) {
-              if (transactionDate.isBefore(endDate) ||
-                  transactionDate.isAtSameMomentAs(endDate)) {
-                if (data['status'] == "order selesai") {
-                  successfulTransactions++;
-                  totalSell += data['totalPrice'];
-                  if(data['shippingFee']!=null){
-                    totalCost+=data['shippingFee'];
-                  }
-                } else if (data['status'] == 'order dibatalkan') {
-                  canceledTransactions++;
+            int startYear = startDate.year;
+            int startMonth = startDate.month;
+            int startDay = startDate.day;
+
+            int endYear = endDate.year;
+            int endMonth = endDate.month;
+            int endDay = endDate.day;
+
+            if ((transactionYear > startYear ||
+                    (transactionYear == startYear &&
+                        transactionMonth > startMonth) ||
+                    (transactionYear == startYear &&
+                        transactionMonth == startMonth &&
+                        transactionDay >= startDay)) &&
+                (transactionYear < endYear ||
+                    (transactionYear == endYear &&
+                        transactionMonth < endMonth) ||
+                    (transactionYear == endYear &&
+                        transactionMonth == endMonth &&
+                        transactionDay <= endDay))) {
+              if (data['status'] == "order selesai") {
+                successfulTransactions++;
+                totalSell += data['totalPrice'];
+                if (data['shippingFee'] != null) {
+                  totalCost += data['shippingFee'];
                 }
+              } else if (data['status'] == 'order dibatalkan') {
+                canceledTransactions++;
               }
             }
           }
@@ -116,9 +136,9 @@ class AdminVerificationViewModel extends ChangeNotifier{
           'totalTransactions': successfulTransactions + canceledTransactions,
           'successfulTransactions': successfulTransactions,
           'canceledTransactions': canceledTransactions,
-          'totalSell':totalSell,
-          'totalCost':totalCost,
-          'totalRevenue': totalSell-totalCost,
+          'totalSell': totalSell,
+          'totalCost': totalCost,
+          'totalRevenue': totalSell - totalCost,
         };
       });
     } else {
@@ -126,11 +146,12 @@ class AdminVerificationViewModel extends ChangeNotifier{
     }
   }
 
-
-  Stream<Map<String, dynamic>> reportTransactionStream(DateTime startDate, DateTime endDate,ConsumerProfile consumer) {
+  Stream<Map<String, dynamic>> reportTransactionStream(
+      DateTime startDate, DateTime endDate, ConsumerProfile consumer) {
     User? user = _auth.currentUser;
     if (user != null && user.email != null) {
-      CollectionReference transactionCollectionRef = _firestore.collection('transactions');
+      CollectionReference transactionCollectionRef =
+          _firestore.collection('transactions');
 
       return transactionCollectionRef.snapshots().asyncMap((snapshot) async {
         int successfulTransactions = 0;
@@ -140,17 +161,35 @@ class AdminVerificationViewModel extends ChangeNotifier{
           Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
           DateTime transactionDate = (data['date'] as Timestamp).toDate();
 
+          if (data['consumerId'] == consumer.uid) {
+            int transactionYear = transactionDate.year;
+            int transactionMonth = transactionDate.month;
+            int transactionDay = transactionDate.day;
 
-          if(data['consumerId']==consumer.uid) {
-            if (transactionDate.isAfter(startDate) ||
-                transactionDate.isAtSameMomentAs(startDate)) {
-              if (transactionDate.isBefore(endDate) ||
-                  transactionDate.isAtSameMomentAs(endDate)) {
-                if (data['status'] == "order selesai") {
-                  successfulTransactions++;
-                } else if (data['status'] == 'order dibatalkan') {
-                  canceledTransactions++;
-                }
+            int startYear = startDate.year;
+            int startMonth = startDate.month;
+            int startDay = startDate.day;
+
+            int endYear = endDate.year;
+            int endMonth = endDate.month;
+            int endDay = endDate.day;
+
+            if ((transactionYear > startYear ||
+                    (transactionYear == startYear &&
+                        transactionMonth > startMonth) ||
+                    (transactionYear == startYear &&
+                        transactionMonth == startMonth &&
+                        transactionDay >= startDay)) &&
+                (transactionYear < endYear ||
+                    (transactionYear == endYear &&
+                        transactionMonth < endMonth) ||
+                    (transactionYear == endYear &&
+                        transactionMonth == endMonth &&
+                        transactionDay <= endDay))) {
+              if (data['status'] == "order selesai") {
+                successfulTransactions++;
+              } else if (data['status'] == 'order dibatalkan') {
+                canceledTransactions++;
               }
             }
           }
@@ -167,7 +206,7 @@ class AdminVerificationViewModel extends ChangeNotifier{
     }
   }
 
-  Future<void> verifyFoodProvider(BuildContext context,String uid) async {
+  Future<void> verifyFoodProvider(BuildContext context, String uid) async {
     try {
       await _firestore.collection('providers').doc(uid).update({
         'status': 'verified',
@@ -177,7 +216,7 @@ class AdminVerificationViewModel extends ChangeNotifier{
     }
   }
 
-  Future<void> denyFoodProvider(BuildContext context,String uid) async {
+  Future<void> denyFoodProvider(BuildContext context, String uid) async {
     try {
       await _firestore.collection('providers').doc(uid).update({
         'status': 'denied',
@@ -187,7 +226,7 @@ class AdminVerificationViewModel extends ChangeNotifier{
     }
   }
 
-  Future<void> reinstateConsumer(BuildContext context,String uid) async {
+  Future<void> reinstateConsumer(BuildContext context, String uid) async {
     try {
       await _firestore.collection('consumers').doc(uid).update({
         'status': true,
@@ -197,7 +236,7 @@ class AdminVerificationViewModel extends ChangeNotifier{
     }
   }
 
-  Future<void> blockConsumer(BuildContext context,String uid) async {
+  Future<void> blockConsumer(BuildContext context, String uid) async {
     try {
       await _firestore.collection('consumers').doc(uid).update({
         'status': false,
@@ -206,6 +245,4 @@ class AdminVerificationViewModel extends ChangeNotifier{
       showCustomSnackBar(context, "gagal menolak user.", color: Colors.red);
     }
   }
-
-
 }
