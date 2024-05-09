@@ -99,7 +99,6 @@ class _MenuLayoutState extends State<MenuLayout> with TickerProviderStateMixin {
                           _selectedCategory = categories.first;
                           _selectedCategoryController.add(_selectedCategory);
                         }
-                        print("Selected category: $_selectedCategory");
                         return TabBar(
                           isScrollable: true,
                           controller: _tabController,

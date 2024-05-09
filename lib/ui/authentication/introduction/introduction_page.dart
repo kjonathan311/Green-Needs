@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:greenneeds/model/FirebaseAuthProvider.dart';
@@ -5,14 +6,27 @@ import 'package:provider/provider.dart';
 
 import 'introduction_view_model.dart';
 
-class IntroductionPage extends StatelessWidget {
+class IntroductionPage extends StatefulWidget {
+
 
   @override
+  State<IntroductionPage> createState() => _IntroductionPageState();
+}
+
+class _IntroductionPageState extends State<IntroductionPage> {
+  @override
+  void initState() {
+    super.initState();
+    FirebaseMessaging.instance.deleteToken();
+  }
+  @override
   Widget build(BuildContext context){
+
     final authProvider = Provider.of<FirebaseAuthProvider>(context);
     final viewModel = IntroductionPageViewModel(authProvider);
 
     viewModel.handleInitialRoute(context);
+
 
     return ChangeNotifierProvider<IntroductionPageViewModel>(
         create: (context)=>viewModel,
@@ -107,8 +121,10 @@ class IntroductionPage extends StatelessWidget {
                                             10.0), // Adjust the radius as needed
                                       ),
                                     )),
-                                child: Text('Register Penyedia Makanan',
-                                    style: Theme.of(context).textTheme.titleLarge!.copyWith(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 20)),
+                                child: Center(
+                                  child: Text('Register Penyedia Makanan',
+                                      style: Theme.of(context).textTheme.titleLarge!.copyWith(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 20)),
+                                ),
                               ),
                             ),
                             const SizedBox(height: 20.0),

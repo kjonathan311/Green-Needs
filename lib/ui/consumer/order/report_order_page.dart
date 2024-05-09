@@ -42,7 +42,7 @@ class _ReportOrderPageState extends State<ReportOrderPage> {
           }else{
           showCustomSnackBar(context, "Semua field harus diisi.", color: Colors.red);
           }
-          }, icon: Icon(Icons.report_problem))
+          }, icon: Icon(Icons.check))
         ],
       ),
       body: Stack(

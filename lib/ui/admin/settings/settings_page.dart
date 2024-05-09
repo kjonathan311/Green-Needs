@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:greenneeds/model/MainSettings.dart';
 import 'package:greenneeds/ui/admin/settings/settings_view_model.dart';
 import 'package:provider/provider.dart';
 
@@ -12,7 +11,6 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  final TextEditingController _costController = TextEditingController();
   final TextEditingController _taxController = TextEditingController();
 
   @override
@@ -23,7 +21,7 @@ class _SettingsPageState extends State<SettingsPage> {
         title: Text("Pengaturan Global"),
         actions: [
           IconButton(onPressed: ()async{
-            await settingsViewModel.editMainSettings(context, _costController.text.trim(), _taxController.text.trim());
+            await settingsViewModel.editMainSettings(context, _taxController.text.trim());
           }, icon: Icon(Icons.edit))
         ],
       ),
@@ -45,9 +43,8 @@ class _SettingsPageState extends State<SettingsPage> {
                           ),
                         );
                       } else if (snapshot.hasData) {
-                        MainSettings? settings = snapshot.data;
-                        _costController.text = settings!.costPerKm;
-                        _taxController.text = settings.tax;
+                        String? settings = snapshot.data;
+                        _taxController.text = settings!;
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -74,20 +71,6 @@ class _SettingsPageState extends State<SettingsPage> {
                                   child: Text("%",style: TextStyle(fontSize: 20)),
                                 )
                               ],
-                            ),
-                            SizedBox(height: 10.0),
-                            Text("biaya per km",style: Theme.of(context).textTheme.bodyLarge),
-                            SizedBox(height: 5.0),
-                            TextField(
-                              controller: _costController,
-                              decoration: const InputDecoration(
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(10.0),
-                                  ),
-                                ),
-                              ),
-                              keyboardType: TextInputType.number,
                             ),
                           ],
                         );

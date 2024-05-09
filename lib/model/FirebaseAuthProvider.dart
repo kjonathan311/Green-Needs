@@ -121,7 +121,8 @@ class FirebaseAuthProvider with ChangeNotifier {
         'balance':0,
         if(postalcode!=null) 'postalcode':postalcode,
         'city': city,
-        'status': 'unverified'
+        'status': 'unverified',
+        'costPerKm':2000
       };
 
       await doc.set(providerData);

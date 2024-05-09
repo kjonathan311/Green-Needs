@@ -132,7 +132,7 @@ class _AlaCarteLayoutState extends State<AlaCarteLayout> {
           right: 32.0,
           child: FloatingActionButton(
             onPressed: () {
-              Navigator.pushNamed(context, "/provider/daily/add");
+              Navigator.pushNamed(context, "/provider/daily/add").then((value) => setState(() {}));
             },
             child: Icon(Icons.add),
             backgroundColor: Colors.grey,
@@ -214,7 +214,7 @@ class _PacketLayoutState extends State<PacketLayout> {
           right: 32.0,
           child: FloatingActionButton(
             onPressed: () {
-              Navigator.pushNamed(context, "/provider/daily/add");
+              Navigator.pushNamed(context, "/provider/daily/add").then((value) => setState(() {}));
             },
             child: Icon(Icons.add),
             backgroundColor: Colors.grey,

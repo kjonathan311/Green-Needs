@@ -22,7 +22,7 @@ class DetailMenuViewModel extends ChangeNotifier{
     _isLoading = true;
     notifyListeners();
     if (user != null && user.email != null) {
-      if (name.isEmpty || category.isEmpty || description.isEmpty || startPrice.isEmpty || discountedPrice.isEmpty) {
+      if (name.isEmpty || category.isEmpty || startPrice.isEmpty || discountedPrice.isEmpty) {
         showCustomSnackBar(context, "Semua field perlu diisi.", color: Colors.red);
 
         _isLoading = false;

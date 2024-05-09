@@ -6,6 +6,7 @@ import 'package:greenneeds/ui/consumer/balance/consumer_balance_view_model.dart'
 import 'package:greenneeds/ui/consumer/food_delivery/address/address_view_model.dart';
 import 'package:provider/provider.dart';
 
+import '../../provider/profile/food_provider_profile_view_model.dart';
 import '../../utils.dart';
 import '../food_delivery/cart/cart_view_model.dart';
 import 'consumer_profile_view_model.dart';
@@ -25,6 +26,8 @@ class _ConsumerProfilePopUpWindowState extends State<ConsumerProfilePopUpWindow>
     final addressViewModel = Provider.of<AddressViewModel>(context);
     final cartViewModel = Provider.of<CartViewModel>(context);
     final balanceViewModel = Provider.of<ConsumerBalanceViewModel>(context);
+    final foodProviderProfileViewModel = Provider.of<FoodProviderProfileViewModel>(context);
+
 
 
     return Dialog(
@@ -124,11 +127,12 @@ class _ConsumerProfilePopUpWindowState extends State<ConsumerProfilePopUpWindow>
               leading: const Icon(Icons.logout),
               title: const Text("Logout"),
               onTap: () async {
+                FirebaseMessaging.instance.deleteToken();
+                foodProviderProfileViewModel.clearData();
                 consumerProfileViewModel.clearData();
                 addressViewModel.clearData();
                 cartViewModel.clearAll();
                 await authProvider.logout();
-                FirebaseMessaging.instance.deleteToken();
                 Navigator.of(context)
                     .pushNamedAndRemoveUntil("/introduction", (route) => false);
                 Navigator.pushReplacementNamed(context, "/introduction");

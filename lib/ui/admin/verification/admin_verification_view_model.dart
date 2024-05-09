@@ -31,6 +31,7 @@ class AdminVerificationViewModel extends ChangeNotifier {
             status: data['status'],
             postalcode: data['postalcode'],
             photoUrl: data['photoUrl'],
+            costPerKm: data['costPerKm']
           );
           unverifiedProviders.add(profile);
         });

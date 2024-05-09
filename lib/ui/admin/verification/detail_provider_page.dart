@@ -92,7 +92,17 @@ class _DetailProviderPageState extends State<DetailProviderPage> {
                         Text("${widget.provider.address},${widget.provider.postalcode},${widget.provider.city}"),
                       ]),
                 ),
-
+                const Divider(thickness: 10, color: Colors.black12),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+                  child:  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text("Biaya Ongkos Per Km : "),
+                      Text("Rp ${widget.provider.costPerKm}")
+                    ],
+                  )
+                ),
                 const Divider(thickness: 10, color: Colors.black12),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),

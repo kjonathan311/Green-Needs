@@ -19,6 +19,7 @@ class _FoodProviderEditProfilePageState extends State<FoodProviderEditProfilePag
   final TextEditingController _phoneNumberController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
   final TextEditingController _cityController = TextEditingController();
+  final TextEditingController _costController = TextEditingController();
   File? _imageFile;
 
   @override
@@ -40,7 +41,7 @@ class _FoodProviderEditProfilePageState extends State<FoodProviderEditProfilePag
             icon: Icon(Icons.edit),
             onPressed: () async{
               await foodProviderProfileViewModel.updateProfile(context, _nameController.text.trim(), _phoneNumberController.text.trim()
-                  ,_addressController.text.trim(),_cityController.text.trim(),_imageFile);
+                  ,_addressController.text.trim(),_cityController.text.trim(),_costController.text.trim(),_imageFile);
             },
           ),
         ],
@@ -72,6 +73,7 @@ class _FoodProviderEditProfilePageState extends State<FoodProviderEditProfilePag
                               _phoneNumberController.text = profile.phoneNumber;
                               _addressController.text = profile.address!;
                               _cityController.text = profile.city!;
+                              _costController.text=profile.costPerKm!.toString();
                               return Padding(
                                 padding: const EdgeInsets.all(40.0),
                                 child: Column(
@@ -147,6 +149,20 @@ class _FoodProviderEditProfilePageState extends State<FoodProviderEditProfilePag
                                           ),
                                         ),
                                       ),
+                                    ),
+                                    SizedBox(height: 20.0),
+                                    Text("Ganti Ongkos Kirim per Km",style: Theme.of(context).textTheme.bodyLarge),
+                                    SizedBox(height: 5.0),
+                                    TextField(
+                                      controller: _costController,
+                                      decoration: const InputDecoration(
+                                        border: OutlineInputBorder(
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(10.0),
+                                          ),
+                                        ),
+                                      ),
+                                      keyboardType: TextInputType.number,
                                     ),
                                   ],
                                 ),

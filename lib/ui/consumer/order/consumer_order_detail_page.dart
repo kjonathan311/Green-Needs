@@ -553,7 +553,7 @@ class _RatingDialogState extends State<RatingDialog> {
                 icon: Icon(
                   index < _rating ? Icons.star : Icons.star_border,
                   color: Colors.orange,
-                  size: 40.0,
+                  size: 30.0,
                 ),
                 onPressed: () {
                   setState(() {
@@ -610,7 +610,7 @@ class ViewRatingDialog extends StatelessWidget {
               return Icon(
                 index < rating ? Icons.star : Icons.star_border,
                 color: Colors.orange,
-                size: 40.0,
+                size: 30.0,
               );
             }),
           ),

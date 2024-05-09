@@ -40,7 +40,6 @@ class CartViewModel extends ChangeNotifier {
 
   void setSelectedOrderType(String orderType) {
     _selectedOrderType = orderType;
-    notifyListeners();
   }
 
   void setDistance() {
@@ -277,7 +276,7 @@ class CartViewModel extends ChangeNotifier {
   }
 
   Future<void> getCostPerKm() async {
-    final snapshot = await _firestore.collection('main_settings').doc("1").get();
+    final snapshot = await _firestore.collection('providers').doc(currentFoodProvider?.uid).get();
     if (snapshot.exists) {
       int costPerKm = snapshot.data()?['costPerKm'];
       costAmount = (costPerKm * currentDistance).toInt();

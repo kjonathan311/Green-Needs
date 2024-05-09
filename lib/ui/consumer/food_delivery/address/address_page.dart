@@ -37,105 +37,109 @@ class _AddressPageState extends State<AddressPage> {
             : null,
         title: Text("Alamat"),
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+      body: Stack(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(32.0),
-            child: ElevatedButton(
-              onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return const AddAddressPopUpWindow();
-                  },
-                );
-              },
-              child: Text("tambah alamat baru"),
-            ),
-          ),
-          Expanded(
-            child: StreamBuilder<List<Address>>(
-              stream: viewModel.addressItems(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting || snapshot.hasError) {
-                  return Center(
-                    child: Text('Loading..'),
-                  );
-                } else {
-                  final addresses = snapshot.data ?? [];
-                  if (addresses.isEmpty) {
-                    return Center(
-                      child: Text('Tidak ada alamat.'),
-                    );
-                  } else {
-                    return ListView.builder(
-                      itemCount: addresses.length,
-                      itemBuilder: (context, index) {
-                        final address = addresses[index];
-                        return Container(
-                          margin: EdgeInsets.symmetric(vertical: 5,horizontal: 32),
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.grey),
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                          child: ListTile(
-                            title: Text(address.address,style: TextStyle(fontWeight: FontWeight.bold)),
-                            subtitle: Text("${address.address}, ${address.city}, ${address.postalcode}"),
-                            leading: Radio<int>(
-                              value: index,
-                              groupValue: viewModel.selectedIndex,
-                              onChanged: (int? value) async{
-                                if (mounted==true) {
-                                  setState(() {
-                                     viewModel.setSelectedIndex(value!);
-                                  });
-                                }
-                              },
-                            ),
-                            trailing: IconButton(
-                              icon: Icon(Icons.close),
-                              onPressed: () async{
-                                await viewModel.deleteAddress(context, address.uid);
-                              },
-                            ),
-                          ),
-                        );
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(32.0),
+                child: ElevatedButton(
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return const AddAddressPopUpWindow();
                       },
                     );
-                  }
-                }
-              },
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(32.0),
-            child: ElevatedButton(
-              onPressed: () {
-                viewModel.selectAddress(context);
-                searchViewModel.selectedAddress=viewModel.selectedAddress;
-                cartViewModel.selectedAddress=viewModel.selectedAddress;
-              },
-              style: ButtonStyle(
-                backgroundColor:
-                MaterialStateProperty.all<Color>(const Color(0xFF7A779E)),
-                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                  RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20.0),
+                  },
+                  child: Text("tambah alamat baru"),
+                ),
+              ),
+              Expanded(
+                child: StreamBuilder<List<Address>>(
+                  stream: viewModel.addressItems(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting || snapshot.hasError) {
+                      return Center(
+                        child: Text('Loading..'),
+                      );
+                    } else {
+                      final addresses = snapshot.data ?? [];
+                      if (addresses.isEmpty) {
+                        return Center(
+                          child: Text('Tidak ada alamat.'),
+                        );
+                      } else {
+                        return ListView.builder(
+                          itemCount: addresses.length,
+                          itemBuilder: (context, index) {
+                            final address = addresses[index];
+                            return Container(
+                              margin: EdgeInsets.symmetric(vertical: 5,horizontal: 32),
+                              decoration: BoxDecoration(
+                                border: Border.all(color: Colors.grey),
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              child: ListTile(
+                                title: Text(address.address,style: TextStyle(fontWeight: FontWeight.bold)),
+                                subtitle: Text("${address.address}, ${address.city}, ${address.postalcode}"),
+                                leading: Radio<int>(
+                                  value: index,
+                                  groupValue: viewModel.selectedIndex,
+                                  onChanged: (int? value) async{
+                                    if (mounted==true) {
+                                      setState(() {
+                                         viewModel.setSelectedIndex(value!);
+                                      });
+                                    }
+                                  },
+                                ),
+                                trailing: IconButton(
+                                  icon: Icon(Icons.close),
+                                  onPressed: () async{
+                                    await viewModel.deleteAddress(context, address.uid);
+                                  },
+                                ),
+                              ),
+                            );
+                          },
+                        );
+                      }
+                    }
+                  },
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(32.0),
+                child: ElevatedButton(
+                  onPressed: () {
+                    viewModel.selectAddress(context);
+                    searchViewModel.selectedAddress=viewModel.selectedAddress;
+                    cartViewModel.selectedAddress=viewModel.selectedAddress;
+                  },
+                  style: ButtonStyle(
+                    backgroundColor:
+                    MaterialStateProperty.all<Color>(const Color(0xFF7A779E)),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20.0),
+                      ),
+                    ),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      'Pilih alamat',
+                      style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
                 ),
               ),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  'Pilih alamat',
-                  style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ),
+            ],
           ),
         ],
       ),
@@ -156,6 +160,7 @@ class AddAddressPopUpWindow extends StatefulWidget {
 class _AddAddressPopUpWindowState extends State<AddAddressPopUpWindow> {
   final TextEditingController _addressController = TextEditingController();
   final TextEditingController _cityController = TextEditingController();
+  bool _isButtonDisabled = false;
 
   @override
   Widget build(BuildContext context) {
@@ -215,12 +220,22 @@ class _AddAddressPopUpWindowState extends State<AddAddressPopUpWindow> {
         ),
       ),
       actions: <Widget>[
-        TextButton(onPressed: ()async{
-          await viewModel.addAddress(
+        TextButton(
+          onPressed: _isButtonDisabled
+              ? null
+              : () async {
+            setState(() {
+              _isButtonDisabled = true;
+            });
+            await viewModel.addAddress(
               context,
               _addressController.text.trim(),
-              _cityController.text.trim());
-        }, child: Text("Tambah"))
+              _cityController.text.trim(),
+            );
+            Navigator.pop(context);
+          },
+          child: Text("Tambah"),
+        )
       ],
     );
   }

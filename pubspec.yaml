@@ -50,6 +50,7 @@ dependencies:
   firebase_messaging: ^14.9.0
   timeago: ^3.6.1
   badges: ^3.1.2
+  flutter_launcher_icons: ^0.13.1
 
 dev_dependencies:
   flutter_test:
@@ -61,6 +62,11 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^3.0.0
+
+flutter_icons:
+  image_path: "images/logo_green_needs.png"
+  android: true
+  ios: true
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -78,6 +84,7 @@ flutter:
     - images/introduction_background.jpg
     - images/placeholder_profile.jpg
     - images/placeholder_food.png
+    - images/logo_green_needs.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

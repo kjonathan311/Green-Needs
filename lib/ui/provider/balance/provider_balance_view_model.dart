@@ -53,7 +53,7 @@ class ProviderBalanceViewModel extends ChangeNotifier {
           },
           parameters: {
             "external_id": currentUser.uid,
-            "email": "kjonathan311@gmail.com",
+            "email": currentUser.email,
             "amount": payment,
           },
         );

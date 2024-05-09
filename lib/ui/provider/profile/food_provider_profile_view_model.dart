@@ -37,6 +37,7 @@ class FoodProviderProfileViewModel extends ChangeNotifier{
           address: data['address'],
           status: data['status'],
           rating: data['rating'],
+          costPerKm: data['costPerKm']
         );
         return foodProviderProfile;
       }
@@ -45,12 +46,12 @@ class FoodProviderProfileViewModel extends ChangeNotifier{
   }
 
   Future<void> updateProfile(BuildContext context,String name,
-      String phoneNumber,String address,String city, File? newImageFile) async {
+      String phoneNumber,String address,String city,String costPerKm, File? newImageFile) async {
     User? user = _auth.currentUser;
     _isLoading = true;
     notifyListeners();
 
-    if (name.isEmpty || phoneNumber.isEmpty) {
+    if (name.isEmpty || phoneNumber.isEmpty || city.isEmpty || address.isEmpty || costPerKm.isEmpty) {
       showCustomSnackBar(context, "Semua field perlu diisi.", color: Colors.red);
 
       _isLoading = false;
@@ -91,12 +92,15 @@ class FoodProviderProfileViewModel extends ChangeNotifier{
       return;
     }
 
+
+
     if (user != null) {
       try {
         String? photoUrl;
         if (newImageFile != null) {
           photoUrl = await uploadProfileImage(newImageFile);
         }
+
 
         await _firestore.collection('providers').doc(user.uid).set({
           'name': name,
@@ -105,6 +109,7 @@ class FoodProviderProfileViewModel extends ChangeNotifier{
           'longitude':lng,
           'city':city,
           'address':address,
+          'costPerKm':int.parse(costPerKm),
           if (postalcode!=null) 'postalcode':postalcode,
           if (photoUrl != null) 'photoUrl': photoUrl,
         }, SetOptions(merge: true));

@@ -39,7 +39,6 @@ class _WithdrawPageState extends State<WithdrawPage> {
       body: RefreshIndicator(
         key: _refreshIndicatorKey,
         onRefresh: () async {
-          // Perform the refresh action here
           setState(() {});
         },
         child: Stack(

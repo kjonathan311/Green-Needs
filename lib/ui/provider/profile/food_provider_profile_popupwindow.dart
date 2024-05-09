@@ -3,6 +3,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:greenneeds/model/FirebaseAuthProvider.dart';
 import 'package:greenneeds/model/Profile.dart';
+import 'package:greenneeds/ui/consumer/profile/consumer_profile_view_model.dart';
 import 'package:greenneeds/ui/provider/balance/provider_balance_view_model.dart';
 import 'package:provider/provider.dart';
 
@@ -16,6 +17,7 @@ class FoodProviderProfilePopUpWindow extends StatelessWidget {
   Widget build(BuildContext context) {
     final authProvider = Provider.of<FirebaseAuthProvider>(context);
     final foodProviderProfileViewModel = Provider.of<FoodProviderProfileViewModel>(context);
+    final consumerProfileViewModel= Provider.of<ConsumerProfileViewModel>(context);
     final balanceViewModel = Provider.of<ProviderBalanceViewModel>(context);
 
 
@@ -58,17 +60,16 @@ class FoodProviderProfilePopUpWindow extends StatelessWidget {
                                   '${profile!.name}',
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
+                                    fontSize: 16
                                   ),
                                   overflow: TextOverflow.ellipsis
                               ),
-                              const SizedBox(height: 5.0),
                               Text('${profile.email}',  overflow: TextOverflow.ellipsis),
-                              const SizedBox(height: 5.0),
                               Text('${profile.phoneNumber}',overflow: TextOverflow.ellipsis),
-                              const SizedBox(height: 5.0),
                               Text('alamat:',overflow: TextOverflow.ellipsis),
                               Text('${profile.address}',overflow: TextOverflow.ellipsis),
-                              const SizedBox(height: 5.0),
+                              Text('ongkos kirim per km:',overflow: TextOverflow.ellipsis),
+                              Text('Rp ${profile.costPerKm}',style:TextStyle(fontWeight: FontWeight.bold),overflow: TextOverflow.ellipsis),
                               if(profile.rating!=null)
                                 Row(
                                   children: [
@@ -158,6 +159,8 @@ class FoodProviderProfilePopUpWindow extends StatelessWidget {
               title: Text("Logout"),
               onTap: () async {
                 FirebaseMessaging.instance.deleteToken();
+                foodProviderProfileViewModel.clearData();
+                consumerProfileViewModel.clearData();
                 await authProvider.logout();
                 Navigator.of(context)
                     .pushNamedAndRemoveUntil("/introduction", (route) => false);

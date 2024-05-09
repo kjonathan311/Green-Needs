@@ -62,7 +62,6 @@ class AddressViewModel extends ChangeNotifier{
       showCustomSnackBar(context, "pilih alamat diatas.", color: Colors.red);
     }
     notifyListeners();
-    print(_selectedAddress!.address.toString());
     if (Navigator.canPop(context)) {
       Navigator.pop(context);
     }
@@ -90,9 +89,8 @@ class AddressViewModel extends ChangeNotifier{
         city = city.toLowerCase();
         city = city.substring(0, 1).toUpperCase() + city.substring(1);
 
-        List<Location> checklocal = await locationFromAddress('$city');
-
-        List<Location> checkLoc = await locationFromAddress('$address');
+        await locationFromAddress('$city');
+        await locationFromAddress('$address');
 
         List<Location> locations = await locationFromAddress('$address, $city');
         double lat = locations[0].latitude;
@@ -118,7 +116,6 @@ class AddressViewModel extends ChangeNotifier{
         notifyListeners();
       }
 
-      Navigator.of(context).pop();
     }
     _isLoading = false;
     notifyListeners();
@@ -136,6 +133,7 @@ class AddressViewModel extends ChangeNotifier{
   }
   void clearData(){
     _selectedAddress=null;
+    _selectedIndex=-1;
     notifyListeners();
   }
 

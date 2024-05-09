@@ -162,6 +162,7 @@ class ConsumerOrderViewModel extends ChangeNotifier {
                     .get())
                     .size;
 
+                print(order.uid);
                 orders
                     .add(
                     OrderItemWithProviderAndConsumer(order: order, provider: provider,consumer: consumer,itemCount:itemCount));
