@@ -13,10 +13,11 @@ import '../utils.dart';
 
 class ChatScreen extends StatefulWidget {
   final UserChat user;
+  final UserChat origin;
 
   const ChatScreen({
     Key? key,
-    required this.user,
+    required this.user, required this.origin,
   }) : super(key: key);
 
   @override
@@ -56,7 +57,7 @@ class _ChatScreenState extends State<ChatScreen> {
             Expanded(
               child: ChatMessages(user: widget.user),
             ),
-            ChatTextField(user: widget.user),
+            ChatTextField(user: widget.user,origin: widget.origin),
           ],
         ),
       ),
@@ -171,10 +172,11 @@ class MessageBubble extends StatelessWidget {
 
 class ChatTextField extends StatefulWidget {
   final UserChat user;
+  final UserChat origin;
 
   const ChatTextField({
     Key? key,
-    required this.user,
+    required this.user, required this.origin,
   }) : super(key: key);
 
   @override
@@ -210,13 +212,13 @@ class _ChatTextFieldState extends State<ChatTextField> {
         );
         if(widget.user.type=="provider"){
           await notificationService.sendNotificationForProvider(
-            user: widget.user,
+            user: widget.origin,
             body: controller.text,
             senderId: FirebaseAuth.instance.currentUser!.uid,
           );
         }else{
           await notificationService.sendNotification(
-            user: widget.user,
+            user: widget.origin,
             body: controller.text,
             senderId: FirebaseAuth.instance.currentUser!.uid,
           );

@@ -49,7 +49,15 @@ class _ConsumerOrderDetailPageState extends State<ConsumerOrderDetailPage> {
                             photoUrl: widget.transaction.provider.photoUrl,
                             transactionId: widget.transaction.order.uid,
                             type: 'provider',
-                          ))));
+                          ),
+                          origin:UserChat(
+                            uid: widget.transaction.consumer.uid,
+                            name: widget.transaction.consumer.name,
+                            email: widget.transaction.consumer.email,
+                            photoUrl: widget.transaction.consumer.photoUrl,
+                            transactionId: widget.transaction.order.uid,
+                            type: 'consumer',
+                      ))));
                 },
                 icon: Icon(Icons.chat)),
             StreamBuilder(

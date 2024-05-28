@@ -47,7 +47,16 @@ class _ProviderOrderDetailPageState extends State<ProviderOrderDetailPage> {
                             photoUrl: widget.transaction.consumer.photoUrl,
                             transactionId: widget.transaction.order.uid,
                             type: 'consumer',
-                          ))));
+                          ),
+                            origin: UserChat(
+                            uid: widget.transaction.provider.uid,
+                            name: widget.transaction.provider.name,
+                            email: widget.transaction.provider.email,
+                            photoUrl: widget.transaction.provider.photoUrl,
+                            transactionId: widget.transaction.order.uid,
+                            type: 'provider',
+                          ),
+                          )));
             }, icon: Icon(Icons.chat)),
 
             StreamBuilder(
